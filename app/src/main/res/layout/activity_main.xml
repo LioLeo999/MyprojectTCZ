@@ -5,33 +5,126 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/dgreen"
+    tools:context=".screens.MainActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
         android:orientation="vertical"
-        android:weightSum="10"
-        >
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp"
+        android:weightSum="12"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            >
+
+            <Button
+                android:id="@+id/loginbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/yellow"
+                android:textColor="@color/black"
+                android:text="Login" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/registerbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/yellow"
+                android:textColor="@color/black"
+                android:text="Register"
+                />
+        </LinearLayout>
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/coteret"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="Welcome to \n TCZ"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_weight="1"
+            />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What would you like to do?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+
+            />
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <TextView
+        <Button
+            android:id="@+id/drillsB"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:text="🎾 Drills"
+            android:backgroundTint="@color/lgreen"
             android:layout_weight="1.5"
-            android:gravity="center"
-            android:textSize="75dp"
-            android:text="אודות"/>
-        <TextView
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+
+            />
+        <Button
+            android:id="@+id/chatsB"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5.5"
-            android:text="האפליקציה מיועדת למאמני טניס, באפליקציה תמצאו מאגר גדול של תרגילי טניס לכל רמה כולל חימום. "/>
+            android:layout_height="wrap_content"
+            android:text="💬Chats"
+            android:backgroundTint="@color/lgreen"
+            android:layout_weight="1.5"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+
+
+            />
+
+        <Button
+            android:id="@+id/tsetsB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/lgreen"
+            android:layout_weight="1.5"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            android:text="📋🎾Training sets" />
+
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
