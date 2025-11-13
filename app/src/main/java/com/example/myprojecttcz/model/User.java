@@ -22,6 +22,18 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.isadmin = isadmin;
+        this.maarachim = maarachim;
+    }
+
+    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean isadmin) {
+        this.id = id;
+        this.uname = uname;
+        this.fname = fname;
+        this.lname = lname;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.isadmin = isadmin;
         this.maarachim = new ArrayList<MaarachImun>();
     }
 
