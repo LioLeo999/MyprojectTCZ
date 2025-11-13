@@ -10,9 +10,10 @@ public class User {
     protected String email;
     protected String phone;
     protected String password;
+    protected boolean isadmin;
     protected ArrayList<MaarachImun> maarachim;
 
-    public User(String id, String uname, String fname, String lname, String email, String phone, String password) {
+    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean isadmin, ArrayList<MaarachImun> maarachim) {
         this.id = id;
         this.uname = uname;
         this.fname = fname;
@@ -20,6 +21,7 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.isadmin = isadmin;
         this.maarachim = new ArrayList<MaarachImun>();
     }
 
@@ -96,6 +98,14 @@ public class User {
         this.maarachim = maarachim;
     }
 
+    public boolean isIsadmin() {
+        return isadmin;
+    }
+
+    public void setIsadmin(boolean isadmin) {
+        this.isadmin = isadmin;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -106,6 +116,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
+                ", isadmin=" + isadmin +
                 ", maarachim=" + maarachim +
                 '}';
     }

@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "978701090341",
+    "firebase_url": "https://myprotcz-default-rtdb.firebaseio.com",
+    "project_id": "myprotcz",
+    "storage_bucket": "myprotcz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978701090341:android:1bdd2ae8cf74260ec1c9cc",
+        "android_client_info": {
+          "package_name": "com.example.myprojecttcz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGOfyngfFPe6BsNvJntyIL3z-aFTkSc2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978701090341:android:22825537810779afc1c9cc",
+        "android_client_info": {
+          "package_name": "com.example.myprojecttcz.screens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGOfyngfFPe6BsNvJntyIL3z-aFTkSc2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

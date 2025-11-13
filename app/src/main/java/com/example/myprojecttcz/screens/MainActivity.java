@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v.getId() == R.id.registerbtn)
         {
-            Intent go = new Intent(MainActivity.this,Register.class);
+            Intent go = new Intent(MainActivity.this, Register.class);
             startActivity(go);
         }
         if(v.getId() == R.id.loginbtn){
