@@ -1,6 +1,8 @@
 package com.example.myprojecttcz.screens;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +31,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private Button btnRegister, toMain;
     private DatabaseService databaseService;
 
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             return insets;
         });
         finds();
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
     }
+
 
     public void finds(){
         /// get the views
@@ -131,6 +138,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 /// Redirect to MainActivity and clear back stack to prevent user from going back to register screen
                 Intent mainIntent = new Intent(Register.this, MainActivity.class);
                 /// clear the back stack (clear history) and start the MainActivity
+
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                editor.putString("email", etEmail.toString());
+                editor.putString("password", etPassword.toString());
+
+                editor.commit();
+
+
+
+
+
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mainIntent);
             }
