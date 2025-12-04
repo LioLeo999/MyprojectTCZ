@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.AddDrill"
+    android:background="@color/dgreen"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@color/dgreen"
+        android:weightSum="4">
+
+        <!-- כרטיס עגול עם צל -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:layout_margin="8dp"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/lightBg">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- כותרת בצהוב TCZ -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create Drill"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:background="@color/yellow"
+                    android:textColor="@color/dgreen"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- EditTexts -->
+                <EditText
+                    android:id="@+id/editName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Drill Name"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:textColorHint="#888888" />
+
+                <EditText
+                    android:id="@+id/editTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Time"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:textColorHint="#888888" />
+
+                <EditText
+                    android:id="@+id/editLevel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Level"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:textColorHint="#888888" />
+
+                <EditText
+                    android:id="@+id/editMinPlayers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Minimum Players"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:textColorHint="#888888" />
+
+                <EditText
+                    android:id="@+id/editMaxPlayers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Maximum Players"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:textColorHint="#888888" />
+
+                <!-- כותרת Skills -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Skills Included"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/dgreen"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- Grid של CheckBox עם צבעים -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:useDefaultMargins="true">
+
+                    <CheckBox
+                        android:id="@+id/checkForehand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Forehand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkBackhand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Backhand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkVolleyForehand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Volley Forehand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkVolleyBackhand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Volley Backhand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkDriveForehand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drive Forehand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkDriveBackhand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drive Backhand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkServe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Serve"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkSmash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Smash"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkForwardForehand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Forward Forehand"
+                        android:buttonTint="@color/yellow" />
+
+                    <CheckBox
+                        android:id="@+id/checkForwardBackhand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Forward Backhand"
+                        android:buttonTint="@color/yellow" />
+
+                </GridLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- שאר הדברים שלך מתחת (הקופסאות הירוקות וכו') -->
+        <!-- ... -->
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

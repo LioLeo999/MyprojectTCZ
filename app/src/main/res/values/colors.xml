@@ -5,4 +5,5 @@
     <color name="lgreen">#388E3C</color>
     <color name="yellow">#FFEB3B</color>
     <color name="dgreen">#2E7D32</color>
+    <color name="lightBg">#F5F5F5</color>
 </resources>

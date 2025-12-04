@@ -6,18 +6,41 @@ public class Drill {
 
     protected String id;
     protected String name;
-    protected String shot[];
     protected String time;
     protected String level;
-    protected String minmaxplayers;
+    protected String minplayers;
+    protected String maxplayers;
+    protected Boolean forehand;
+    protected Boolean backhand;
+    protected Boolean volleyforehand;
+    protected Boolean volleybackhand;
+    protected Boolean driveforehand;
+    protected Boolean drivebackhand;
+    protected Boolean serve;
+    protected Boolean smash;
+    protected Boolean forwardforehand;
+    protected Boolean forwardbeckhand;
 
-    public Drill(String id, String name, String[] shot, String time, String level, String minmaxplayers) {
+    public Drill(String id, String name, String time, String level, String minplayers, String maxplayers, Boolean forehand, Boolean backhand, Boolean volleyforehand, Boolean volleybackhand, Boolean driveforehand, Boolean drivebackhand, Boolean serve, Boolean smash, Boolean forwardforehand, Boolean forwardbeckhand) {
         this.id = id;
         this.name = name;
-        this.shot = shot;
         this.time = time;
         this.level = level;
-        this.minmaxplayers = minmaxplayers;
+        this.minplayers = minplayers;
+        this.maxplayers = maxplayers;
+        this.forehand = forehand;
+        this.backhand = backhand;
+        this.volleyforehand = volleyforehand;
+        this.volleybackhand = volleybackhand;
+        this.driveforehand = driveforehand;
+        this.drivebackhand = drivebackhand;
+        this.serve = serve;
+        this.smash = smash;
+        this.forwardforehand = forwardforehand;
+        this.forwardbeckhand = forwardbeckhand;
+    }
+
+    public Drill() {
     }
 
     public String getId() {
@@ -36,14 +59,6 @@ public class Drill {
         this.name = name;
     }
 
-    public String[] getShot() {
-        return shot;
-    }
-
-    public void setShot(String shot) {
-        this.shot = new String[]{shot};
-    }
-
     public String getTime() {
         return time;
     }
@@ -60,12 +75,100 @@ public class Drill {
         this.level = level;
     }
 
-    public String getMinmaxplayers() {
-        return minmaxplayers;
+    public String getMinplayers() {
+        return minplayers;
     }
 
-    public void setMinmaxplayers(String minmaxplayers) {
-        this.minmaxplayers = minmaxplayers;
+    public void setMinplayers(String minplayers) {
+        this.minplayers = minplayers;
+    }
+
+    public String getMaxplayers() {
+        return maxplayers;
+    }
+
+    public void setMaxplayers(String maxplayers) {
+        this.maxplayers = maxplayers;
+    }
+
+    public Boolean getForehand() {
+        return forehand;
+    }
+
+    public void setForehand(Boolean forehand) {
+        this.forehand = forehand;
+    }
+
+    public Boolean getBackhand() {
+        return backhand;
+    }
+
+    public void setBackhand(Boolean backhand) {
+        this.backhand = backhand;
+    }
+
+    public Boolean getVolleyforehand() {
+        return volleyforehand;
+    }
+
+    public void setVolleyforehand(Boolean volleyforehand) {
+        this.volleyforehand = volleyforehand;
+    }
+
+    public Boolean getVolleybackhand() {
+        return volleybackhand;
+    }
+
+    public void setVolleybackhand(Boolean volleybackhand) {
+        this.volleybackhand = volleybackhand;
+    }
+
+    public Boolean getDriveforehand() {
+        return driveforehand;
+    }
+
+    public void setDriveforehand(Boolean driveforehand) {
+        this.driveforehand = driveforehand;
+    }
+
+    public Boolean getDrivebackhand() {
+        return drivebackhand;
+    }
+
+    public void setDrivebackhand(Boolean drivebackhand) {
+        this.drivebackhand = drivebackhand;
+    }
+
+    public Boolean getServe() {
+        return serve;
+    }
+
+    public void setServe(Boolean serve) {
+        this.serve = serve;
+    }
+
+    public Boolean getSmash() {
+        return smash;
+    }
+
+    public void setSmash(Boolean smash) {
+        this.smash = smash;
+    }
+
+    public Boolean getForwardforehand() {
+        return forwardforehand;
+    }
+
+    public void setForwardforehand(Boolean forwardforehand) {
+        this.forwardforehand = forwardforehand;
+    }
+
+    public Boolean getForwardbeckhand() {
+        return forwardbeckhand;
+    }
+
+    public void setForwardbeckhand(Boolean forwardbeckhand) {
+        this.forwardbeckhand = forwardbeckhand;
     }
 
     @Override
@@ -73,10 +176,20 @@ public class Drill {
         return "Drill{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", shot=" + Arrays.toString(shot) +
                 ", time='" + time + '\'' +
                 ", level='" + level + '\'' +
-                ", minmaxplayers='" + minmaxplayers + '\'' +
+                ", minplayers='" + minplayers + '\'' +
+                ", maxplayers='" + maxplayers + '\'' +
+                ", forehand=" + forehand +
+                ", backhand=" + backhand +
+                ", volleyforehand=" + volleyforehand +
+                ", volleybackhand=" + volleybackhand +
+                ", driveforehand=" + driveforehand +
+                ", drivebackhand=" + drivebackhand +
+                ", serve=" + serve +
+                ", smash=" + smash +
+                ", forwardforehand=" + forwardforehand +
+                ", forwardbeckhand=" + forwardbeckhand +
                 '}';
     }
 }
