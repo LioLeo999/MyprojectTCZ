@@ -33,6 +33,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedpreferences;
+    private String email,password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +80,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
 
             /// get the input from the user
-            String email = etEmail.getText().toString();
-            String password = etPassword.getText().toString();
+             email = etEmail.getText().toString();
+             password = etPassword.getText().toString();
             String fName = etFName.getText().toString();
             String lName = etLName.getText().toString();
             String phone = etPhone.getText().toString();
@@ -141,8 +142,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                editor.putString("email", etEmail.toString());
-                editor.putString("password", etPassword.toString());
+                editor.putString("email", email);
+                editor.putString("password", password);
 
                 editor.commit();
 

@@ -74,7 +74,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         btnLogin.setOnClickListener(this);
         btnRegister = findViewById(R.id.gotoRegister);
         btnRegister.setOnClickListener(this);
-        databaseService.getInstance();
+        databaseService=  DatabaseService.getInstance();
     }
 
     @Override
