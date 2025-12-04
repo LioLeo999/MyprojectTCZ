@@ -1,9 +1,6 @@
 package com.example.myprojecttcz.model;
 
-import java.util.Arrays;
-
-public class Drill {
-
+public class Drill2v {
     protected String id;
     protected String name;
     protected String time;
@@ -21,9 +18,10 @@ public class Drill {
     protected Boolean forwardforehand;
     protected Boolean forwardbeckhand;
     protected String gif;
-    protected String video;
+    protected String video1;
+    protected String video2;
 
-    public Drill(String id, String name, String time, String level, String minplayers, String maxplayers, Boolean forehand, Boolean backhand, Boolean volleyforehand, Boolean volleybackhand, Boolean driveforehand, Boolean drivebackhand, Boolean serve, Boolean smash, Boolean forwardforehand, Boolean forwardbeckhand, String gif, String video) {
+    public Drill2v(String id, String name, String time, String level, String minplayers, String maxplayers, Boolean forehand, Boolean backhand, Boolean volleyforehand, Boolean volleybackhand, Boolean driveforehand, Boolean drivebackhand, Boolean serve, Boolean smash, Boolean forwardforehand, Boolean forwardbeckhand, String gif, String video1, String video2) {
         this.id = id;
         this.name = name;
         this.time = time;
@@ -41,10 +39,11 @@ public class Drill {
         this.forwardforehand = forwardforehand;
         this.forwardbeckhand = forwardbeckhand;
         this.gif = gif;
-        this.video = video;
+        this.video1 = video1;
+        this.video2 = video2;
     }
 
-    public Drill() {
+    public Drill2v() {
     }
 
     public String getId() {
@@ -175,9 +174,33 @@ public class Drill {
         this.forwardbeckhand = forwardbeckhand;
     }
 
+    public String getGif() {
+        return gif;
+    }
+
+    public void setGif(String gif) {
+        this.gif = gif;
+    }
+
+    public String getVideo1() {
+        return video1;
+    }
+
+    public void setVideo1(String video1) {
+        this.video1 = video1;
+    }
+
+    public String getVideo2() {
+        return video2;
+    }
+
+    public void setVideo2(String video2) {
+        this.video2 = video2;
+    }
+
     @Override
     public String toString() {
-        return "Drill{" +
+        return "Drill2v{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", time='" + time + '\'' +
@@ -195,7 +218,8 @@ public class Drill {
                 ", forwardforehand=" + forwardforehand +
                 ", forwardbeckhand=" + forwardbeckhand +
                 ", gif='" + gif + '\'' +
-                ", video='" + video + '\'' +
+                ", video1='" + video1 + '\'' +
+                ", video2='" + video2 + '\'' +
                 '}';
     }
 }
