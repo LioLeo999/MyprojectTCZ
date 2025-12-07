@@ -29,169 +29,180 @@
             app:cardCornerRadius="18dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="@color/lightBg">
-
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- כותרת בצהוב TCZ -->
-                <TextView
+                android:layout_height="match_parent">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Create Drill"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:paddingVertical="10dp"
-                    android:background="@color/yellow"
-                    android:textColor="@color/dgreen"
-                    android:layout_marginBottom="16dp" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <!-- EditTexts -->
-                <EditText
-                    android:id="@+id/editName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Drill Name"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@android:drawable/editbox_background_normal"
-                    android:textColorHint="#888888" />
-
-                <EditText
-                    android:id="@+id/editTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Time"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@android:drawable/editbox_background_normal"
-                    android:textColorHint="#888888" />
-
-                <EditText
-                    android:id="@+id/editLevel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Level"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@android:drawable/editbox_background_normal"
-                    android:textColorHint="#888888" />
-
-                <EditText
-                    android:id="@+id/editMinPlayers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Minimum Players"
-                    android:inputType="number"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@android:drawable/editbox_background_normal"
-                    android:textColorHint="#888888" />
-
-                <EditText
-                    android:id="@+id/editMaxPlayers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Maximum Players"
-                    android:inputType="number"
-                    android:padding="12dp"
-                    android:layout_marginBottom="18dp"
-                    android:background="@android:drawable/editbox_background_normal"
-                    android:textColorHint="#888888" />
-
-                <!-- כותרת Skills -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Skills Included"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/dgreen"
-                    android:layout_marginBottom="10dp" />
-
-                <!-- Grid של CheckBox עם צבעים -->
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="2"
-                    android:useDefaultMargins="true">
-
-                    <CheckBox
-                        android:id="@+id/checkForehand"
-                        android:layout_width="wrap_content"
+                    <!-- כותרת בצהוב TCZ -->
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Forehand"
-                        android:buttonTint="@color/yellow" />
+                        android:text="Create Drill"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:paddingVertical="10dp"
+                        android:background="@color/yellow"
+                        android:textColor="@color/dgreen"
+                        android:layout_marginBottom="16dp" />
 
-                    <CheckBox
-                        android:id="@+id/checkBackhand"
-                        android:layout_width="wrap_content"
+                    <!-- EditTexts -->
+                    <EditText
+                        android:id="@+id/editName"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Backhand"
-                        android:buttonTint="@color/yellow" />
+                        android:hint="Drill Name"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"
+                        android:textColorHint="#888888" />
 
-                    <CheckBox
-                        android:id="@+id/checkVolleyForehand"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/editTime"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Volley Forehand"
-                        android:buttonTint="@color/yellow" />
+                        android:hint="Time"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"
+                        android:textColorHint="#888888" />
 
-                    <CheckBox
-                        android:id="@+id/checkVolleyBackhand"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/editLevel"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Volley Backhand"
-                        android:buttonTint="@color/yellow" />
+                        android:hint="Level"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"
+                        android:textColorHint="#888888" />
 
-                    <CheckBox
-                        android:id="@+id/checkDriveForehand"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/editMinPlayers"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Drive Forehand"
-                        android:buttonTint="@color/yellow" />
+                        android:hint="Minimum Players"
+                        android:inputType="number"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"
+                        android:textColorHint="#888888" />
 
-                    <CheckBox
-                        android:id="@+id/checkDriveBackhand"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/editMaxPlayers"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Drive Backhand"
-                        android:buttonTint="@color/yellow" />
+                        android:hint="Maximum Players"
+                        android:inputType="number"
+                        android:padding="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:background="@android:drawable/editbox_background_normal"
+                        android:textColorHint="#888888" />
 
-                    <CheckBox
-                        android:id="@+id/checkServe"
-                        android:layout_width="wrap_content"
+                    <!-- כותרת Skills -->
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Serve"
-                        android:buttonTint="@color/yellow" />
+                        android:text="Skills Included"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/dgreen"
+                        android:layout_marginBottom="10dp" />
 
-                    <CheckBox
-                        android:id="@+id/checkSmash"
-                        android:layout_width="wrap_content"
+                    <!-- Grid של CheckBox עם צבעים -->
+                    <GridLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Smash"
-                        android:buttonTint="@color/yellow" />
+                        android:columnCount="2"
+                        android:useDefaultMargins="true">
 
-                    <CheckBox
-                        android:id="@+id/checkForwardForehand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Forward Forehand"
-                        android:buttonTint="@color/yellow" />
+                        <CheckBox
+                            android:id="@+id/checkForehand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Forehand"
+                            android:buttonTint="@color/yellow" />
 
-                    <CheckBox
-                        android:id="@+id/checkForwardBackhand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Forward Backhand"
-                        android:buttonTint="@color/yellow" />
+                        <CheckBox
+                            android:id="@+id/checkBackhand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Backhand"
+                            android:buttonTint="@color/yellow" />
 
-                </GridLayout>
+                        <CheckBox
+                            android:id="@+id/checkVolleyForehand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Volley Forehand"
+                            android:buttonTint="@color/yellow" />
 
-            </LinearLayout>
+                        <CheckBox
+                            android:id="@+id/checkVolleyBackhand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Volley Backhand"
+                            android:buttonTint="@color/yellow" />
+
+                        <CheckBox
+                            android:id="@+id/checkDriveForehand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Drive Forehand"
+                            android:buttonTint="@color/yellow" />
+
+                        <CheckBox
+                            android:id="@+id/checkDriveBackhand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Drive Backhand"
+                            android:buttonTint="@color/yellow" />
+
+                        <CheckBox
+                            android:id="@+id/checkServe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Serve"
+                            android:buttonTint="@color/yellow" />
+
+                        <CheckBox
+                            android:id="@+id/checkSmash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Smash"
+                            android:buttonTint="@color/yellow" />
+
+                        <CheckBox
+                            android:id="@+id/checkForwardForehand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Forward Forehand"
+                            android:buttonTint="@color/yellow" />
+
+                        <CheckBox
+                            android:id="@+id/checkForwardBackhand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Forward Backhand"
+                            android:buttonTint="@color/yellow" />
+
+                    </GridLayout>
+                    <Button
+                        android:id="@+id/addsubmitbtn"
+                        android:text="Submit"
+                        android:textColor="@color/black"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/yellow"/>
+                </LinearLayout>
+            </ScrollView>
+
 
         </androidx.cardview.widget.CardView>
 

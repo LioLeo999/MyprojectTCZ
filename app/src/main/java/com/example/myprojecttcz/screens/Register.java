@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
@@ -34,6 +35,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedpreferences;
     private String email,password;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     public void finds(){
         /// get the views
+
         etEmail = findViewById(R.id.rEmail);
         etPassword = findViewById(R.id.rPassword);
         etFName = findViewById(R.id.rFname);
@@ -62,7 +65,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         btnRegister = findViewById(R.id.registerbtn);
         toMain = findViewById(R.id.rtomain);
         databaseService = databaseService.getInstance();
-
+        mAuth = FirebaseAuth.getInstance();
 
         /// set the click listener
         btnRegister.setOnClickListener(this);
@@ -97,14 +100,19 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     }
     private void registerUser(String uname, String fname, String lname, String phone, String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            boolean isadmin = false;
+            User user = new User(uid, uname, fname, lname, email,phone, password, isadmin);
+            createUserInDatabase(user);
+
+        });
         Log.d(TAG, "registerUser: Registering user...");
 
-        String uid = databaseService.generateUserId();
+
 
         /// create a new user object
-        boolean isadmin = false;
-        User user = new User(uid, uname, fname, lname, phone,email, password, isadmin);
-        createUserInDatabase(user);
+
+
         /*databaseService.checkIfEmailExists(email, new DatabaseService.DatabaseCallback<Boolean>() {
             @Override
             public void onCompleted(Boolean exists) {
@@ -134,7 +142,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             public void onCompleted(Void object) {
                 Log.d(TAG, "createUserInDatabase: User created successfully");
                 /// save the user to shared preferences
-
                 Log.d(TAG, "createUserInDatabase: Redirecting to MainActivity");
                 /// Redirect to MainActivity and clear back stack to prevent user from going back to register screen
                 Intent mainIntent = new Intent(Register.this, MainActivity.class);
