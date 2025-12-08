@@ -1,7 +1,5 @@
 package com.example.myprojecttcz.model;
 
-import java.util.Arrays;
-
 public class Drill {
 
     protected String id;
@@ -23,7 +21,11 @@ public class Drill {
     protected String gif;
     protected String video;
 
-    public Drill(String id, String name, String time, String level, String minplayers, String maxplayers, Boolean forehand, Boolean backhand, Boolean volleyforehand, Boolean volleybackhand, Boolean driveforehand, Boolean drivebackhand, Boolean serve, Boolean smash, Boolean forwardforehand, Boolean forwardbeckhand, String gif, String video) {
+    public Drill(String id, String name, String time, String level, String minplayers, String maxplayers,
+                 Boolean forehand, Boolean backhand, Boolean volleyforehand, Boolean volleybackhand,
+                 Boolean driveforehand, Boolean drivebackhand, Boolean serve, Boolean smash,
+                 Boolean forwardforehand, Boolean forwardbeckhand, String gif, String video) {
+
         this.id = id;
         this.name = name;
         this.time = time;
@@ -44,136 +46,61 @@ public class Drill {
         this.video = video;
     }
 
-    public Drill() {
-    }
+    public Drill() {}
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getTime() { return time; }
+    public void setTime(String time) { this.time = time; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getLevel() { return level; }
+    public void setLevel(String level) { this.level = level; }
 
-    public String getTime() {
-        return time;
-    }
+    public String getMinplayers() { return minplayers; }
+    public void setMinplayers(String minplayers) { this.minplayers = minplayers; }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
+    public String getMaxplayers() { return maxplayers; }
+    public void setMaxplayers(String maxplayers) { this.maxplayers = maxplayers; }
 
-    public String getLevel() {
-        return level;
-    }
+    public Boolean getForehand() { return forehand; }
+    public void setForehand(Boolean forehand) { this.forehand = forehand; }
 
-    public void setLevel(String level) {
-        this.level = level;
-    }
+    public Boolean getBackhand() { return backhand; }
+    public void setBackhand(Boolean backhand) { this.backhand = backhand; }
 
-    public String getMinplayers() {
-        return minplayers;
-    }
+    public Boolean getVolleyforehand() { return volleyforehand; }
+    public void setVolleyforehand(Boolean volleyforehand) { this.volleyforehand = volleyforehand; }
 
-    public void setMinplayers(String minplayers) {
-        this.minplayers = minplayers;
-    }
+    public Boolean getVolleybackhand() { return volleybackhand; }
+    public void setVolleybackhand(Boolean volleybackhand) { this.volleybackhand = volleybackhand; }
 
-    public String getMaxplayers() {
-        return maxplayers;
-    }
+    public Boolean getDriveforehand() { return driveforehand; }
+    public void setDriveforehand(Boolean driveforehand) { this.driveforehand = driveforehand; }
 
-    public void setMaxplayers(String maxplayers) {
-        this.maxplayers = maxplayers;
-    }
+    public Boolean getDrivebackhand() { return drivebackhand; }
+    public void setDrivebackhand(Boolean drivebackhand) { this.drivebackhand = drivebackhand; }
 
-    public Boolean getForehand() {
-        return forehand;
-    }
+    public Boolean getServe() { return serve; }
+    public void setServe(Boolean serve) { this.serve = serve; }
 
-    public void setForehand(Boolean forehand) {
-        this.forehand = forehand;
-    }
+    public Boolean getSmash() { return smash; }
+    public void setSmash(Boolean smash) { this.smash = smash; }
 
-    public Boolean getBackhand() {
-        return backhand;
-    }
+    public Boolean getForwardforehand() { return forwardforehand; }
+    public void setForwardforehand(Boolean forwardforehand) { this.forwardforehand = forwardforehand; }
 
-    public void setBackhand(Boolean backhand) {
-        this.backhand = backhand;
-    }
+    public Boolean getForwardbeckhand() { return forwardbeckhand; }
+    public void setForwardbeckhand(Boolean forwardbeckhand) { this.forwardbeckhand = forwardbeckhand; }
 
-    public Boolean getVolleyforehand() {
-        return volleyforehand;
-    }
+    public String getGif() { return gif; }
+    public void setGif(String gif) { this.gif = gif; }
 
-    public void setVolleyforehand(Boolean volleyforehand) {
-        this.volleyforehand = volleyforehand;
-    }
-
-    public Boolean getVolleybackhand() {
-        return volleybackhand;
-    }
-
-    public void setVolleybackhand(Boolean volleybackhand) {
-        this.volleybackhand = volleybackhand;
-    }
-
-    public Boolean getDriveforehand() {
-        return driveforehand;
-    }
-
-    public void setDriveforehand(Boolean driveforehand) {
-        this.driveforehand = driveforehand;
-    }
-
-    public Boolean getDrivebackhand() {
-        return drivebackhand;
-    }
-
-    public void setDrivebackhand(Boolean drivebackhand) {
-        this.drivebackhand = drivebackhand;
-    }
-
-    public Boolean getServe() {
-        return serve;
-    }
-
-    public void setServe(Boolean serve) {
-        this.serve = serve;
-    }
-
-    public Boolean getSmash() {
-        return smash;
-    }
-
-    public void setSmash(Boolean smash) {
-        this.smash = smash;
-    }
-
-    public Boolean getForwardforehand() {
-        return forwardforehand;
-    }
-
-    public void setForwardforehand(Boolean forwardforehand) {
-        this.forwardforehand = forwardforehand;
-    }
-
-    public Boolean getForwardbeckhand() {
-        return forwardbeckhand;
-    }
-
-    public void setForwardbeckhand(Boolean forwardbeckhand) {
-        this.forwardbeckhand = forwardbeckhand;
-    }
+    public String getVideo() { return video; }
+    public void setVideo(String video) { this.video = video; }
 
     @Override
     public String toString() {

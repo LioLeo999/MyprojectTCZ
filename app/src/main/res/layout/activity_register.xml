@@ -26,7 +26,8 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:scaleType="fitCenter"
-                android:src="@drawable/tczlogo"/>
+                android:src="@drawable/tczlogo"
+                android:contentDescription="Go to main screen"/>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"

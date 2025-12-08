@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn,toadmin;
+    Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn,toadmin,logoutbtn;
     FirebaseAuth auth;
     FirebaseUser user;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 registerbtn.setVisibility(View.GONE);
                 loginbtn.setVisibility(View.GONE);
                 tsetsBtn.setVisibility(View.VISIBLE);
+                logoutbtn.setVisibility(View.VISIBLE);
                 DatabaseReference ref = FirebaseDatabase.getInstance()
                         .getReference("users")
                         .child(currentUser.getUid())
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 loginbtn.setVisibility(View.VISIBLE);
                 tsetsBtn.setVisibility(View.GONE);
                 toadmin.setVisibility(View.GONE);
+                logoutbtn.setVisibility(View.GONE);
             }
 
         };
@@ -85,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         toadmin = findViewById(R.id.maintomasterpage);
+        toadmin.setOnClickListener(this);
+        logoutbtn = findViewById(R.id.logoutbtn);
+        logoutbtn.setOnClickListener(this);
     }
 
     @Override
@@ -117,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.maintomasterpage){
             Intent go = new Intent(MainActivity.this, AdminPage.class);
             startActivity(go);
+        }
+        if (v.getId() == R.id.logoutbtn){
+            FirebaseAuth.getInstance().signOut();
         }
     }
 }

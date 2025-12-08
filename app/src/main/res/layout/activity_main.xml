@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="10dp"
+            android:layout_weight="2"
             >
 
             <Button
@@ -48,6 +49,15 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
+            <Button
+                android:id="@+id/logoutbtn"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/yellow"
+                android:textColor="@color/black"
+                android:text="Log out"
+                android:visibility="gone"
+                />
 
             <Button
                 android:id="@+id/registerbtn"
