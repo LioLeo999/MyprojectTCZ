@@ -12,9 +12,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn;
+    Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn,toadmin;
+    FirebaseAuth auth;
+    FirebaseUser user;
+    private FirebaseAuth.AuthStateListener authStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +35,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         });
         finds();
+
+        authStateListener = firebaseAuth -> {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+            if (currentUser != null) {
+                // משתמש מחובר → להציג כפתורים
+                registerbtn.setVisibility(View.GONE);
+                loginbtn.setVisibility(View.GONE);
+                tsetsBtn.setVisibility(View.VISIBLE);
+                DatabaseReference ref = FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(currentUser.getUid())
+                        .child("isadmin");
+
+                ref.get().addOnSuccessListener(snapshot -> {
+                    Boolean isAdmin = snapshot.getValue(Boolean.class);
+
+                    if (Boolean.TRUE.equals(isAdmin)) {
+                        // הוא אדמין
+                        toadmin.setVisibility(View.VISIBLE);
+
+
+                    }
+                    else {
+                        toadmin.setVisibility(View.GONE);
+
+                    }
+                });
+            } else {
+                // משתמש לא מחובר → להסתיר כפתורים
+
+                registerbtn.setVisibility(View.VISIBLE);
+                loginbtn.setVisibility(View.VISIBLE);
+                tsetsBtn.setVisibility(View.GONE);
+                toadmin.setVisibility(View.GONE);
+            }
+
+        };
     }
     private void finds(){
         registerbtn = findViewById(R.id.registerbtn);
@@ -36,6 +82,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drillsBtn = findViewById(R.id.drillsB);
         chatsBtn = findViewById(R.id.chatsB);
         tsetsBtn = findViewById(R.id.tsetsB);
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        toadmin = findViewById(R.id.maintomasterpage);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authStateListener);
+    }
+
+    // 🔥 4 - להוריד אותו כשהמסך נסגר
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authStateListener != null)
+            auth.removeAuthStateListener(authStateListener);
     }
 
 
@@ -50,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent go = new Intent(MainActivity.this,LogIn.class);
             startActivity(go);
 
+        }
+        if (v.getId() == R.id.maintomasterpage){
+            Intent go = new Intent(MainActivity.this, AdminPage.class);
+            startActivity(go);
         }
     }
 }

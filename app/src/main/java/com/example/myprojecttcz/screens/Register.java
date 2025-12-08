@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private static final String TAG = "RegisterActivity";
 
     private EditText etEmail, etPassword, etFName, etLName, etPhone, etUname;
-    private Button btnRegister, toMain;
+    private Button btnRegister;
+    private ImageButton toMain;
     private DatabaseService databaseService;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
