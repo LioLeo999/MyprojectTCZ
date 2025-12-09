@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.model.Drill;
 import com.example.myprojecttcz.model.MaarachImun;
@@ -478,5 +479,23 @@ public class DatabaseService {
                     }
                 });
     }
+    // ---- DRILL SECTION ----
+
+    private static final String DRILLS_PATH = "drills";
+
+    public String generateDrillId() {
+        return generateNewId(DRILLS_PATH);
+    }
+
+    public void createNewDrill(@NonNull final Drill drill,
+                               @Nullable final DatabaseCallback<Void> callback) {
+        writeData(DRILLS_PATH + "/" + drill.getId(), drill, callback);
+    }
+
+    public void createNewDrill2v(@NonNull final Drill2v drill,
+                                 @Nullable final DatabaseCallback<Void> callback) {
+        writeData(DRILLS_PATH + "/" + drill.getId(), drill, callback);
+    }
+
 
 }

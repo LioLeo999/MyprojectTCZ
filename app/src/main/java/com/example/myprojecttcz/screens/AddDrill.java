@@ -5,9 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,8 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.Drill;
 import com.example.myprojecttcz.model.Drill2v;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -30,16 +31,28 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
     private static final String TAG = "AddDrill";
     private static final int PICK_GIF = 101;
 
-    private EditText editName, editTime, editLevel, editMinPlayers, editMaxPlayers, edityt, edityt2;
-    private CheckBox checkForehand, checkBackhand, checkVolleyForehand, checkVolleyBackhand,
-            checkDriveForehand, checkDriveBackhand, checkServe, checkSmash,
-            checkForwardForehand, checkForwardBackhand;
+    // INPUT FIELDS
+    private EditText editName, editExplanation, editTime, editLevel, editMinPlayers, editMaxPlayers;
+    private EditText editTrainingTools, editAge, editPlayerLevel;
+    private EditText edityt, edityt2;
+
+    // SPINNERS
+    private Spinner spinnerBallColor, spinnerCourtSize;
+
+    // CHECKBOXES
+    private CheckBox checkForehand, checkBackhand, checkVolleyForehand, checkVolleyBackhand;
+    private CheckBox checkDriveForehand, checkDriveBackhand, checkServe, checkSmash;
+    private CheckBox checkForwardForehand, checkForwardBackhand;
+
+    // BUTTONS
     private Button addsubmitbtn, btSelectGif;
 
+    // GIF FILE
     private Uri gifUri = null;
     private String gifUrl = null;
 
-    private DatabaseReference drillsRef;
+    // DATABASE SERVICE
+    private DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +66,35 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
             return insets;
         });
 
-        drillsRef = FirebaseDatabase.getInstance().getReference("drills");
+        databaseService = DatabaseService.getInstance();
+
         initViews();
+        initSpinners();
     }
 
+    // ---------------------------------------------------------
+    // INIT VIEWS
+    // ---------------------------------------------------------
     private void initViews() {
 
         // EditTexts
         editName = findViewById(R.id.editName);
+        editExplanation = findViewById(R.id.editExplanation);
         editTime = findViewById(R.id.editTime);
         editLevel = findViewById(R.id.editLevel);
         editMinPlayers = findViewById(R.id.editMinPlayers);
         editMaxPlayers = findViewById(R.id.editMaxPlayers);
+
+        editTrainingTools = findViewById(R.id.editTrainingTools);
+        editAge = findViewById(R.id.editAge);
+        editPlayerLevel = findViewById(R.id.editPlayerLevel);
+
         edityt = findViewById(R.id.etyoutubev);
         edityt2 = findViewById(R.id.etyoutubev2);
+
+        // Spinners
+        spinnerBallColor = findViewById(R.id.spinnerBallColor);
+        spinnerCourtSize = findViewById(R.id.spinnerCourtSize);
 
         // Checkboxes
         checkForehand = findViewById(R.id.checkForehand);
@@ -84,10 +112,34 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         addsubmitbtn = findViewById(R.id.addsubmitbtn);
         btSelectGif = findViewById(R.id.btSelectGif);
 
+        // Listeners
         addsubmitbtn.setOnClickListener(this);
         btSelectGif.setOnClickListener(this);
     }
 
+    // ---------------------------------------------------------
+    // INIT SPINNERS
+    // ---------------------------------------------------------
+    private void initSpinners() {
+
+        // Ball colors
+        String[] ballColors = {"אדום", "כתום", "ירוק/צהוב"};
+        ArrayAdapter<String> adapterBall = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, ballColors);
+        adapterBall.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBallColor.setAdapter(adapterBall);
+
+        // Court sizes
+        String[] courtSizes = {"מיני מגרש", "3/4 מגרש", "מגרש מלא"};
+        ArrayAdapter<String> adapterCourt = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, courtSizes);
+        adapterCourt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCourtSize.setAdapter(adapterCourt);
+    }
+
+    // ---------------------------------------------------------
+    // BUTTON CLICK HANDLING
+    // ---------------------------------------------------------
     @Override
     public void onClick(View v) {
 
@@ -101,6 +153,9 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         }
     }
 
+    // ---------------------------------------------------------
+    // GIF PICKER
+    // ---------------------------------------------------------
     private void openGifPicker() {
         Intent intent = new Intent();
         intent.setType("image/gif");
@@ -118,31 +173,49 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         }
     }
 
+    // ---------------------------------------------------------
+    // MAIN CREATION PROCESS
+    // ---------------------------------------------------------
     private void startDrillCreation() {
 
+        if (gifUri == null) {
+            Toast.makeText(this, "חובה לבחור GIF!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String name = editName.getText().toString();
+        String explanation = editExplanation.getText().toString();
         String time = editTime.getText().toString();
         String level = editLevel.getText().toString();
         String minP = editMinPlayers.getText().toString();
         String maxP = editMaxPlayers.getText().toString();
 
+        String tools = editTrainingTools.getText().toString();
+        String age = editAge.getText().toString();
+        String playerLevel = editPlayerLevel.getText().toString();
+
+        String ballColor = spinnerBallColor.getSelectedItem().toString();
+        String courtSize = spinnerCourtSize.getSelectedItem().toString();
+
         String yt1 = edityt.getText().toString().trim();
         String yt2 = edityt2.getText().toString().trim();
 
-        String id = drillsRef.push().getKey();
-
-        if (id == null) {
-            Toast.makeText(this, "Failed to generate ID", Toast.LENGTH_SHORT).show();
+        if (yt1.isEmpty()) {
+            Toast.makeText(this, "חובה להוסיף סרטון יוטיוב!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (gifUri != null) {
-            uploadGif(id, () -> createDrillObject(id, name, time, level, minP, maxP, yt1, yt2));
-        } else {
-            createDrillObject(id, name, time, level, minP, maxP, yt1, yt2);
-        }
+        String id = databaseService.generateDrillId();
+
+        uploadGif(id, () ->
+                createDrillObject(id, name, explanation, time, level, minP, maxP,
+                        tools, age, playerLevel, ballColor, courtSize, yt1, yt2)
+        );
     }
 
+    // ---------------------------------------------------------
+    // UPLOAD GIF
+    // ---------------------------------------------------------
     private void uploadGif(String drillId, Runnable onComplete) {
 
         StorageReference ref = FirebaseStorage.getInstance()
@@ -158,40 +231,25 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
                 )
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "GIF upload failed", e);
-                    Toast.makeText(this, "GIF upload failed", Toast.LENGTH_SHORT).show();
-                    onComplete.run(); // create drill anyway without gif
+                    Toast.makeText(this, "העלאת GIF נכשלה", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void createDrillObject(String id, String name, String time, String level, String minP,
-                                   String maxP, String yt1, String yt2) {
+    // ---------------------------------------------------------
+    // MAKE OBJECT + SEND TO DATABASE
+    // ---------------------------------------------------------
+    private void createDrillObject(
+            String id, String name, String explanation, String time, String level,
+            String minP, String maxP, String tools, String age, String playerLevel,
+            String ballColor, String courtSize, String yt1, String yt2
+    ) {
 
-        if (!yt1.isEmpty() && yt2.isEmpty()) {
+        boolean oneVideo = yt2.isEmpty();
+
+        if (oneVideo) {
 
             Drill drill = new Drill(
-                    id, name, time, level, minP, maxP,
-                    checkForehand.isChecked(),
-                    checkBackhand.isChecked(),
-                    checkVolleyForehand.isChecked(),
-                    checkVolleyBackhand.isChecked(),
-                    checkDriveForehand.isChecked(),
-                    checkDriveBackhand.isChecked(),
-                    checkServe.isChecked(),
-                    checkSmash.isChecked(),
-                    checkForwardForehand.isChecked(),
-                    checkForwardBackhand.isChecked(),
-                    gifUrl,
-                    yt1
-            );
-
-            drillsRef.child(id).setValue(drill);
-            Toast.makeText(this, "Drill created!", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (!yt1.isEmpty() && !yt2.isEmpty()) {
-
-            Drill2v drill2v = new Drill2v(
-                    id, name, time, level, minP, maxP,
+                    id, name, explanation, time, level, minP, maxP,
                     checkForehand.isChecked(),
                     checkBackhand.isChecked(),
                     checkVolleyForehand.isChecked(),
@@ -204,15 +262,73 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
                     checkForwardBackhand.isChecked(),
                     gifUrl,
                     yt1,
-                    yt2
+                    tools,
+                    age,
+                    playerLevel,
+                    ballColor,
+                    courtSize
             );
 
-            drillsRef.child(id).setValue(drill2v);
-            Toast.makeText(this, "2v Drill created!", Toast.LENGTH_SHORT).show();
+            databaseService.createNewDrill(drill, new DatabaseService.DatabaseCallback<Void>() {
+                @Override
+                public void onCompleted(Void object) {
+                    Toast.makeText(AddDrill.this, "תרגיל נוצר!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    Toast.makeText(AddDrill.this, "כשל ביצירת תרגיל", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         else {
-            Toast.makeText(this, "Please provide at least 1 YouTube link", Toast.LENGTH_SHORT).show();
+
+            Drill2v drill2v = new Drill2v(
+                    id,
+                    name,
+                    explanation,
+                    time,
+                    level,
+                    minP,
+                    maxP,
+
+                    checkForehand.isChecked(),
+                    checkBackhand.isChecked(),
+                    checkVolleyForehand.isChecked(),
+                    checkVolleyBackhand.isChecked(),
+                    checkDriveForehand.isChecked(),
+                    checkDriveBackhand.isChecked(),
+                    checkServe.isChecked(),
+                    checkSmash.isChecked(),
+                    checkForwardForehand.isChecked(),
+                    checkForwardBackhand.isChecked(),
+
+                    gifUrl,
+                    yt1,
+                    yt2,
+
+                    tools,
+                    age,
+                    playerLevel,
+                    ballColor,
+                    courtSize
+            );
+
+
+            databaseService.createNewDrill2v(drill2v, new DatabaseService.DatabaseCallback<Void>() {
+                @Override
+                public void onCompleted(Void object) {
+                    Toast.makeText(AddDrill.this, "תרגיל 2V נוצר!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    Toast.makeText(AddDrill.this, "כשל ביצירת 2V", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }

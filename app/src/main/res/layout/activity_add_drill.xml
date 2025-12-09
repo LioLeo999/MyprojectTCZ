@@ -17,7 +17,6 @@
         android:background="@color/dgreen"
         android:weightSum="10">
 
-        <!-- Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -38,7 +37,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Title -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -49,9 +47,9 @@
                         android:paddingVertical="10dp"
                         android:background="@color/yellow"
                         android:textColor="@color/dgreen"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_marginBottom="16dp"/>
 
-                    <!-- EditTexts -->
+                    <!-- Name -->
                     <EditText
                         android:id="@+id/editName"
                         android:layout_width="match_parent"
@@ -59,9 +57,19 @@
                         android:hint="Drill Name"
                         android:padding="12dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"
-                        android:textColorHint="#888888" />
+                        android:background="@android:drawable/editbox_background_normal"/>
 
+                    <!-- Explanation -->
+                    <EditText
+                        android:id="@+id/editExplanation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Explanation"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"/>
+
+                    <!-- Time -->
                     <EditText
                         android:id="@+id/editTime"
                         android:layout_width="match_parent"
@@ -69,9 +77,9 @@
                         android:hint="Time"
                         android:padding="12dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"
-                        android:textColorHint="#888888" />
+                        android:background="@android:drawable/editbox_background_normal"/>
 
+                    <!-- Level -->
                     <EditText
                         android:id="@+id/editLevel"
                         android:layout_width="match_parent"
@@ -79,9 +87,9 @@
                         android:hint="Level"
                         android:padding="12dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"
-                        android:textColorHint="#888888" />
+                        android:background="@android:drawable/editbox_background_normal"/>
 
+                    <!-- Min/Max Players -->
                     <EditText
                         android:id="@+id/editMinPlayers"
                         android:layout_width="match_parent"
@@ -90,8 +98,7 @@
                         android:inputType="number"
                         android:padding="12dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"
-                        android:textColorHint="#888888" />
+                        android:background="@android:drawable/editbox_background_normal"/>
 
                     <EditText
                         android:id="@+id/editMaxPlayers"
@@ -101,10 +108,72 @@
                         android:inputType="number"
                         android:padding="12dp"
                         android:layout_marginBottom="18dp"
-                        android:background="@android:drawable/editbox_background_normal"
-                        android:textColorHint="#888888" />
+                        android:background="@android:drawable/editbox_background_normal"/>
 
-                    <!-- Skills Title -->
+                    <!-- Training Tools -->
+                    <EditText
+                        android:id="@+id/editTrainingTools"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Training Tools"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"/>
+
+                    <!-- Age -->
+                    <EditText
+                        android:id="@+id/editAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Age"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"/>
+
+                    <!-- Player Level -->
+                    <EditText
+                        android:id="@+id/editPlayerLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Player Level"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:drawable/editbox_background_normal"/>
+
+                    <!-- Ball Color Spinner -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ball Color"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dgreen"
+                        android:layout_marginTop="10dp"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerBallColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Court Size Spinner -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Court Size"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dgreen"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerCourtSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:layout_marginBottom="18dp"/>
+
+                    <!-- Skills -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -112,54 +181,50 @@
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/dgreen"
-                        android:layout_marginBottom="10dp" />
+                        android:layout_marginBottom="10dp"/>
 
-                    <!-- Skills Grid -->
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:columnCount="2"
                         android:useDefaultMargins="true">
 
-                        <CheckBox android:id="@+id/checkForehand" android:text="Forehand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkBackhand" android:text="Backhand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkVolleyForehand" android:text="Volley Forehand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkVolleyBackhand" android:text="Volley Backhand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkDriveForehand" android:text="Drive Forehand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkDriveBackhand" android:text="Drive Backhand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkServe" android:text="Serve" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkSmash" android:text="Smash" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkForwardForehand" android:text="Forward Forehand" android:buttonTint="@color/yellow"/>
-                        <CheckBox android:id="@+id/checkForwardBackhand" android:text="Forward Backhand" android:buttonTint="@color/yellow"/>
+                        <CheckBox android:id="@+id/checkForehand" android:text="Forehand"/>
+                        <CheckBox android:id="@+id/checkBackhand" android:text="Backhand"/>
+                        <CheckBox android:id="@+id/checkVolleyForehand" android:text="Volley Forehand"/>
+                        <CheckBox android:id="@+id/checkVolleyBackhand" android:text="Volley Backhand"/>
+                        <CheckBox android:id="@+id/checkDriveForehand" android:text="Drive Forehand"/>
+                        <CheckBox android:id="@+id/checkDriveBackhand" android:text="Drive Backhand"/>
+                        <CheckBox android:id="@+id/checkServe" android:text="Serve"/>
+                        <CheckBox android:id="@+id/checkSmash" android:text="Smash"/>
+                        <CheckBox android:id="@+id/checkForwardForehand" android:text="Forward Forehand"/>
+                        <CheckBox android:id="@+id/checkForwardBackhand" android:text="Forward Backhand"/>
                     </GridLayout>
 
-                    <!-- YouTube Links -->
+                    <!-- YouTube -->
                     <EditText
                         android:id="@+id/etyoutubev"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:hint="YouTube link"
+                        android:layout_height="wrap_content"
+                        android:hint="YouTube Link"
                         android:padding="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:layout_marginTop="16dp"/>
 
                     <EditText
                         android:id="@+id/etyoutubev2"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:hint="YouTube link 2 (optional)"
+                        android:layout_height="wrap_content"
+                        android:hint="YouTube Link 2 (optional)"
                         android:padding="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:layout_marginBottom="18dp"/>
 
-                    <!-- Select GIF -->
+                    <!-- GIF -->
                     <Button
                         android:id="@+id/btSelectGif"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Select GIF"
                         android:layout_gravity="center"
-                        android:layout_marginTop="18dp"
                         android:backgroundTint="@color/yellow"
                         android:textColor="@color/black"/>
 
@@ -167,12 +232,12 @@
                     <Button
                         android:id="@+id/addsubmitbtn"
                         android:text="Submit"
-                        android:textColor="@color/black"
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:backgroundTint="@color/yellow"
-                        android:layout_marginTop="15dp"/>
+                        android:textColor="@color/black"
+                        android:layout_marginTop="20dp"/>
 
                 </LinearLayout>
             </ScrollView>
