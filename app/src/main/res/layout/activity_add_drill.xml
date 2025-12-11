@@ -24,6 +24,7 @@
             android:adjustViewBounds="true"
             android:background="@null"
             android:scaleType="fitCenter"
+            android:contentDescription="tomain"
             android:src="@drawable/tczlogo" />
 
         <androidx.cardview.widget.CardView
@@ -214,16 +215,16 @@
                     <EditText
                         android:id="@+id/etcoachv"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="YouTube Link"
+                        android:layout_height="50dp"
+                        android:hint="Coach View (youtube link)"
                         android:padding="10dp"
                         android:layout_marginTop="16dp"/>
 
                     <EditText
                         android:id="@+id/etincourtview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="YouTube Link 2 (optional)"
+                        android:layout_height="50dp"
+                        android:hint="In court view (youtube link)"
                         android:padding="10dp"
                         android:layout_marginBottom="18dp"/>
 

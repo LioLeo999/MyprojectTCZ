@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyprojectTCZ">
         <activity
-            android:name=".screens.Drills"
+            android:name=".screens.ShowDrill"
             android:exported="false" />
         <activity
-            android:name=".screens.ShowDrill"
+            android:name=".model.ShowDrill"
+            android:exported="false" />
+        <activity
+            android:name=".screens.Drills"
             android:exported="false" />
         <activity
             android:name=".screens.AdminPage"

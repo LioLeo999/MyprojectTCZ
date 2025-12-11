@@ -11,9 +11,9 @@ public class User {
     protected String phone;
     protected String password;
     protected boolean isadmin;
-    protected ArrayList<MaarachImun> maarachim;
+    protected ArrayList<Maarchim> maarachim;
 
-    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean isadmin, ArrayList<MaarachImun> maarachim) {
+    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean isadmin, ArrayList<Maarchim> maarachim) {
         this.id = id;
         this.uname = uname;
         this.fname = fname;
@@ -34,7 +34,7 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.isadmin = isadmin;
-        this.maarachim = new ArrayList<MaarachImun>();
+        this.maarachim = new ArrayList<Maarchim>();
     }
 
     public User(String uname, String fname, String lname) {
@@ -102,11 +102,11 @@ public class User {
         this.password = password;
     }
 
-    public ArrayList<MaarachImun> getMaarachim() {
+    public ArrayList<Maarchim> getMaarachim() {
         return maarachim;
     }
 
-    public void setMaarachim(ArrayList<MaarachImun> maarachim) {
+    public void setMaarachim(ArrayList<Maarchim> maarachim) {
         this.maarachim = maarachim;
     }
 

@@ -39,37 +39,8 @@ public class Drill2v {
     // ----------------------------------------------------
     // FULL CONSTRUCTOR (מסודר לפי AddDrill.java!)
     // ----------------------------------------------------
-    public Drill2v(
-            String id,
-            String name,
-            String explanation,
-            String time,
-            String level,
-            String minplayers,
-            String maxplayers,
 
-            Boolean forehand,
-            Boolean backhand,
-            Boolean volleyforehand,
-            Boolean volleybackhand,
-            Boolean driveforehand,
-            Boolean drivebackhand,
-            Boolean serve,
-            Boolean smash,
-            Boolean forwardforehand,
-            Boolean forwardbackhand,
-
-            String gif,
-            String video1,
-            String video2,
-
-            String trainingTools,
-            String age,
-            String playerLevel,
-            String ballColor,
-            String courtSize
-    ) {
-
+    public Drill2v(String id, String name, String explanation, String time, String level, String minplayers, String maxplayers, Boolean forehand, Boolean backhand, Boolean volleyforehand, Boolean volleybackhand, Boolean driveforehand, Boolean drivebackhand, Boolean serve, Boolean smash, Boolean forwardforehand, Boolean forwardbackhand, Boolean slicebackhand, Boolean sliceforehand, String gif, String video1, String video2, String trainingTools, String age, String playerLevel, String ballColor, String courtSize) {
         this.id = id;
         this.name = name;
         this.explanation = explanation;
@@ -77,7 +48,6 @@ public class Drill2v {
         this.level = level;
         this.minplayers = minplayers;
         this.maxplayers = maxplayers;
-
         this.forehand = forehand;
         this.backhand = backhand;
         this.volleyforehand = volleyforehand;
@@ -88,17 +58,18 @@ public class Drill2v {
         this.smash = smash;
         this.forwardforehand = forwardforehand;
         this.forwardbackhand = forwardbackhand;
-
+        this.slicebackhand = slicebackhand;
+        this.sliceforehand = sliceforehand;
         this.gif = gif;
         this.video1 = video1;
         this.video2 = video2;
-
         this.trainingTools = trainingTools;
         this.age = age;
         this.playerLevel = playerLevel;
         this.ballColor = ballColor;
         this.courtSize = courtSize;
     }
+
 
     // ----------------------------------------------------
     // Getters & Setters
@@ -179,6 +150,22 @@ public class Drill2v {
     public String getCourtSize() { return courtSize; }
     public void setCourtSize(String courtSize) { this.courtSize = courtSize; }
 
+    public Boolean getSlicebackhand() {
+        return slicebackhand;
+    }
+
+    public void setSlicebackhand(Boolean slicebackhand) {
+        this.slicebackhand = slicebackhand;
+    }
+
+    public Boolean getSliceforehand() {
+        return sliceforehand;
+    }
+
+    public void setSliceforehand(Boolean sliceforehand) {
+        this.sliceforehand = sliceforehand;
+    }
+
     @Override
     public String toString() {
         return "Drill2v{" +
@@ -199,6 +186,8 @@ public class Drill2v {
                 ", smash=" + smash +
                 ", forwardforehand=" + forwardforehand +
                 ", forwardbackhand=" + forwardbackhand +
+                ", slicebackhand=" + slicebackhand +
+                ", sliceforehand=" + sliceforehand +
                 ", gif='" + gif + '\'' +
                 ", video1='" + video1 + '\'' +
                 ", video2='" + video2 + '\'' +
