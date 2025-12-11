@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyprojectTCZ</string>
+    <string name="Adminpage"><u>Admin page</u></string>
+
 </resources>

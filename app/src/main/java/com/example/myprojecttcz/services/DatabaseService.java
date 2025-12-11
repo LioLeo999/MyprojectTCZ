@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.model.User;
-import com.example.myprojecttcz.model.Drill;
 import com.example.myprojecttcz.model.MaarachImun;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -339,43 +338,8 @@ public class DatabaseService {
 
     // region food section
 
-    /// create a new food in the database
-    /// @param food the food object to create
-    /// @param callback the callback to call when the operation is completed
-    ///              the callback will receive void
-    ///             if the operation fails, the callback will receive an exception
-    /// @see DatabaseCallback
-    /// @see Drill
-    public void createNewFood(@NotNull final Drill food, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(FOODS_PATH + "/" + food.getId(), food, callback);
-    }
 
-    /// get a food from the database
-    /// @param foodId the id of the food to get
-    /// @param callback the callback to call when the operation is completed
-    ///               the callback will receive the food object
-    ///              if the operation fails, the callback will receive an exception
-    /// @see DatabaseCallback
-    /// @see Drill
-    public void getFood(@NotNull final String foodId, @NotNull final DatabaseCallback<Drill> callback) {
-        getData(FOODS_PATH + "/" + foodId, Drill.class, callback);
-    }
 
-    /// get all the foods from the database
-    /// @param callback the callback to call when the operation is completed
-    ///              the callback will receive a list of food objects
-    ///            if the operation fails, the callback will receive an exception
-    /// @see DatabaseCallback
-    /// @see List
-    /// @see Drill
-    public void getFoodList(@NotNull final DatabaseCallback<List<Drill>> callback) {
-        getDataList(FOODS_PATH, Drill.class, callback);
-    }
-
-    /// generate a new id for a new food in the database
-    /// @return a new id for the food
-    /// @see #generateNewId(String)
-    /// @see Drill
     public String generateFoodId() {
         return generateNewId(FOODS_PATH);
     }
@@ -487,10 +451,7 @@ public class DatabaseService {
         return generateNewId(DRILLS_PATH);
     }
 
-    public void createNewDrill(@NonNull final Drill drill,
-                               @Nullable final DatabaseCallback<Void> callback) {
-        writeData(DRILLS_PATH + "/" + drill.getId(), drill, callback);
-    }
+
 
     public void createNewDrill2v(@NonNull final Drill2v drill,
                                  @Nullable final DatabaseCallback<Void> callback) {

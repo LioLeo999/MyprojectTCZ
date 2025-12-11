@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,7 +21,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
-import com.example.myprojecttcz.model.Drill;
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.storage.FirebaseStorage;
@@ -34,7 +34,7 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
     // INPUT FIELDS
     private EditText editName, editExplanation, editTime, editLevel, editMinPlayers, editMaxPlayers;
     private EditText editTrainingTools, editAge, editPlayerLevel;
-    private EditText edityt, edityt2;
+    private EditText etcoachview, etincourtview;
 
     // SPINNERS
     private Spinner spinnerBallColor, spinnerCourtSize;
@@ -46,6 +46,7 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
 
     // BUTTONS
     private Button addsubmitbtn, btSelectGif;
+    private ImageButton btntomain;
 
     // GIF FILE
     private Uri gifUri = null;
@@ -89,8 +90,8 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         editAge = findViewById(R.id.editAge);
         editPlayerLevel = findViewById(R.id.editPlayerLevel);
 
-        edityt = findViewById(R.id.etyoutubev);
-        edityt2 = findViewById(R.id.etyoutubev2);
+        etcoachview = findViewById(R.id.etcoachv);
+        etincourtview = findViewById(R.id.etincourtview);
 
         // Spinners
         spinnerBallColor = findViewById(R.id.spinnerBallColor);
@@ -111,6 +112,8 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         // Buttons
         addsubmitbtn = findViewById(R.id.addsubmitbtn);
         btSelectGif = findViewById(R.id.btSelectGif);
+        btntomain = findViewById(R.id.tomainbtnfromadddrill);
+        btntomain.setOnClickListener(this);
 
         // Listeners
         addsubmitbtn.setOnClickListener(this);
@@ -142,7 +145,10 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
     // ---------------------------------------------------------
     @Override
     public void onClick(View v) {
-
+        if (v == btntomain){
+            Intent go = new Intent(this, MainActivity.class);
+            startActivity(go);
+        }
         if (v == btSelectGif) {
             openGifPicker();
             return;
@@ -197,8 +203,8 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         String ballColor = spinnerBallColor.getSelectedItem().toString();
         String courtSize = spinnerCourtSize.getSelectedItem().toString();
 
-        String yt1 = edityt.getText().toString().trim();
-        String yt2 = edityt2.getText().toString().trim();
+        String yt1 = etcoachview.getText().toString().trim();
+        String yt2 = etincourtview.getText().toString().trim();
 
         if (yt1.isEmpty()) {
             Toast.makeText(this, "חובה להוסיף סרטון יוטיוב!", Toast.LENGTH_SHORT).show();
@@ -244,46 +250,9 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
             String ballColor, String courtSize, String yt1, String yt2
     ) {
 
-        boolean oneVideo = yt2.isEmpty();
 
-        if (oneVideo) {
 
-            Drill drill = new Drill(
-                    id, name, explanation, time, level, minP, maxP,
-                    checkForehand.isChecked(),
-                    checkBackhand.isChecked(),
-                    checkVolleyForehand.isChecked(),
-                    checkVolleyBackhand.isChecked(),
-                    checkDriveForehand.isChecked(),
-                    checkDriveBackhand.isChecked(),
-                    checkServe.isChecked(),
-                    checkSmash.isChecked(),
-                    checkForwardForehand.isChecked(),
-                    checkForwardBackhand.isChecked(),
-                    gifUrl,
-                    yt1,
-                    tools,
-                    age,
-                    playerLevel,
-                    ballColor,
-                    courtSize
-            );
 
-            databaseService.createNewDrill(drill, new DatabaseService.DatabaseCallback<Void>() {
-                @Override
-                public void onCompleted(Void object) {
-                    Toast.makeText(AddDrill.this, "תרגיל נוצר!", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    Toast.makeText(AddDrill.this, "כשל ביצירת תרגיל", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        else {
 
             Drill2v drill2v = new Drill2v(
                     id,
@@ -329,6 +298,6 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
                     Toast.makeText(AddDrill.this, "כשל ביצירת 2V", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
+
     }
 }

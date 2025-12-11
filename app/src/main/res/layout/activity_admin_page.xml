@@ -5,11 +5,73 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.AdminPage">
-    <Button
-        android:id="@+id/adddrill"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:onClick="toadddrill"/>
+    tools:context=".screens.AdminPage"
+    android:background="@color/dgreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:layout_margin="20dp"
+        >
+        <ImageButton
+            android:id="@+id/tomainbtnfromadmin"
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="tomain"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tczlogo"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:text="@string/Adminpage"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="50dp"
+            />
+
+        <Button
+            android:id="@+id/userstable"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/lgreen"
+            android:text="Users table"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            />
+        <Button
+            android:id="@+id/showdrills"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/lgreen"
+            android:text="🎾Show drills"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+
+            />
+        <Button
+            android:id="@+id/addDrills"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/lgreen"
+            android:text="🎾Add drills"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+
+            />
+
+
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@
     tools:context=".screens.AddDrill"
     android:background="@color/dgreen">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,6 +17,14 @@
         android:padding="12dp"
         android:background="@color/dgreen"
         android:weightSum="10">
+        <ImageButton
+            android:id="@+id/tomainbtnfromadddrill"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tczlogo" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -203,7 +212,7 @@
 
                     <!-- YouTube -->
                     <EditText
-                        android:id="@+id/etyoutubev"
+                        android:id="@+id/etcoachv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="YouTube Link"
@@ -211,7 +220,7 @@
                         android:layout_marginTop="16dp"/>
 
                     <EditText
-                        android:id="@+id/etyoutubev2"
+                        android:id="@+id/etincourtview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="YouTube Link 2 (optional)"
