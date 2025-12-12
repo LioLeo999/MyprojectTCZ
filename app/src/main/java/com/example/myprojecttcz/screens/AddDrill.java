@@ -32,12 +32,12 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
     private static final int PICK_GIF = 101;
 
     // INPUT FIELDS
-    private EditText editName, editExplanation, editTime, editLevel, editMinPlayers, editMaxPlayers;
-    private EditText editTrainingTools, editAge, editPlayerLevel;
+    private EditText editName, editExplanation, editTime, editMinPlayers, editMaxPlayers;
+    private EditText editTrainingTools, editAge;
     private EditText etcoachview, etincourtview;
 
     // SPINNERS
-    private Spinner spinnerBallColor, spinnerCourtSize;
+    private Spinner spinnerBallColor, spinnerCourtSize, spinnerPlayerLevel, spinnerPhisicalLevel;
 
     // CHECKBOXES
     private CheckBox checkForehand, checkBackhand, checkVolleyForehand, checkVolleyBackhand;
@@ -82,13 +82,11 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         editName = findViewById(R.id.editName);
         editExplanation = findViewById(R.id.editExplanation);
         editTime = findViewById(R.id.editTime);
-        editLevel = findViewById(R.id.editLevel);
         editMinPlayers = findViewById(R.id.editMinPlayers);
         editMaxPlayers = findViewById(R.id.editMaxPlayers);
 
         editTrainingTools = findViewById(R.id.editTrainingTools);
         editAge = findViewById(R.id.editAge);
-        editPlayerLevel = findViewById(R.id.editPlayerLevel);
 
         etcoachview = findViewById(R.id.etcoachv);
         etincourtview = findViewById(R.id.etincourtview);
@@ -96,7 +94,8 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         // Spinners
         spinnerBallColor = findViewById(R.id.spinnerBallColor);
         spinnerCourtSize = findViewById(R.id.spinnerCourtSize);
-
+        spinnerPhisicalLevel = findViewById(R.id.spinnerPhysicalLevel);
+        spinnerPlayerLevel = findViewById(R.id.spinnerPlayerLevel);
         // Checkboxes
         checkForehand = findViewById(R.id.checkForehand);
         checkBackhand = findViewById(R.id.checkBackhand);
@@ -125,19 +124,55 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
     // ---------------------------------------------------------
     private void initSpinners() {
 
+
         // Ball colors
-        String[] ballColors = {"אדום", "כתום", "ירוק/צהוב"};
-        ArrayAdapter<String> adapterBall = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, ballColors);
-        adapterBall.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapterBall =
+                ArrayAdapter.createFromResource(
+                        this,
+                        R.array.ballColors,
+                        android.R.layout.simple_spinner_item
+                );
+
+        adapterBall.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
         spinnerBallColor.setAdapter(adapterBall);
 
+
         // Court sizes
-        String[] courtSizes = {"מיני מגרש", "3/4 מגרש", "מגרש מלא"};
-        ArrayAdapter<String> adapterCourt = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, courtSizes);
-        adapterCourt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapterCourt =
+                ArrayAdapter.createFromResource(
+                        this,
+                        R.array.courtSizes,
+                        android.R.layout.simple_spinner_item
+                );
+
+        adapterCourt.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
         spinnerCourtSize.setAdapter(adapterCourt);
+
+        // Player level
+        ArrayAdapter<CharSequence> adapterpllevel =
+                ArrayAdapter.createFromResource(
+                        this,
+                        R.array.playerlevel,
+                        android.R.layout.simple_spinner_item
+                );
+        adapterCourt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPlayerLevel.setAdapter(adapterpllevel);
+        // Phisical level
+        ArrayAdapter<CharSequence> adapterphlevel =
+                ArrayAdapter.createFromResource(
+                        this,
+                        R.array.level,
+                        android.R.layout.simple_spinner_item
+                );
+        adapterCourt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPhisicalLevel.setAdapter(adapterphlevel);
+
     }
 
     // ---------------------------------------------------------
@@ -192,22 +227,26 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         String name = editName.getText().toString();
         String explanation = editExplanation.getText().toString();
         String time = editTime.getText().toString();
-        String level = editLevel.getText().toString();
         String minP = editMinPlayers.getText().toString();
         String maxP = editMaxPlayers.getText().toString();
 
         String tools = editTrainingTools.getText().toString();
         String age = editAge.getText().toString();
-        String playerLevel = editPlayerLevel.getText().toString();
 
         String ballColor = spinnerBallColor.getSelectedItem().toString();
         String courtSize = spinnerCourtSize.getSelectedItem().toString();
+        String playerLevel = spinnerPlayerLevel.getSelectedItem().toString();
+        String level = spinnerPhisicalLevel.getSelectedItem().toString();
 
         String yt1 = etcoachview.getText().toString().trim();
         String yt2 = etincourtview.getText().toString().trim();
 
         if (yt1.isEmpty()) {
-            Toast.makeText(this, "חובה להוסיף סרטון יוטיוב!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You must add a coach view video", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (yt2.isEmpty()){
+            Toast.makeText(this,"You must add in court view video", Toast.LENGTH_SHORT);
             return;
         }
 

@@ -89,15 +89,6 @@
                         android:layout_marginBottom="10dp"
                         android:background="@android:drawable/editbox_background_normal"/>
 
-                    <!-- Level -->
-                    <EditText
-                        android:id="@+id/editLevel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Level"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
 
                     <!-- Min/Max Players -->
                     <EditText
@@ -140,15 +131,6 @@
                         android:layout_marginBottom="10dp"
                         android:background="@android:drawable/editbox_background_normal"/>
 
-                    <!-- Player Level -->
-                    <EditText
-                        android:id="@+id/editPlayerLevel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Player Level"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
 
                     <!-- Ball Color Spinner -->
                     <TextView
@@ -163,7 +145,7 @@
                     <Spinner
                         android:id="@+id/spinnerBallColor"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:padding="12dp"
                         android:layout_marginBottom="16dp"/>
 
@@ -179,7 +161,34 @@
                     <Spinner
                         android:id="@+id/spinnerCourtSize"
                         android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:padding="12dp"
+                        android:layout_marginBottom="18dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Player level"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dgreen"/>
+                    <Spinner
+                        android:id="@+id/spinnerPlayerLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:padding="12dp"
+                        android:layout_marginBottom="18dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Physical level"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dgreen"/>
+                    <Spinner
+                        android:id="@+id/spinnerPhysicalLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:padding="12dp"
                         android:layout_marginBottom="18dp"/>
 

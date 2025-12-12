@@ -69,6 +69,68 @@ public class Drill2v {
         this.ballColor = ballColor;
         this.courtSize = courtSize;
     }
+    public Drill2v(
+            String id,
+            String name,
+            String explanation,
+
+            String time,
+            String level,
+            String minplayers,
+            String maxplayers,
+
+            Boolean forehand,
+            Boolean backhand,
+            Boolean volleyforehand,
+            Boolean volleybackhand,
+            Boolean driveforehand,
+            Boolean drivebackhand,
+            Boolean serve,
+            Boolean smash,
+            Boolean forwardforehand,
+            Boolean forwardbackhand,
+
+            String gif,
+            String video1,
+            String video2,
+
+            String trainingTools,
+            String age,
+            String playerLevel,
+            String ballColor,
+            String courtSize
+    ) {
+        this.id = id;
+        this.name = name;
+        this.explanation = explanation;
+
+        this.time = time;
+        this.level = level;
+        this.minplayers = minplayers;
+        this.maxplayers = maxplayers;
+
+        this.forehand = forehand;
+        this.backhand = backhand;
+        this.volleyforehand = volleyforehand;
+        this.volleybackhand = volleybackhand;
+        this.driveforehand = driveforehand;
+        this.drivebackhand = drivebackhand;
+        this.serve = serve;
+        this.smash = smash;
+        this.forwardforehand = forwardforehand;
+        this.forwardbackhand = forwardbackhand;
+
+        this.gif = gif;
+        this.video1 = video1;
+        this.video2 = video2;
+
+        this.trainingTools = trainingTools;
+        this.age = age;
+        this.playerLevel = playerLevel;
+        this.ballColor = ballColor;
+        this.courtSize = courtSize;
+    }
+
 
 
     // ----------------------------------------------------
