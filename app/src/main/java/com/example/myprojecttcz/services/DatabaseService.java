@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -457,6 +458,50 @@ public class DatabaseService {
                                  @Nullable final DatabaseCallback<Void> callback) {
         writeData(DRILLS_PATH + "/" + drill.getId(), drill, callback);
     }
+
+    // show drills functions
+    public interface DrillCallback {
+        void onSuccess(Drill2v drill);
+        void onError(Exception e);
+    }
+
+    public void getDrillById(String drillId, DrillCallback callback) {
+
+        DatabaseReference ref = FirebaseDatabase
+                .getInstance()
+                .getReference("drills")
+                .child(drillId);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (!snapshot.exists()) {
+                    callback.onError(new Exception("Drill not found"));
+                    return;
+                }
+
+                Drill2v drill = snapshot.getValue(Drill2v.class);
+
+                if (drill == null) {
+                    callback.onError(new Exception("Drill is null"));
+                    return;
+                }
+
+                callback.onSuccess(drill);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error.toException());
+            }
+        });
+    }
+
+
+
+
 
 
 }
