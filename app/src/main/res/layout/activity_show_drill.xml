@@ -169,6 +169,16 @@
                     android:text="In-court view"
                     android:backgroundTint="@color/lgreen"/>
             </LinearLayout>
+            <!-- להוסיף כפתור הוספה למערך אימון -->
+            <Button
+                android:id="@+id/addToImun"
+                android:text="Add to a training set"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/yellow"/>
 
         </LinearLayout>
 

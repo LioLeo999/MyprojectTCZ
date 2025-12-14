@@ -501,6 +501,40 @@ public class DatabaseService {
 
 
 
+    // מאגר דרילים
+    public interface DrillsCallback {
+        void onSuccess(List<Drill2v> drills);
+        void onError(String error);
+    }
+
+    public void getAllDrills(DrillsCallback callback) {
+
+        DatabaseReference ref =
+                FirebaseDatabase.getInstance().getReference("drills");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                List<Drill2v> list = new ArrayList<>();
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    Drill2v drill = ds.getValue(Drill2v.class);
+                    list.add(drill);
+                }
+
+                callback.onSuccess(list);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error.getMessage());
+            }
+        });
+    }
+
+
+
 
 
 

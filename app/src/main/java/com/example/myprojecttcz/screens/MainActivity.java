@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         loginbtn = findViewById(R.id.loginbtn);
         loginbtn.setOnClickListener(this);
         drillsBtn = findViewById(R.id.drillsB);
+        drillsBtn.setOnClickListener(this);
         chatsBtn = findViewById(R.id.chatsB);
         tsetsBtn = findViewById(R.id.tsetsB);
         auth = FirebaseAuth.getInstance();
@@ -125,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (v.getId() == R.id.logoutbtn){
             FirebaseAuth.getInstance().signOut();
+        }
+        if (v == drillsBtn){
+            Intent go = new Intent(MainActivity.this, MaagarDrills.class);
+            startActivity(go);
         }
     }
 }
