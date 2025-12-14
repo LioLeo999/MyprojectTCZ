@@ -33,12 +33,13 @@ public class ShowDrillVideo extends AppCompatActivity {
     public void initViews(){
         get = getIntent();
         link = get.getStringExtra("link");
+        webView = findViewById(R.id.youtubevideo);
         embed = convertToEmbedUrl(link);
         if (embed != null) {
             webView.loadUrl(embed);
         }
 
-        webView = findViewById(R.id.youtubevideo);
+
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
 
