@@ -2,8 +2,6 @@ package com.example.myprojecttcz.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +10,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 public class ShowDrillVideo extends AppCompatActivity {
 
-    private WebView webView;
+    private YouTubePlayerView youTubePlayerView;
     private String link;
 
     @Override
@@ -37,41 +38,22 @@ public class ShowDrillVideo extends AppCompatActivity {
         Intent intent = getIntent();
         link = intent.getStringExtra("link");
 
-        webView = findViewById(R.id.youtubevideo);
-
-        // הגדרות חובה ל-YouTube
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        webView.setWebViewClient(new WebViewClient());
-
         String videoId = extractVideoId(link);
         if (videoId == null) {
             finish();
             return;
         }
 
-        String html =
-                "<!DOCTYPE html>" +
-                        "<html>" +
-                        "<body style='margin:0'>" +
-                        "<iframe " +
-                        "width='100%' " +
-                        "height='100%' " +
-                        "src='https://www.youtube.com/embed/" + videoId + "' " +
-                        "frameborder='0' " +
-                        "allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' " +
-                        "allowfullscreen>" +
-                        "</iframe>" +
-                        "</body>" +
-                        "</html>".formatted(videoId);
+        youTubePlayerView = findViewById(R.id.youtubePlayerView);
+        getLifecycle().addObserver(youTubePlayerView);
 
-        webView.loadDataWithBaseURL(
-                "https://www.youtube.com",
-                html,
-                "text/html",
-                "utf-8",
-                null
+        youTubePlayerView.addYouTubePlayerListener(
+                new AbstractYouTubePlayerListener() {
+                    @Override
+                    public void onReady(YouTubePlayer youTubePlayer) {
+                        youTubePlayer.loadVideo(videoId, 0);
+                    }
+                }
         );
     }
 
@@ -91,7 +73,6 @@ public class ShowDrillVideo extends AppCompatActivity {
 
         if (videoId == null) return null;
 
-        // ניקוי פרמטרים מיותרים
         if (videoId.contains("&")) {
             videoId = videoId.substring(0, videoId.indexOf("&"));
         }

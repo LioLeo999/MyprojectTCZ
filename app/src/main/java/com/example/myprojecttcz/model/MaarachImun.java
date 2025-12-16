@@ -4,15 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MaarachImun {
-    String name;
-    protected ArrayList<Drill2v> drills;
+    protected String id;
+    protected String name;
+    protected String description;
+    protected ArrayList<String> drillsid;
 
     public MaarachImun() {
     }
 
-    public MaarachImun(String name, ArrayList<Drill2v> maarach) {
+    public MaarachImun(String id, String name, ArrayList<String> drills) {
+        this.id = id;
         this.name = name;
-        this.drills = maarach;
+        this.drillsid = drills;
+    }
+
+    public MaarachImun(String id, String name, String description, ArrayList<String> drillsid) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.drillsid = drillsid;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -23,19 +41,29 @@ public class MaarachImun {
         this.name = name;
     }
 
-    public ArrayList<Drill2v> getMaarach() {
-        return drills;
+    public String getDescription() {
+        return description;
     }
 
-    public void setMaarach(ArrayList<Drill2v> maarach) {
-        this.drills = maarach;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
+    public ArrayList<String> getDrillsid() {
+        return drillsid;
+    }
+
+    public void setDrillsid(ArrayList<String> drillsid) {
+        this.drillsid = drillsid;
+    }
+
 
     @Override
     public String toString() {
         return "MaarachImun{" +
-                "name='" + name + '\'' +
-                ", maarach=" + drills +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", drills=" + drillsid +
                 '}';
     }
 }

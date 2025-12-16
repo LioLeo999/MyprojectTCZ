@@ -534,6 +534,29 @@ public class DatabaseService {
     }
 
 
+    private static final String MAARACHIM_PATH = "maarachim";
+    public String generateMaarachId(String userId) {
+        return databaseReference
+                .child(USERS_PATH)
+                .child(userId)
+                .child(MAARACHIM_PATH)
+                .push()
+                .getKey();
+    }
+    public void addMaarachToUser(
+            @NonNull String userId,
+            @NonNull MaarachImun maarach,
+            @Nullable DatabaseCallback<Void> callback
+    ) {
+        writeData(
+                USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH + "/" + maarach.getId(),
+                maarach,
+                callback
+        );
+    }
+
+
+
 
 
 
