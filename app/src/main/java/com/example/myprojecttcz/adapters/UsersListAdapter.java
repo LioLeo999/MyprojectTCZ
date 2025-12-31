@@ -22,86 +22,31 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UsersListAdapter extends ArrayAdapter<User> {
 
-    private Context context;
-    private ArrayList<User> usersList;
-
-    // בנאי (Constructor)
-    public UsersListAdapter(Context context, ArrayList<User> list) {
-        super(context, 0, list);
-        this.context = context;
-        this.usersList = list;
+    public UsersListAdapter(@NonNull Context context, int resource) {
+        super(context, resource);
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // 1. בדיקה אם צריך ליצור View חדש או למחזר קיים
-        View listItem = convertView;
-        if (listItem == null) {
-            listItem = LayoutInflater.from(context).inflate(R.layout.list_item_user, parent, false);
-        }
-
-        // 2. שליפת המשתמש הנוכחי
-        User currentUser = usersList.get(position);
-
-        // 3. קישור לרכיבים ב-XML
-        TextView tvName = listItem.findViewById(R.id.tvFullName);
-        TextView tvEmail = listItem.findViewById(R.id.tvEmail);
-        ImageButton btnDelete = listItem.findViewById(R.id.btnDelete);
-
-        // 4. הצבת הנתונים (מניעת קריסה אם המשתמש null)
-        if (currentUser != null) {
-            String fullName = currentUser.getFname() + " " + currentUser.getLname();
-            tvName.setText(fullName);
-            tvEmail.setText(currentUser.getEmail());
-
-            // בדיקה אם המשתמש הוא אדמין כדי להציג אייקון או צבע שונה (אופציונלי)
-            if (currentUser.isIsadmin()) {
-                tvName.setTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
-            } else {
-                tvName.setTextColor(context.getResources().getColor(android.R.color.black));
-            }
-
-            // 5. לוגיקה של כפתור המחיקה
-            btnDelete.setOnClickListener(v -> {
-                showDeleteConfirmationDialog(currentUser);
-            });
-        }
-
-        return listItem;
+    public UsersListAdapter(@NonNull Context context, int resource, int textViewResourceId) {
+        super(context, resource, textViewResourceId);
     }
 
-    // פונקציה שמציגה דיאלוג אישור לפני מחיקה (מומלץ מאוד!)
-    private void showDeleteConfirmationDialog(User user) {
-        new AlertDialog.Builder(context)
-                .setTitle("מחיקת משתמש")
-                .setMessage("האם אתה בטוח שברצונך למחוק את " + user.getFname() + "?")
-                .setPositiveButton("כן, מחק", (dialog, which) -> {
-                    deleteUserFromFirebase(user);
-                })
-                .setNegativeButton("ביטול", null)
-                .show();
+    public UsersListAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<User> objects) {
+        super(context, resource, textViewResourceId, objects);
     }
 
-    // הפונקציה שמוחקת בפועל מ-Firebase
-    private void deleteUserFromFirebase(User user) {
-        if (user.getId() == null) {
-            Toast.makeText(context, "שגיאה: למשתמש אין מזהה (ID)", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    public UsersListAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull User[] objects) {
+        super(context, resource, textViewResourceId, objects);
+    }
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(user.getId()).removeValue()
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "המשתמש נמחק בהצלחה", Toast.LENGTH_SHORT).show();
-                    // הערה: אנחנו לא צריכים למחוק ידנית מה-usersList כאן,
-                    // כי ה-Activity מאזין לשינויים ב-Firebase והוא יעדכן את הרשימה לבד.
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "נכשל במחיקה: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+    public UsersListAdapter(@NonNull Context context, int resource, @NonNull List<User> objects) {
+        super(context, resource, objects);
+    }
+
+    public UsersListAdapter(@NonNull Context context, int resource, @NonNull User[] objects) {
+        super(context, resource, objects);
     }
 }
