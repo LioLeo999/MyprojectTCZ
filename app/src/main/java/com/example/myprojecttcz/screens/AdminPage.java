@@ -50,7 +50,8 @@ public class AdminPage extends AppCompatActivity implements View.OnClickListener
             startActivity(go);
         }
         if (v.getId() == btnuserstable.getId()){
-
+            Intent go = new Intent(AdminPage.this, UsersTable.class);
+            startActivity(go);
         }
         if (v.getId() == btnshowdrills.getId()){
 

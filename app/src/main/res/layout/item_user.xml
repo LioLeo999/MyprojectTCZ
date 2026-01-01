@@ -10,115 +10,155 @@
     app:cardElevation="6dp"
     app:cardBackgroundColor="@android:color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+
+            <TextView
+                android:id="@+id/tv_user_initials"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="JD"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp">
+            <TextView
+                android:id="@+id/tv_item_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="John Doe"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="4dp"
+                tools:text="@tools:sample/first_names" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <TextView
-                    android:id="@+id/tvUsername"
+                    android:id="@+id/tv_item_first_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UserName"
-                    android:textSize="20sp"
+                    android:text="John Doe"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#1A237E"
-                    android:layout_marginStart="12dp"/>
-
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="4dp"
+                    tools:text="@tools:sample/first_names" />
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="0dp"/>
                 <TextView
-                    android:id="@+id/tvFullName"
+                    android:id="@+id/tv_item_last_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ישראל ישראלי"
-                    android:textSize="14sp"
-                    android:textColor="#757575"
-                    android:layout_marginStart="12dp"/>
-
-                <TextView
-                    android:id="@+id/tvRole"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="מנהל מערכת"
-                    android:textSize="12sp"
-                    android:textColor="#1565C0"
+                    android:text="John Doe"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toStartOf="@id/btnDelete"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/btnDelete"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_delete"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="delete"
-                    />
-
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="4dp"
+                    tools:text="@tools:sample/last_names" />
             </LinearLayout>
-            <View
-                android:id="@+id/divider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="#E0E0E0"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="12dp"
-                app:layout_constraintTop_toBottomOf="@id/divider">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView android:id="@+id/tvEmail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="email@domain.com" android:layout_marginStart="8dp" android:textColor="#37474F"/>
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@android:drawable/ic_dialog_email"
+                    app:tint="#666666"
+                    android:layout_marginEnd="6dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_item_user_email"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView android:id="@+id/tvPhone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="050-1234567" android:layout_marginStart="8dp" android:textColor="#37474F"/>
-                </LinearLayout>
+                    android:text="john.doe@example.com"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="user@example.com" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView android:id="@+id/tvPassword" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pass1234" android:layout_marginStart="8dp" android:textColor="#37474F"/>
-                </LinearLayout>
+            </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@android:drawable/sym_action_call"
+                    app:tint="#666666"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/tv_item_user_phone"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-                    <TextView android:id="@+id/tvId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ID: xyz-123" android:textSize="12sp" android:layout_marginStart="8dp" android:textColor="#90A4AE"/>
-                </LinearLayout>
+                    android:text="+1 234 567 8900"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="@tools:sample/us_phones" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
+            android:orientation="vertical">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_user_role"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Admin"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:chipBackgroundColor="?attr/colorSecondary"
+                app:chipStrokeWidth="0dp"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="#999999" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

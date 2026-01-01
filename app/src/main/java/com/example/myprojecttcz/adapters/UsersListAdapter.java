@@ -15,38 +15,123 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.User;
+import com.google.android.material.chip.Chip;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersListAdapter extends ArrayAdapter<User> {
+public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.ViewHolder> {
 
-    public UsersListAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
+    public interface OnUserClickListener {
+        void onUserClick(User user);
+        void onLongUserClick(User user);
     }
 
-    public UsersListAdapter(@NonNull Context context, int resource, int textViewResourceId) {
-        super(context, resource, textViewResourceId);
+    private final List<User> userList;
+    private final OnUserClickListener onUserClickListener;
+    public UsersListAdapter(@Nullable final OnUserClickListener onUserClickListener) {
+        userList = new ArrayList<>();
+        this.onUserClickListener = onUserClickListener;
     }
 
-    public UsersListAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<User> objects) {
-        super(context, resource, textViewResourceId, objects);
+    @NonNull
+    @Override
+    public UsersListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
+        return new ViewHolder(view);
     }
 
-    public UsersListAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull User[] objects) {
-        super(context, resource, textViewResourceId, objects);
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        User user = userList.get(position);
+        if (user == null) return;
+        holder.tvuname.setText(user.getUname());
+        holder.tvfName.setText(user.getFname());
+        holder.tvlName.setText(user.getLname());
+        holder.tvEmail.setText(user.getEmail());
+        holder.tvPhone.setText(user.getPhone());
+
+        // Set initials
+        String initials = "";
+        if (user.getFname() != null && !user.getFname().isEmpty()) {
+            initials += user.getFname().charAt(0);
+        }
+        if (user.getLname() != null && !user.getLname().isEmpty()) {
+            initials += user.getLname().charAt(0);
+        }
+        holder.tvInitials.setText(initials.toUpperCase());
+
+        // Show admin chip if user is admin
+        if (user.isIsadmin()) {
+            holder.chipRole.setVisibility(View.VISIBLE);
+            holder.chipRole.setText("Admin");
+        } else {
+            holder.chipRole.setVisibility(View.GONE);
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onUserClickListener != null) {
+                onUserClickListener.onUserClick(user);
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (onUserClickListener != null) {
+                onUserClickListener.onLongUserClick(user);
+            }
+            return true;
+        });
+
     }
 
-    public UsersListAdapter(@NonNull Context context, int resource, @NonNull List<User> objects) {
-        super(context, resource, objects);
+    @Override
+    public int getItemCount() {
+        return userList.size();
     }
 
-    public UsersListAdapter(@NonNull Context context, int resource, @NonNull User[] objects) {
-        super(context, resource, objects);
+    public void setUserList(List<User> users) {
+        userList.clear();
+        userList.addAll(users);
+        notifyDataSetChanged();
+    }
+
+    public void addUser(User user) {
+        userList.add(user);
+        notifyItemInserted(userList.size() - 1);
+    }
+    public void updateUser(User user) {
+        int index = userList.indexOf(user);
+        if (index == -1) return;
+        userList.set(index, user);
+        notifyItemChanged(index);
+    }
+
+    public void removeUser(User user) {
+        int index = userList.indexOf(user);
+        if (index == -1) return;
+        userList.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvuname,tvfName, tvlName, tvEmail, tvPhone, tvInitials;
+        Chip chipRole;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvuname = itemView.findViewById(R.id.tv_item_user_name);
+            tvfName = itemView.findViewById(R.id.tv_item_first_name);
+            tvlName = itemView.findViewById(R.id.tv_item_last_name);
+            tvEmail = itemView.findViewById(R.id.tv_item_user_email);
+            tvPhone = itemView.findViewById(R.id.tv_item_user_phone);
+            tvInitials = itemView.findViewById(R.id.tv_user_initials);
+            chipRole = itemView.findViewById(R.id.chip_user_role);
+        }
     }
 }
