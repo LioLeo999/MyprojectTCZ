@@ -33,6 +33,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
     private View adminBadge;
     String selectedUid;
     User selectedUser;
+    User currentUser;
     boolean isCurrentUser = false;
     DatabaseService databaseService;
     Validator validator;
@@ -52,7 +53,8 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         validator = new Validator();
 
         selectedUid = getIntent().getStringExtra("USER_UID");
-        User currentUser = SharedPreferencesUtil.getUser(this);
+
+        currentUser = SharedPreferencesUtil.getUser(this);
         if (currentUser == null) {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, LogIn.class);
@@ -65,10 +67,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         if (selectedUid == null) {
             selectedUid = currentUser.getId();
         }
-        isCurrentUser = selectedUid.equals(currentUser.getId());
-        if (!currentUser.isadmin()) {
-            // If the user is not an admin and the selected user is not the current user
-            // then finish the activity
+        if (currentUser.isadmin()) {
             Toast.makeText(this, "You are not authorized to view this profile", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -92,7 +91,6 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         btnUpdateProfile.setOnClickListener(this);
         btnSignOut.setOnClickListener(this);
 
-        // if the user is not the current user, hide the sign out button
         if (!isCurrentUser) {
             btnSignOut.setVisibility(View.GONE);
         }
@@ -105,12 +103,16 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
 
 
     private void showUserProfile() {
-        // Get the user data from database
         databaseService.getUser(selectedUid, new DatabaseService.DatabaseCallback<User>() {
             @Override
             public void onCompleted(User user) {
+                if (user == null) {
+                    Log.e(TAG, "User not found in database");
+                    Toast.makeText(UserProfile.this, "User not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                }
                 selectedUser = user;
-                // Set the user data to the EditText fields
                 etUsername.setText(user.getUname());
                 etUserFirstName.setText(user.getFname());
                 etUserLastName.setText(user.getLname());
@@ -118,12 +120,10 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
                 etUserPhone.setText(user.getPhone());
                 etUserPassword.setText(user.getPassword());
 
-                // Update display fields
                 String displayName = user.getFname() + " " + user.getLname();
                 tvUserDisplayName.setText(displayName);
                 tvUserDisplayEmail.setText(user.getEmail());
 
-                // Show/hide admin badge based on user's admin status
                 if (user.isadmin()) {
                     adminBadge.setVisibility(View.VISIBLE);
                     Log.d(TAG, "User is admin, showing admin badge");
@@ -131,6 +131,15 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
                     adminBadge.setVisibility(View.GONE);
                     Log.d(TAG, "User is not admin, hiding admin badge");
                 }
+
+                boolean canEdit = isCurrentUser || currentUser.isadmin();
+                etUsername.setEnabled(canEdit);
+                etUserFirstName.setEnabled(canEdit);
+                etUserLastName.setEnabled(canEdit);
+                etUserEmail.setEnabled(canEdit);
+                etUserPhone.setEnabled(canEdit);
+                etUserPassword.setEnabled(canEdit);
+                btnUpdateProfile.setVisibility(canEdit ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -138,16 +147,6 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
                 Log.e(TAG, "Error getting user profile", e);
             }
         });
-
-        // disable the EditText fields if the user is not the current user
-        if (!isCurrentUser) {
-            etUserEmail.setEnabled(false);
-            etUserPassword.setEnabled(false);
-        } else {
-            etUserEmail.setEnabled(true);
-            etUserPassword.setEnabled(true);
-            btnUpdateProfile.setVisibility(View.VISIBLE);
-        }
     }
 
     private void updateUserProfile() {
@@ -156,7 +155,13 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Get the updated user data from the EditText fields
+
+        if (!isCurrentUser && !currentUser.isadmin()) {
+            Log.e(TAG, "User not authorized to update this profile");
+            Toast.makeText(this, "You are not authorized to update this profile", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String firstName = etUserFirstName.getText().toString();
         String lastName = etUserLastName.getText().toString();
         String phone = etUserPhone.getText().toString();
@@ -168,14 +173,12 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
-        // Update the user object
         selectedUser.setFname(firstName);
         selectedUser.setLname(lastName);
         selectedUser.setPhone(phone);
         selectedUser.setEmail(email);
         selectedUser.setPassword(password);
 
-        // Update the user data in the authentication
         Log.d(TAG, "Updating user profile");
         Log.d(TAG, "Selected user UID: " + selectedUser.getId());
         Log.d(TAG, "Is current user: " + isCurrentUser);
@@ -184,18 +187,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
 
 
 
-        if (!isCurrentUser && !selectedUser.isadmin()) {
-            Log.e(TAG, "Only the current user can update their profile");
-            Toast.makeText(this, "You can only update your own profile", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else if (isCurrentUser) {
-            updateUserInDatabase(selectedUser);
-        }
-        else if (selectedUser.isadmin()) {
-            // update the user in the database
-            updateUserInDatabase(selectedUser);
-        }
+        updateUserInDatabase(selectedUser);
     }
 
     private void updateUserInDatabase(User user) {
@@ -205,7 +197,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
             public void onCompleted(Void result) {
                 Log.d(TAG, "User profile updated successfully");
                 Toast.makeText(UserProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                showUserProfile(); // Refresh the profile view
+                showUserProfile();
             }
 
             @Override
