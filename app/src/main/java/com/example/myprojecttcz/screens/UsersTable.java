@@ -37,7 +37,7 @@ public class UsersTable extends AppCompatActivity {
             public void onUserClick(User user) {
                 // Handle user click
                 Log.d(TAG, "User clicked: " + user);
-                Intent intent = new Intent(UsersTable.this, MainActivity.class);
+                Intent intent = new Intent(UsersTable.this, UserProfile.class);
                 intent.putExtra("USER_UID", user.getId());
                 startActivity(intent);
             }

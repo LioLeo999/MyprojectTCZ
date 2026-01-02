@@ -110,7 +110,7 @@ public class User {
         this.maarachim = maarachim;
     }
 
-    public boolean isIsadmin() {
+    public boolean isadmin() {
         return isadmin;
     }
 
