@@ -21,6 +21,7 @@ import com.example.myprojecttcz.screens.LogIn;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.example.myprojecttcz.utils.SharedPreferencesUtil;
 import com.example.myprojecttcz.utils.Validator;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class UserProfile extends AppCompatActivity implements View.OnClickListener {
@@ -31,12 +32,15 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
     private TextView tvUserDisplayName, tvUserDisplayEmail;
     private Button btnUpdateProfile, btnSignOut;
     private View adminBadge;
-    String selectedUid;
+    String selectedUid="";
     User selectedUser;
-    User currentUser;
+    User currentUser=new User();
     boolean isCurrentUser = false;
     DatabaseService databaseService;
     Validator validator;
+    private FirebaseAuth mAuth;
+    String currentId;
+
 
 
     @Override
@@ -52,26 +56,46 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         databaseService = DatabaseService.getInstance();
         validator = new Validator();
 
-        selectedUid = getIntent().getStringExtra("USER_UID");
+        selectedUid = getIntent().getStringExtra("USER_UID");// admin only
 
-        currentUser = SharedPreferencesUtil.getUser(this);
-        if (currentUser == null) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, LogIn.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return;
-        }
+        mAuth=FirebaseAuth.getInstance();//Login
 
-        if (selectedUid == null) {
-            selectedUid = currentUser.getId();
+        if (selectedUid.equals("")){
+            currentId = mAuth.getUid();
         }
-        if (currentUser.isadmin()) {
-            Toast.makeText(this, "You are not authorized to view this profile", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        else{
+            currentId = selectedUid;
         }
+        databaseService.getUser(currentId, new DatabaseService.DatabaseCallback<User>() {
+            @Override
+            public void onCompleted(User user) {
+                currentUser=user;
+                // Toast.makeText(UserProfile.this, user.toString(),LENGTH_LONG).show();
+
+
+
+                if (!currentUser.isadmin()) {
+                    Toast.makeText(UserProfile.this, "You are not authorized to view this profile", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+                Toast.makeText(UserProfile.this, "User not logged in", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UserProfile.this, LogIn.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+
+
+
+
+
 
         Log.d(TAG, "Selected user: " + selectedUid);
 
@@ -133,6 +157,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
                 }
 
                 boolean canEdit = isCurrentUser || currentUser.isadmin();
+                Log.d(TAG,canEdit+" ");
                 etUsername.setEnabled(canEdit);
                 etUserFirstName.setEnabled(canEdit);
                 etUserLastName.setEnabled(canEdit);
