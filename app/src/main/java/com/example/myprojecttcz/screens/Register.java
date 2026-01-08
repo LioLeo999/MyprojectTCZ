@@ -3,14 +3,12 @@ package com.example.myprojecttcz.screens;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -141,7 +139,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private void createUserInDatabase(User user) {
         databaseService.createNewUser(user, new DatabaseService.DatabaseCallback<Void>() {
             @Override
-            public void onCompleted(Void object) {
+            public User onCompleted(Void object) {
                 Log.d(TAG, "createUserInDatabase: User created successfully");
                 /// save the user to shared preferences
                 Log.d(TAG, "createUserInDatabase: Redirecting to MainActivity");
@@ -162,6 +160,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mainIntent);
+                return null;
             }
 
             @Override

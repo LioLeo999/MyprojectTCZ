@@ -47,7 +47,9 @@ public class DatabaseService {
     /// @see DatabaseCallback#onFailed(Exception)
     public interface DatabaseCallback<T> {
         /// called when the operation is completed successfully
-        public void onCompleted(T object);
+        ///
+        /// @return
+        public User onCompleted(T object);
 
         /// called when the operation fails with an exception
         public void onFailed(Exception e);
@@ -247,6 +249,21 @@ public class DatabaseService {
     public void getUser(@NotNull final String uid, @NotNull final DatabaseCallback<User> callback) {
         getData(USERS_PATH + "/" + uid, User.class, callback);
     }
+    public void getUserData(@NotNull final String uid) {
+        getUser(uid, new DatabaseCallback<User>() {
+            @Override
+            public User onCompleted(User user) {
+                User senduser = user;
+                return senduser;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                return;
+            }
+        });
+    }
+
 
     /// get all the users from the database
     /// @param callback the callback to call when the operation is completed
@@ -319,10 +336,11 @@ public class DatabaseService {
     public void updateUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
         runTransaction(USERS_PATH + "/" + user.getId(), User.class, currentUser -> user, new DatabaseCallback<User>() {
             @Override
-            public void onCompleted(User object) {
+            public User onCompleted(User object) {
                 if (callback != null) {
                     callback.onCompleted(null);
                 }
+                return object;
             }
 
             @Override

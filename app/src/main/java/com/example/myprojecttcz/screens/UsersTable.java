@@ -55,9 +55,10 @@ public class UsersTable extends AppCompatActivity {
         super.onResume();
         databaseService.getUserList(new DatabaseService.DatabaseCallback<>() {
             @Override
-            public void onCompleted(List<User> users) {
+            public User onCompleted(List<User> users) {
                 userAdapter.setUserList(users);
                 tvUserCount.setText("Total users: " + users.size());
+                return null;
             }
 
             @Override

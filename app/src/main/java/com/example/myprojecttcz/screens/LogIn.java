@@ -90,12 +90,12 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     private void loginUser(String email, String password) {
         databaseService.LoginUser(email, password, new DatabaseService.DatabaseCallback<String>() {
             @Override
-            public void onCompleted(String uid) {
+            public User onCompleted(String uid) {
                 Log.d(TAG, "onCompleted: User logged in with UID: " + uid);
                 // Now, get the full user object
                 databaseService.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
                     @Override
-                    public void onCompleted(User user) {
+                    public User onCompleted(User user) {
                         if (user != null) {
                             Log.d(TAG, "Successfully fetched user data.");
                             // Save user to SharedPreferences
@@ -112,6 +112,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                             Log.e(TAG, "onCompleted: Failed to fetch user data, user is null");
                             Toast.makeText(LogIn.this, "Login failed: Could not fetch user details.", Toast.LENGTH_LONG).show();
                         }
+                        return user;
                     }
 
                     @Override
@@ -120,6 +121,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                         Toast.makeText(LogIn.this, "Login failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+                return null;
             }
 
             @Override

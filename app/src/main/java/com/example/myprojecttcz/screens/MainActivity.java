@@ -35,7 +35,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         });
         finds();
+        showBtns();
 
+    }
+    private void finds(){
+        registerbtn = findViewById(R.id.registerbtn);
+        registerbtn.setOnClickListener(this);
+        loginbtn = findViewById(R.id.loginbtn);
+        loginbtn.setOnClickListener(this);
+        drillsBtn = findViewById(R.id.drillsB);
+        drillsBtn.setOnClickListener(this);
+        chatsBtn = findViewById(R.id.chatsB);
+        tsetsBtn = findViewById(R.id.tsetsB);
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        toadmin = findViewById(R.id.maintomasterpage);
+        toadmin.setOnClickListener(this);
+        logoutbtn = findViewById(R.id.logoutbtn);
+        logoutbtn.setOnClickListener(this);
+    }
+    private void showBtns(){
         authStateListener = firebaseAuth -> {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
@@ -75,22 +94,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         };
-    }
-    private void finds(){
-        registerbtn = findViewById(R.id.registerbtn);
-        registerbtn.setOnClickListener(this);
-        loginbtn = findViewById(R.id.loginbtn);
-        loginbtn.setOnClickListener(this);
-        drillsBtn = findViewById(R.id.drillsB);
-        drillsBtn.setOnClickListener(this);
-        chatsBtn = findViewById(R.id.chatsB);
-        tsetsBtn = findViewById(R.id.tsetsB);
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        toadmin = findViewById(R.id.maintomasterpage);
-        toadmin.setOnClickListener(this);
-        logoutbtn = findViewById(R.id.logoutbtn);
-        logoutbtn.setOnClickListener(this);
     }
 
     @Override

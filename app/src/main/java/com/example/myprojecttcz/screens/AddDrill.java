@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.Drill2v;
+import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -327,9 +328,10 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
 
             databaseService.createNewDrill2v(drill2v, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
-                public void onCompleted(Void object) {
+                public User onCompleted(Void object) {
                     Toast.makeText(AddDrill.this, "תרגיל 2V נוצר!", Toast.LENGTH_SHORT).show();
                     finish();
+                    return null;
                 }
 
                 @Override

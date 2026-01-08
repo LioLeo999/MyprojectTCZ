@@ -17,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.User;
-import com.example.myprojecttcz.screens.LogIn;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.example.myprojecttcz.utils.SharedPreferencesUtil;
 import com.example.myprojecttcz.utils.Validator;
@@ -35,7 +34,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
     String selectedUid="";
     User selectedUser;
     User currentUser=new User();
-    boolean isCurrentUser = false;
+    boolean isCurrentUser;
     DatabaseService databaseService;
     Validator validator;
     private FirebaseAuth mAuth;
@@ -53,44 +52,9 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        databaseService = DatabaseService.getInstance();
-        validator = new Validator();
+        initViews();
+        getUserData();
 
-        selectedUid = getIntent().getStringExtra("USER_UID");// admin only
-
-        mAuth=FirebaseAuth.getInstance();//Login
-
-        if (selectedUid.equals("")){
-            currentId = mAuth.getUid();
-        }
-        else{
-            currentId = selectedUid;
-        }
-        databaseService.getUser(currentId, new DatabaseService.DatabaseCallback<User>() {
-            @Override
-            public void onCompleted(User user) {
-                currentUser=user;
-                // Toast.makeText(UserProfile.this, user.toString(),LENGTH_LONG).show();
-
-
-
-                if (!currentUser.isadmin()) {
-                    Toast.makeText(UserProfile.this, "You are not authorized to view this profile", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-
-                Toast.makeText(UserProfile.this, "User not logged in", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(UserProfile.this, LogIn.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
 
 
 
@@ -98,6 +62,33 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
 
 
         Log.d(TAG, "Selected user: " + selectedUid);
+
+
+        if (!isCurrentUser) {
+            btnSignOut.setVisibility(View.GONE);
+        }
+
+        showUserProfile();
+    }
+    public void initViews(){
+        databaseService = DatabaseService.getInstance();
+        validator = new Validator();
+        mAuth = FirebaseAuth.getInstance();
+
+        selectedUid = getIntent().getStringExtra("USER_UID");// admin only
+        if (selectedUid.equals("")){ // אם  מגיע מהטבלת משתמשים או מגיע מהמשתמש עצמו
+            // נכנס דרך טבלת המשתמשים
+            currentId = mAuth.getUid();
+            isCurrentUser = false;
+        }
+        else if(selectedUid.equals(mAuth.getUid())){ //אם המשתמש שהתקבל הוא האדמין שמחובר
+            currentId = selectedUid;
+            isCurrentUser = true;
+        }
+        else{// אם זה משתמש שמחובר שמחובר שנכנס לא דרך הטבלה
+            currentId = selectedUid;
+            isCurrentUser = true;
+        }
 
         // Initialize the EditText fields
         etUsername = findViewById(R.id.et_user_user_name);
@@ -114,14 +105,29 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
 
         btnUpdateProfile.setOnClickListener(this);
         btnSignOut.setOnClickListener(this);
-
-        if (!isCurrentUser) {
-            btnSignOut.setVisibility(View.GONE);
-        }
-
-        showUserProfile();
     }
 
+    private void getUserData(){
+        databaseService.getUser(currentId, new DatabaseService.DatabaseCallback<User>() {
+            @Override
+            public User onCompleted(User user) {
+                currentUser = user;
+                // Toast.makeText(UserProfile.this, user.toString(),LENGTH_LONG).show();
+                return user;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+                Toast.makeText(UserProfile.this, "User not logged in", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UserProfile.this, LogIn.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+    }
 
 
 
@@ -129,12 +135,12 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
     private void showUserProfile() {
         databaseService.getUser(selectedUid, new DatabaseService.DatabaseCallback<User>() {
             @Override
-            public void onCompleted(User user) {
+            public User onCompleted(User user) {
                 if (user == null) {
                     Log.e(TAG, "User not found in database");
                     Toast.makeText(UserProfile.this, "User not found", Toast.LENGTH_SHORT).show();
                     finish();
-                    return;
+                    return user;
                 }
                 selectedUser = user;
                 etUsername.setText(user.getUname());
@@ -165,6 +171,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
                 etUserPhone.setEnabled(canEdit);
                 etUserPassword.setEnabled(canEdit);
                 btnUpdateProfile.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+                return user;
             }
 
             @Override
@@ -219,10 +226,11 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         Log.d(TAG, "Updating user in database: " + user.getId());
         databaseService.updateUser(user, new DatabaseService.DatabaseCallback<Void>() {
             @Override
-            public void onCompleted(Void result) {
+            public User onCompleted(Void result) {
                 Log.d(TAG, "User profile updated successfully");
                 Toast.makeText(UserProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                 showUserProfile();
+                return null;
             }
 
             @Override
