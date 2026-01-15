@@ -23,7 +23,7 @@ public class SharedPreferencesUtil {
     /// @param key The key to save the string with
     /// @param value The string to save
     /// @see SharedPreferences.Editor#putString(String, String)
-    private static void saveString(Context context, String key, String value) {
+    public static void saveString(Context context, String key, String value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
@@ -36,7 +36,7 @@ public class SharedPreferencesUtil {
     /// @param defaultValue The default value to return if the key is not found
     /// @return The string value stored in shared preferences
     /// @see SharedPreferences#getString(String, String)
-    private static String getString(Context context, String key, String defaultValue) {
+    public static String getString(Context context, String key, String defaultValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, defaultValue);
     }

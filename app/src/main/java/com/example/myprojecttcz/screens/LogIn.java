@@ -19,6 +19,7 @@ import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.example.myprojecttcz.utils.SharedPreferencesUtil;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LogIn extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
@@ -27,6 +28,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     private EditText etEmail, etPassword;
     private Button btnLogin, btnRegister;
     private DatabaseService databaseService;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,10 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        auth = FirebaseAuth.getInstance();
 
         // Check if user is already logged in
-        if (SharedPreferencesUtil.isUserLoggedIn(this)) {
+        if (auth.getCurrentUser() != null) {
             Intent mainIntent = new Intent(LogIn.this, MainActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mainIntent);
@@ -54,8 +57,24 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     private void finds() {
         tomainbtn = findViewById(R.id.tomainbtn);
         tomainbtn.setOnClickListener(this);
+
         etEmail = findViewById(R.id.emailli);
         etPassword = findViewById(R.id.passli);
+
+        // --- הוסף את הקוד הזה כאן ---
+        // שליפת הנתונים שנשמרו בפעם הקודמת
+        String savedEmail = SharedPreferencesUtil.getString(this, "saved_email", "");
+        String savedPassword = SharedPreferencesUtil.getString(this, "saved_password", "");
+
+        // אם הם לא ריקים - הצג אותם בתוך השדות
+        if (!savedEmail.isEmpty()) {
+            etEmail.setText(savedEmail);
+        }
+        if (!savedPassword.isEmpty()) {
+            etPassword.setText(savedPassword);
+        }
+        // ----------------------------
+
         btnLogin = findViewById(R.id.btnLogIn);
         btnLogin.setOnClickListener(this);
         btnRegister = findViewById(R.id.gotoRegister);
@@ -92,23 +111,33 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
             @Override
             public User onCompleted(String uid) {
                 Log.d(TAG, "onCompleted: User logged in with UID: " + uid);
-                // Now, get the full user object
+
+                // --- הוספה: שמירת אימייל וסיסמה למילוי אוטומטי בפעם הבאה ---
+                SharedPreferencesUtil.saveString(LogIn.this, "saved_email", email);
+                SharedPreferencesUtil.saveString(LogIn.this, "saved_password", password);
+                // ------------------------------------------------------------
+
+                // כעת נמשוך את פרטי המשתמש המלאים
                 databaseService.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
                     @Override
                     public User onCompleted(User user) {
                         if (user != null) {
                             Log.d(TAG, "Successfully fetched user data.");
-                            // Save user to SharedPreferences
-                            SharedPreferencesUtil.saveUser(LogIn.this, user);
 
-                            // Redirect to main activity
+                            // ניסיון לשמור את המשתמש המלא (עם הגנה מקריסה)
+                            try {
+                                SharedPreferencesUtil.saveUser(LogIn.this, user);
+                            } catch (Exception e) {
+                                Log.e(TAG, "Warning: Could not save full User object (likely due to ArrayList), but continuing login.", e);
+                            }
+
+                            // מעבר למסך הראשי
                             Toast.makeText(LogIn.this, "Login Successful", Toast.LENGTH_SHORT).show();
                             Intent mainIntent = new Intent(LogIn.this, MainActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(mainIntent);
                             finish();
                         } else {
-                            // This case is unlikely if UID is correct, but good to handle
                             Log.e(TAG, "onCompleted: Failed to fetch user data, user is null");
                             Toast.makeText(LogIn.this, "Login failed: Could not fetch user details.", Toast.LENGTH_LONG).show();
                         }
