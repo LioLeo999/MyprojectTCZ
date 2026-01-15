@@ -6,20 +6,20 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.base.BaseActivity;
+import com.example.myprojecttcz.model.User;
+import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn,toadmin,logoutbtn;
+    User nuser = new User();
     FirebaseAuth auth;
     FirebaseUser user;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -37,7 +37,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
         finds();
         showBtns();
-
     }
     private void finds(){
         registerbtn = findViewById(R.id.registerbtn);
@@ -56,45 +55,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         logoutbtn.setOnClickListener(this);
     }
     private void showBtns(){
-        authStateListener = firebaseAuth -> {
-            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
+            FirebaseUser currentUser = auth.getCurrentUser();
             if (currentUser != null) {
-                // משתמש מחובר → להציג כפתורים
-                registerbtn.setVisibility(View.GONE);
-                loginbtn.setVisibility(View.GONE);
-                tsetsBtn.setVisibility(View.VISIBLE);
-                logoutbtn.setVisibility(View.VISIBLE);
-                DatabaseReference ref = FirebaseDatabase.getInstance()
-                        .getReference("users")
-                        .child(currentUser.getUid())
-                        .child("isadmin");
-
-                ref.get().addOnSuccessListener(snapshot -> {
-                    Boolean isAdmin = snapshot.getValue(Boolean.class);
-
-                    if (Boolean.TRUE.equals(isAdmin)) {
-                        // הוא אדמין
-                        toadmin.setVisibility(View.VISIBLE);
-
-
+                databaseService.getUser(currentUser.getUid(), new DatabaseService.DatabaseCallback<User>() {
+                    @Override
+                    public User onCompleted(User object) {
+                        nuser = object;
+                        return object;
                     }
-                    else {
-                        toadmin.setVisibility(View.GONE);
+
+                    @Override
+                    public void onFailed(Exception e) {
 
                     }
                 });
-            } else {
-                // משתמש לא מחובר → להסתיר כפתורים
+                // משתמש מחובר → להציג כפתורים
+                // registerbtn.setVisibility(View.GONE);
+                //loginbtn.setVisibility(View.GONE);
+                //tsetsBtn.setVisibility(View.VISIBLE);
+                //logoutbtn.setVisibility(View.VISIBLE);
 
-                registerbtn.setVisibility(View.VISIBLE);
-                loginbtn.setVisibility(View.VISIBLE);
-                tsetsBtn.setVisibility(View.GONE);
-                toadmin.setVisibility(View.GONE);
-                logoutbtn.setVisibility(View.GONE);
+
+
+                //registerbtn.setVisibility(View.VISIBLE);
+                //loginbtn.setVisibility(View.VISIBLE);
+                //tsetsBtn.setVisibility(View.GONE);
+                //toadmin.setVisibility(View.GONE);
+                //logoutbtn.setVisibility(View.GONE);
             }
 
-        };
+
     }
 
     @Override

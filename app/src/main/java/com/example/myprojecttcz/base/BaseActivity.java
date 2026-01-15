@@ -14,14 +14,19 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.services.DatabaseService;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity {
-
+    protected DatabaseService databaseService;
+    protected FirebaseAuth mauth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         // הערה: אנחנו לא עושים כאן setContentView רגיל, זה יקרה בפונקציה למטה
+        databaseService = DatabaseService.getInstance();
+        mauth = FirebaseAuth.getInstance();
     }
 
     /**
@@ -69,8 +74,9 @@ public class BaseActivity extends AppCompatActivity {
 
     // פונקציה שמאפשרת לאקטיביטיז הבנים להחליט אם להראות חץ חזור או לא
     public boolean shouldShowBackButton() {
-        return true; // ברירת מחדל: כן
+        return true;
     }
+
 
     // טיפול בלחיצה על כפתור החזור ב-Toolbar
     @Override
