@@ -10,10 +10,10 @@ public class User {
     protected String email;
     protected String phone;
     protected String password;
-    protected boolean isadmin;
+    protected boolean admin;
     protected ArrayList<MaarachImun> maarachim;
 
-    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean isadmin, ArrayList<MaarachImun> maarachim) {
+    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean admin, ArrayList<MaarachImun> maarachim) {
         this.id = id;
         this.uname = uname;
         this.fname = fname;
@@ -21,11 +21,11 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.password = password;
-        this.isadmin = isadmin;
+        this.admin = admin;
         this.maarachim = maarachim;
     }
 
-    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean isadmin) {
+    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean admin) {
         this.id = id;
         this.uname = uname;
         this.fname = fname;
@@ -33,7 +33,7 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.password = password;
-        this.isadmin = isadmin;
+        this.admin = admin;
         this.maarachim = new ArrayList<MaarachImun>();
     }
 
@@ -111,11 +111,11 @@ public class User {
     }
 
     public boolean isadmin() {
-        return isadmin;
+        return this.admin;
     }
 
     public void setIsadmin(boolean isadmin) {
-        this.isadmin = isadmin;
+        this.admin = admin;
     }
 
 
@@ -129,7 +129,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
-                ", isadmin=" + isadmin +
+                ", isadmin=" + admin +
                 ", maarachim=" + maarachim +
                 '}';
     }

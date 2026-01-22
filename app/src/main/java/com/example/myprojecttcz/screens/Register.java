@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,7 +22,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
@@ -64,7 +70,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         etUname = findViewById(R.id.rUname);
         btnRegister = findViewById(R.id.registerbtn);
         toMain = findViewById(R.id.rtomain);
-        databaseService = databaseService.getInstance();
+        // Corrected: Call the static getInstance() method on the class
+        databaseService = DatabaseService.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         /// set the click listener
@@ -83,57 +90,48 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
 
             /// get the input from the user
-             email = etEmail.getText().toString();
-             password = etPassword.getText().toString();
-            String fName = etFName.getText().toString();
-            String lName = etLName.getText().toString();
-            String phone = etPhone.getText().toString();
-            String uName = etUname.getText().toString();
+             email = etEmail.getText().toString().trim();
+             password = etPassword.getText().toString().trim();
+            String fName = etFName.getText().toString().trim();
+            String lName = etLName.getText().toString().trim();
+            String phone = etPhone.getText().toString().trim();
+            String uName = etUname.getText().toString().trim();
 
+            if (email.isEmpty() || password.isEmpty() || fName.isEmpty() || lName.isEmpty() || phone.isEmpty() || uName.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             registerUser(uName,fName, lName, phone, email, password);
-
-
         }
-
-
-
     }
     private void registerUser(String uname, String fname, String lname, String phone, String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            boolean isadmin = false;
-            User user = new User(uid, uname, fname, lname, email,phone, password, isadmin);
-            createUserInDatabase(user);
-
-        });
-        Log.d(TAG, "registerUser: Registering user...");
-
-
-
-        /// create a new user object
-
-
-        /*databaseService.checkIfEmailExists(email, new DatabaseService.DatabaseCallback<Boolean>() {
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
-            public void onCompleted(Boolean exists) {
-                if (exists) {
-                    Log.e(TAG, "onCompleted: Email already exists");
-                    /// show error message to user
-                    Toast.makeText(Register.this, "", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(Register.this, "Email already exists", Toast.LENGTH_SHORT).show();
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // FIX 1: Registration check - This code runs only on success
+                    Log.d(TAG, "createUserWithEmail:success");
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    if (firebaseUser != null) {
+                        String uid = firebaseUser.getUid();
+                        boolean isadmin = false;
+                        User user = new User(uid, uname, fname, lname, email,phone, password, isadmin);
+                        createUserInDatabase(user);
+                    } else {
+                        Toast.makeText(Register.this, "Registration failed, please try again.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    /// proceed to create the user
-                    createUserInDatabase(user);
+                    // Registration failed - show a message to the user
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        Toast.makeText(Register.this, "Email address is already in use.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Register.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
-            @Override
-            public void onFailed(Exception e) {
-                Log.e(TAG, "onFailed: Failed to check if email exists", e);
-                /// show error message to user
-                Toast.makeText(Register.this, "Failed to register user bcuz email", Toast.LENGTH_SHORT).show();
-            }
         });
-*/
     }
 
     private void createUserInDatabase(User user) {
@@ -141,35 +139,32 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             @Override
             public User onCompleted(Void object) {
                 Log.d(TAG, "createUserInDatabase: User created successfully");
-                /// save the user to shared preferences
                 Log.d(TAG, "createUserInDatabase: Redirecting to MainActivity");
-                /// Redirect to MainActivity and clear back stack to prevent user from going back to register screen
-                Intent mainIntent = new Intent(Register.this, MainActivity.class);
-                /// clear the back stack (clear history) and start the MainActivity
 
+                // NOT FIXED (as requested): Security issue - saving password in plaintext
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-
                 editor.putString("email", email);
                 editor.putString("password", password);
-
                 editor.commit();
 
-
-
-
-
+                Intent mainIntent = new Intent(Register.this, MainActivity.class);
+                // שלא יוכל ללכת אחורה
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mainIntent);
+                finish();
                 return null;
             }
 
             @Override
             public void onFailed(Exception e) {
                 Log.e(TAG, "createUserInDatabase: Failed to create user", e);
-                /// show error message to user
-                Toast.makeText(Register.this, "Failed to register user", Toast.LENGTH_SHORT).show();
-                /// sign out the user if failed to register
+                Toast.makeText(Register.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
 
+                // FIX 2: Handle failure - sign out user to prevent inconsistent state
+                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    mAuth.signOut();
+                }
             }
         });
     }
