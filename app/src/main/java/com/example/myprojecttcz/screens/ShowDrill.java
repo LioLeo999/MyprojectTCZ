@@ -102,22 +102,22 @@ public class ShowDrill extends AppCompatActivity implements View.OnClickListener
 
     private void fillUI() {
         tvname.setText(drill.getName());
-        tvexplanation.setText(drill.getExplanation());
+        tvexplanation.setText("Explanation: " + drill.getExplanation());
 
-        tvminimumplayers.setText(drill.getMinplayers());
-        tvmaximumplayers.setText(drill.getMaxplayers());
+        tvminimumplayers.setText("Mininum players: " + drill.getMinplayers());
+        tvmaximumplayers.setText("Maximum players:" + drill.getMaxplayers());
 
-        tvtools.setText(drill.getTrainingTools());
-        tvage.setText(drill.getAge());
-        tvplayerlevel.setText(drill.getPlayerLevel());
-        tvballcolor.setText(drill.getBallColor());
-        tvcourtsize.setText(drill.getCourtSize());
+        tvtools.setText("Training tools: " + drill.getTrainingTools());
+        tvage.setText("Ages: " + drill.getAge());
+        tvplayerlevel.setText("Player level: " + drill.getPlayerLevel());
+        tvballcolor.setText("Ball color: " + drill.getBallColor());
+        tvcourtsize.setText("Court size: " + drill.getCourtSize());
 
         // דוגמה לשוטים – תתאים לשדות שלך
         tvshots.setText(buildShotsText());
 
         // רמת קושי פיזית
-        tvphysicallevel.setText(drill.getLevel());
+        tvphysicallevel.setText("Physical level: " + drill.getLevel());
 
         if (drill.getGif() == null || drill.getGif().isEmpty()) {
             imgGif.setVisibility(View.GONE);
