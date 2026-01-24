@@ -146,4 +146,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             startActivity(go);
         }
     }
+    @Override
+    public boolean shouldShowBackButton() {
+        return false;
+    }
 }

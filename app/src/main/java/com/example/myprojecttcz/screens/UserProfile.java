@@ -29,7 +29,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
 
     private EditText etUserFirstName, etUserLastName, etUserEmail, etUserPhone, etUserPassword, etUsername;
     private TextView tvUserDisplayName, tvUserDisplayEmail;
-    private Button btnUpdateProfile, btnSignOut;
+    private Button btnUpdateProfile;
     private View adminBadge;
     String selectedUid="";
     User selectedUser;
@@ -64,9 +64,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         Log.d(TAG, "Selected user: " + selectedUid);
 
 
-        if (!isCurrentUser) {
-            btnSignOut.setVisibility(View.GONE);
-        }
+
 
         showUserProfile();
     }
@@ -100,11 +98,9 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         tvUserDisplayName = findViewById(R.id.tv_user_display_name);
         tvUserDisplayEmail = findViewById(R.id.tv_user_display_email);
         btnUpdateProfile = findViewById(R.id.btn_edit_profile);
-        btnSignOut = findViewById(R.id.btn_sign_out);
         adminBadge = findViewById(R.id.admin_badge);
 
         btnUpdateProfile.setOnClickListener(this);
-        btnSignOut.setOnClickListener(this);
     }
 
     private void getUserData(){
@@ -270,15 +266,7 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         return true;
     }
 
-    private void signOut() {
-        Log.d(TAG, "Sign out button clicked");
-        SharedPreferencesUtil.signOutUser(UserProfile.this);
 
-        Log.d(TAG, "User signed out, redirecting to MainActivity");
-        Intent landingIntent = new Intent(UserProfile.this, MainActivity.class);
-        landingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(landingIntent);
-    }
 
     @Override
     public void onClick(View v) {
@@ -286,8 +274,6 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
             updateUserProfile();
             return;
         }
-        if(v.getId() == R.id.btn_sign_out) {
-            signOut();
-        }
+
     }
 }
