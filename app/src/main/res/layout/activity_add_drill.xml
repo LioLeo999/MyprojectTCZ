@@ -17,15 +17,7 @@
         android:padding="12dp"
         android:background="@color/dgreen"
         android:weightSum="10">
-        <ImageButton
-            android:id="@+id/tomainbtnfromadddrill"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:adjustViewBounds="true"
-            android:background="@null"
-            android:scaleType="fitCenter"
-            android:contentDescription="tomain"
-            android:src="@drawable/tczlogo" />
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

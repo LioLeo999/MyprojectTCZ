@@ -9,8 +9,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 
-public class ShowMaarachim extends AppCompatActivity {
+public class ShowMaarachim extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

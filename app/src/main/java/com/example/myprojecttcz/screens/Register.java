@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,12 +31,11 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class Register extends AppCompatActivity implements View.OnClickListener {
+public class Register extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "RegisterActivity";
 
     private EditText etEmail, etPassword, etFName, etLName, etPhone, etUname;
     private Button btnRegister;
-    private ImageButton toMain;
     private DatabaseService databaseService;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -69,22 +69,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         etPhone = findViewById(R.id.rPhonenumber);
         etUname = findViewById(R.id.rUname);
         btnRegister = findViewById(R.id.registerbtn);
-        toMain = findViewById(R.id.rtomain);
         // Corrected: Call the static getInstance() method on the class
         databaseService = DatabaseService.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         /// set the click listener
         btnRegister.setOnClickListener(this);
-        toMain.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View view) {
-        if (view == toMain){
-            Intent intent = new Intent(Register.this,MainActivity.class);
-            startActivity(intent);
-        }
+
         if (view == btnRegister){
             Log.d(TAG, "onClick: Register button clicked");
 

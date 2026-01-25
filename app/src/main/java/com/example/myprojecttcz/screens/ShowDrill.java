@@ -16,10 +16,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.services.DatabaseService;
 
-public class ShowDrill extends AppCompatActivity implements View.OnClickListener {
+public class ShowDrill extends BaseActivity implements View.OnClickListener {
     private Intent get;
     private String id;
     private Drill2v drill;

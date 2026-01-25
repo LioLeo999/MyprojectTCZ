@@ -10,11 +10,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
-public class ShowDrillVideo extends AppCompatActivity {
+public class ShowDrillVideo extends BaseActivity {
 
     private YouTubePlayerView youTubePlayerView;
     private String link;

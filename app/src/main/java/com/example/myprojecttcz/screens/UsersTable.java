@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.adapters.UsersListAdapter;
@@ -15,7 +17,7 @@ import com.example.myprojecttcz.model.User;
 
 import java.util.List;
 
-public class UsersTable extends AppCompatActivity {
+public class UsersTable extends BaseActivity {
     private static final String TAG = "UsersListActivity";
     private UsersListAdapter userAdapter;
     private TextView tvUserCount;

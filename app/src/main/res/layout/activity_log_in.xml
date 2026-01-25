@@ -17,15 +17,6 @@
         android:layout_margin="20dp"
         >
 
-        <ImageButton
-            android:id="@+id/tomainbtn"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:adjustViewBounds="true"
-            android:background="@null"
-            android:scaleType="fitCenter"
-            android:src="@drawable/tczlogo"
-            android:contentDescription="tomain"/>
 
         <TextView
             android:layout_width="match_parent"

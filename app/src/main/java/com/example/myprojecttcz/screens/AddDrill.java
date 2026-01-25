@@ -21,13 +21,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class AddDrill extends AppCompatActivity implements View.OnClickListener {
+public class AddDrill extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "AddDrill";
     private static final int PICK_GIF = 101;
@@ -47,7 +48,6 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
 
     // BUTTONS
     private Button addsubmitbtn, btSelectGif;
-    private ImageButton btntomain;
 
     // GIF FILE
     private Uri gifUri = null;
@@ -112,8 +112,7 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
         // Buttons
         addsubmitbtn = findViewById(R.id.addsubmitbtn);
         btSelectGif = findViewById(R.id.btSelectGif);
-        btntomain = findViewById(R.id.tomainbtnfromadddrill);
-        btntomain.setOnClickListener(this);
+
 
         // Listeners
         addsubmitbtn.setOnClickListener(this);
@@ -181,10 +180,7 @@ public class AddDrill extends AppCompatActivity implements View.OnClickListener 
     // ---------------------------------------------------------
     @Override
     public void onClick(View v) {
-        if (v == btntomain){
-            Intent go = new Intent(this, MainActivity.class);
-            startActivity(go);
-        }
+
         if (v == btSelectGif) {
             openGifPicker();
             return;

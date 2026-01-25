@@ -35,16 +35,7 @@
                 android:textColor="@color/black"
                 android:text="Login"
                 android:visibility="gone"/>
-            <Button
-                android:id="@+id/maintomasterpage"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/yellow"
-                android:textColor="@color/black"
-                android:text="Master Page"
-                android:visibility="gone"
-                />
+
 
             <View
                 android:layout_width="0dp"

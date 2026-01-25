@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.example.myprojecttcz.utils.SharedPreferencesUtil;
@@ -23,7 +24,7 @@ import com.example.myprojecttcz.utils.Validator;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class UserProfile extends AppCompatActivity implements View.OnClickListener {
+public class UserProfile extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "UserProfileActivity";
 
@@ -74,10 +75,15 @@ public class UserProfile extends AppCompatActivity implements View.OnClickListen
         mAuth = FirebaseAuth.getInstance();
 
         selectedUid = getIntent().getStringExtra("USER_UID");// admin only
+        if (selectedUid == null) {
+            selectedUid = "";
+        }
         if (selectedUid.equals("")){ // אם  מגיע מהטבלת משתמשים או מגיע מהמשתמש עצמו
-            // נכנס דרך טבלת המשתמשים
-            currentId = mAuth.getUid();
-            isCurrentUser = false;
+            // לא התקבל ID -> המשתמש צופה בפרופיל של עצמו
+            String myId = mAuth.getUid();
+            selectedUid = myId; // חובה לעדכן את זה כדי ש-showUserProfile יעבוד!
+            currentId = myId;
+            isCurrentUser = true; // זה המשתמש הנוכחי!
         }
         else if(selectedUid.equals(mAuth.getUid())){ //אם המשתמש שהתקבל הוא האדמין שמחובר
             currentId = selectedUid;

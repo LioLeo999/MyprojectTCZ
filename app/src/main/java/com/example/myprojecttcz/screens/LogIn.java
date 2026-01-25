@@ -16,15 +16,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.example.myprojecttcz.utils.SharedPreferencesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LogIn extends AppCompatActivity implements View.OnClickListener {
+public class LogIn extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
 
-    private ImageButton tomainbtn;
+
     private EditText etEmail, etPassword;
     private Button btnLogin, btnRegister;
     private DatabaseService databaseService;
@@ -55,8 +56,6 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void finds() {
-        tomainbtn = findViewById(R.id.tomainbtn);
-        tomainbtn.setOnClickListener(this);
 
         etEmail = findViewById(R.id.emailli);
         etPassword = findViewById(R.id.passli);
@@ -84,10 +83,8 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.tomainbtn) {
-            Intent go = new Intent(this, MainActivity.class);
-            startActivity(go);
-        } else if (view.getId() == btnLogin.getId()) {
+
+         if (view.getId() == btnLogin.getId()) {
             Log.d(TAG, "onClick: Login button clicked");
 
             String email = etEmail.getText().toString().trim();

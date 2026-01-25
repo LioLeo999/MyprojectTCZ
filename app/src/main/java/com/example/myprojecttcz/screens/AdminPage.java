@@ -13,10 +13,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.base.BaseActivity;
 
-public class AdminPage extends AppCompatActivity implements View.OnClickListener {
+public class AdminPage extends BaseActivity implements View.OnClickListener {
     private Button btnuserstable, btnshowdrills, btnaddDrills;
-    private ImageButton btntomain;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +30,6 @@ public class AdminPage extends AppCompatActivity implements View.OnClickListener
         initView();
     }
     public void initView(){
-        btntomain = findViewById(R.id.tomainbtnfromadmin);
-        btntomain.setOnClickListener(this);
         btnuserstable = findViewById(R.id.userstable);
         btnuserstable.setOnClickListener(this);
         btnshowdrills = findViewById(R.id.showdrills);
@@ -45,10 +43,7 @@ public class AdminPage extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v == btntomain){
-            Intent go = new Intent(this, MainActivity.class);
-            startActivity(go);
-        }
+
         if (v.getId() == btnuserstable.getId()){
             Intent go = new Intent(AdminPage.this, UsersTable.class);
             startActivity(go);

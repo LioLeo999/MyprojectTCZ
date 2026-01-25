@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "MAIN_ACTIVITY";
-    Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn,toadmin,logoutbtn;
+    Button registerbtn, loginbtn, drillsBtn, chatsBtn, tsetsBtn,logoutbtn;
     User nuser = new User();
     FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -51,8 +51,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         chatsBtn = findViewById(R.id.chatsB);
         tsetsBtn = findViewById(R.id.tsetsB);
         auth = FirebaseAuth.getInstance();
-        toadmin = findViewById(R.id.maintomasterpage);
-        toadmin.setOnClickListener(this);
+
         logoutbtn = findViewById(R.id.logoutbtn);
         logoutbtn.setOnClickListener(this);
     }
@@ -64,32 +63,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    databaseService.getUser(user.getUid(), new DatabaseService.DatabaseCallback<User>() {
-                        @Override
-                        public User onCompleted(User object) {
-                            nuser = object;
-                            // TODO: Check if user is admin and set visibility for 'toadmin' button
-                            // Example:
-                            // if (nuser != null && "admin".equals(nuser.getRole())) {
-                            //     toadmin.setVisibility(View.VISIBLE);
-                            // } else {
-                            //     toadmin.setVisibility(View.GONE);
-                            // }
-                            Log.d(TAG, "Is admin: " + nuser.isadmin());
-                            Log.d(TAG, "Email: " + nuser.getEmail());
-
-                            if (nuser.isadmin())
-                                toadmin.setVisibility(View.VISIBLE);
-                            else
-                                toadmin.setVisibility(View.GONE);
-                            return object;
-                        }
-
-                        @Override
-                        public void onFailed(Exception e) {
-                            toadmin.setVisibility(View.GONE);
-                        }
-                    });
                     registerbtn.setVisibility(View.GONE);
                     loginbtn.setVisibility(View.GONE);
                     tsetsBtn.setVisibility(View.VISIBLE);
@@ -99,7 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     registerbtn.setVisibility(View.VISIBLE);
                     loginbtn.setVisibility(View.VISIBLE);
                     tsetsBtn.setVisibility(View.GONE);
-                    toadmin.setVisibility(View.GONE);
+
                     logoutbtn.setVisibility(View.GONE);
                 }
             }
@@ -134,10 +107,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             startActivity(go);
 
         }
-        if (v.getId() == R.id.maintomasterpage){
-            Intent go = new Intent(MainActivity.this, AdminPage.class);
-            startActivity(go);
-        }
+
         if (v.getId() == R.id.logoutbtn){
             FirebaseAuth.getInstance().signOut();
         }
@@ -149,5 +119,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public boolean shouldShowBackButton() {
         return false;
+    }
+
+    @Override
+    protected boolean shouldShowHomeInMenu() {
+        return false; // אני כבר במסך הבית, לא צריך להציג אותו
     }
 }

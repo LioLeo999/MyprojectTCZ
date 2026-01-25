@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.adapters.DrillAdapter;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.services.DatabaseService;
 
@@ -24,9 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MaagarDrills extends AppCompatActivity implements View.OnClickListener {
+public class MaagarDrills extends BaseActivity implements View.OnClickListener {
 
-    private ImageButton btntomain;
     private RecyclerView recyclerView;
     private DrillAdapter adapter;
     private List<Drill2v> drillList;
@@ -47,8 +47,6 @@ public class MaagarDrills extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initView(){
-        btntomain = findViewById(R.id.tomainbtnfrommaagar);
-        btntomain.setOnClickListener(this);
 
         recyclerView = findViewById(R.id.recyclerDrills);
 
@@ -87,10 +85,7 @@ public class MaagarDrills extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if(v == btntomain){
-            Intent go = new Intent(MaagarDrills.this, MainActivity.class);
-            startActivity(go);
-        }
+
     }
 
 
