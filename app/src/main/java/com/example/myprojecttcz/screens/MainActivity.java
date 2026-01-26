@@ -109,7 +109,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         if (v.getId() == R.id.logoutbtn){
-            FirebaseAuth.getInstance().signOut();
+            mauth.signOut();
+            Intent go = new Intent(MainActivity.this, LogIn.class);
+            // מנקה את ההיסטוריה כדי שלא יוכלו לחזור אחורה
+            go.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(go);
         }
         if (v == drillsBtn){
             Intent go = new Intent(MainActivity.this, MaagarDrills.class);

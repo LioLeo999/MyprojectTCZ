@@ -19,10 +19,8 @@ import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
-import com.example.myprojecttcz.utils.SharedPreferencesUtil;
 import com.example.myprojecttcz.utils.Validator;
 import com.google.firebase.auth.FirebaseAuth;
-
 
 public class UserProfile extends BaseActivity implements View.OnClickListener {
 
@@ -32,16 +30,14 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
     private TextView tvUserDisplayName, tvUserDisplayEmail;
     private Button btnUpdateProfile;
     private View adminBadge;
-    String selectedUid="";
+    String selectedUid = "";
     User selectedUser;
-    User currentUser=new User();
+    User currentUser = new User();
     boolean isCurrentUser;
     DatabaseService databaseService;
     Validator validator;
     private FirebaseAuth mAuth;
     String currentId;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,45 +49,37 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         initViews();
         getUserData();
 
-
-
-
-
-
-
         Log.d(TAG, "Selected user: " + selectedUid);
 
-
-
-
         showUserProfile();
+        // הערה: מחקתי מפה את ה-setEnabled כי זה חייב לקרות בתוך showUserProfile אחרי שהמידע נטען
     }
-    public void initViews(){
+
+    public void initViews() {
         databaseService = DatabaseService.getInstance();
         validator = new Validator();
         mAuth = FirebaseAuth.getInstance();
 
-        selectedUid = getIntent().getStringExtra("USER_UID");// admin only
+        selectedUid = getIntent().getStringExtra("USER_UID"); // admin only
         if (selectedUid == null) {
             selectedUid = "";
         }
-        if (selectedUid.equals("")){ // אם  מגיע מהטבלת משתמשים או מגיע מהמשתמש עצמו
-            // לא התקבל ID -> המשתמש צופה בפרופיל של עצמו
+
+        if (selectedUid.equals("")) { // אם מגיע מהמשתמש עצמו
             String myId = mAuth.getUid();
-            selectedUid = myId; // חובה לעדכן את זה כדי ש-showUserProfile יעבוד!
+            selectedUid = myId;
             currentId = myId;
-            isCurrentUser = true; // זה המשתמש הנוכחי!
-        }
-        else if(selectedUid.equals(mAuth.getUid())){ //אם המשתמש שהתקבל הוא האדמין שמחובר
+            isCurrentUser = true;
+        } else if (selectedUid.equals(mAuth.getUid())) { // אם המשתמש שהתקבל הוא האדמין שמחובר
             currentId = selectedUid;
             isCurrentUser = true;
-        }
-        else{// אם זה משתמש שמחובר שמחובר שנכנס לא דרך הטבלה
+        } else { // אם זה משתמש שמחובר שנכנס לא דרך הטבלה
             currentId = selectedUid;
-            isCurrentUser = true;
+            isCurrentUser = false; // שים לב: כאן זה כנראה לא המשתמש הנוכחי אלא אדמין שצופה באחר
         }
 
         // Initialize the EditText fields
@@ -109,30 +97,37 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
         btnUpdateProfile.setOnClickListener(this);
     }
 
-    private void getUserData(){
-        databaseService.getUser(currentId, new DatabaseService.DatabaseCallback<User>() {
+    private void getUserData() {
+        // משיג את המשתמש הנוכחי שמחובר לאפליקציה (כדי לבדוק אם הוא אדמין)
+        String uid = mAuth.getUid();
+        if(uid == null) {
+            // טיפול במקרה של ניתוק פתאומי
+            return;
+        }
+
+        databaseService.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
             @Override
             public User onCompleted(User user) {
                 currentUser = user;
-                // Toast.makeText(UserProfile.this, user.toString(),LENGTH_LONG).show();
+                // קריאה חוזרת ל-showUserProfile כדי לעדכן הרשאות אם הנתונים הגיעו אחרי
+                if(selectedUser != null) {
+                    // רענון כפתורים אם המסך כבר נטען
+                    boolean canEdit = isCurrentUser || (currentUser != null && currentUser.isadmin());
+                    btnUpdateProfile.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+                }
                 return user;
             }
 
             @Override
             public void onFailed(Exception e) {
-
                 Toast.makeText(UserProfile.this, "User not logged in", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(UserProfile.this, LogIn.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
-                return;
             }
         });
     }
-
-
-
 
     private void showUserProfile() {
         databaseService.getUser(selectedUid, new DatabaseService.DatabaseCallback<User>() {
@@ -145,6 +140,8 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
                     return user;
                 }
                 selectedUser = user;
+
+                // הצבת הנתונים
                 etUsername.setText(user.getUname());
                 etUserFirstName.setText(user.getFname());
                 etUserLastName.setText(user.getLname());
@@ -158,20 +155,28 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
 
                 if (user.isadmin()) {
                     adminBadge.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "User is admin, showing admin badge");
                 } else {
                     adminBadge.setVisibility(View.GONE);
-                    Log.d(TAG, "User is not admin, hiding admin badge");
                 }
 
-                boolean canEdit = isCurrentUser || currentUser.isadmin();
-                Log.d(TAG,canEdit+" ");
+                // בדיקת הרשאות עריכה
+                boolean canEdit = isCurrentUser || (currentUser != null && currentUser.isadmin());
+
+                // הגדרת שדות ברי עריכה
                 etUsername.setEnabled(canEdit);
                 etUserFirstName.setEnabled(canEdit);
                 etUserLastName.setEnabled(canEdit);
-                etUserEmail.setEnabled(canEdit);
                 etUserPhone.setEnabled(canEdit);
-                etUserPassword.setEnabled(canEdit);
+
+                // --- כאן התיקון החשוב ---
+                // אימייל וסיסמה נעולים תמיד
+                etUserEmail.setEnabled(false);
+                etUserPassword.setEnabled(false);
+
+                // הופך אותם לקצת שקופים כדי שייראה ויזואלית שהם נעולים
+                etUserEmail.setAlpha(0.6f);
+                etUserPassword.setAlpha(0.6f);
+
                 btnUpdateProfile.setVisibility(canEdit ? View.VISIBLE : View.GONE);
                 return user;
             }
@@ -185,13 +190,11 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
 
     private void updateUserProfile() {
         if (selectedUser == null) {
-            Log.e(TAG, "User not found");
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!isCurrentUser && !currentUser.isadmin()) {
-            Log.e(TAG, "User not authorized to update this profile");
+        if (!isCurrentUser && (currentUser == null || !currentUser.isadmin())) {
             Toast.makeText(this, "You are not authorized to update this profile", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -199,28 +202,27 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
         String firstName = etUserFirstName.getText().toString();
         String lastName = etUserLastName.getText().toString();
         String phone = etUserPhone.getText().toString();
-        String email = etUserEmail.getText().toString();
-        String password = etUserPassword.getText().toString();
+        String userName = etUsername.getText().toString();
 
-        if (!isValid(firstName, lastName, phone, email, password)) {
+        // --- תיקון: לוקחים את האימייל והסיסמה המקוריים מהאובייקט, לא מהמסך ---
+        String originalEmail = selectedUser.getEmail();
+        String originalPassword = selectedUser.getPassword();
+
+        // שולחים לוולידציה את הערכים המקוריים (כדי שהיא תעבור)
+        if (!isValid(firstName, lastName, phone, originalEmail, originalPassword)) {
             Log.e(TAG, "Invalid input");
             return;
         }
 
+        // מעדכנים באובייקט רק את מה שמותר לשנות
+        selectedUser.setUname(userName);
         selectedUser.setFname(firstName);
         selectedUser.setLname(lastName);
         selectedUser.setPhone(phone);
-        selectedUser.setEmail(email);
-        selectedUser.setPassword(password);
 
-        Log.d(TAG, "Updating user profile");
-        Log.d(TAG, "Selected user UID: " + selectedUser.getId());
-        Log.d(TAG, "Is current user: " + isCurrentUser);
-        Log.d(TAG, "User email: " + selectedUser.getEmail());
-        Log.d(TAG, "User password: " + selectedUser.getPassword());
+        // לא נוגעים באימייל ובסיסמה באובייקט - הם נשארים כמו שהיו
 
-
-
+        Log.d(TAG, "Updating user profile in DB");
         updateUserInDatabase(selectedUser);
     }
 
@@ -231,6 +233,7 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
             public User onCompleted(Void result) {
                 Log.d(TAG, "User profile updated successfully");
                 Toast.makeText(UserProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                // מרעננים את המסך כדי לוודא שהכל מוצג נכון
                 showUserProfile();
                 return null;
             }
@@ -259,27 +262,22 @@ public class UserProfile extends BaseActivity implements View.OnClickListener {
             etUserPhone.requestFocus();
             return false;
         }
+        // הבדיקות האלו יעברו תמיד כי אנחנו שולחים את המייל/סיסמה המקוריים והתקינים
         if (!validator.isEmailValid(email)) {
             etUserEmail.setError("Email is required");
-            etUserEmail.requestFocus();
             return false;
         }
         if (!validator.isPasswordValid(password)) {
             etUserPassword.setError("Password is required");
-            etUserPassword.requestFocus();
             return false;
         }
         return true;
     }
 
-
-
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_edit_profile) {
+        if (v.getId() == R.id.btn_edit_profile) {
             updateUserProfile();
-            return;
         }
-
     }
 }

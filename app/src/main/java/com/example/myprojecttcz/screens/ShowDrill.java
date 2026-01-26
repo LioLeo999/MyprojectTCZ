@@ -3,8 +3,10 @@ package com.example.myprojecttcz.screens;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,18 +20,30 @@ import com.bumptech.glide.Glide;
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.Drill2v;
+import com.example.myprojecttcz.model.MaarachImun;
+import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 public class ShowDrill extends BaseActivity implements View.OnClickListener {
     private Intent get;
     private String id;
     private Drill2v drill;
     private ImageView imgGif;
+    private Spinner SpinnerAddtoImun;
+    private String currentUserUid;
+    private ArrayList<String> trainingSets;
+    private User currentUser;
+    private ArrayAdapter<String> adapter;
+
 
 
     private TextView tvname, tvexplanation, tvminimumplayers, tvmaximumplayers, tvshots, tvtools, tvage, tvplayerlevel, tvphysicallevel, tvballcolor, tvcourtsize;
     private Button btnvideocoachview, btnincourtview;
     private DatabaseService databaseService;
+    private FirebaseAuth mauth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +57,17 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
         });
         initView();
         loadDrill();
+        if (mauth.getCurrentUser() != null){
+            startLoadingData();
+        }
 
 
     }
     public void initView(){
         // databaseservice
         databaseService = DatabaseService.getInstance();
+        mauth = FirebaseAuth.getInstance();
+        ArrayList<String> trainingSets = new ArrayList<>();
         // intent
         get = getIntent();
         // textview
@@ -70,6 +89,9 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
         btnincourtview = findViewById(R.id.btnincourtview);
         btnincourtview.setOnClickListener(this);
 
+        //spinners
+        SpinnerAddtoImun = findViewById(R.id.spinnerAddtoImun);
+
         // imgview
         imgGif = findViewById(R.id.imgGif);
         //drill id
@@ -79,6 +101,8 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "No drill id", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+
     }
 
     private void loadDrill() {
@@ -150,6 +174,52 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
 
 
         return sb.length() == 0 ? "—" : sb.toString();
+    }
+
+    // פונקציה ראשית שרק מתחילה את התהליך
+    public void startLoadingData() {
+        createArray(); // רק קוראים לזה, בלי לאתחל את הספינר לפני
+    }
+
+    public void createArray() {
+        currentUserUid = mauth.getUid();
+        databaseService.getUser(currentUserUid, new DatabaseService.DatabaseCallback<User>() {
+            @Override
+            public User onCompleted(User object) {
+                currentUser = object;
+
+                // 1. מכינים את הרשימה
+                trainingSets.clear();
+                trainingSets.add("Add to a training set");
+                trainingSets.add("Create new training set");
+
+                if (currentUser != null && currentUser.getMaarachim() != null) {
+                    for (MaarachImun set : currentUser.getMaarachim()) {
+                        trainingSets.add(set.getName());
+                    }
+                }
+
+                // 2. עכשיו כשהנתונים מוכנים - בונים את הספינר!
+                // שים לב: אנחנו בתוך onCompleted
+                setUpSpinner();
+
+                return null;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                // כדאי להציג הודעת שגיאה
+            }
+        });
+    }
+
+    // הפונקציה הזו נקראת רק כשיש נתונים
+    public void setUpSpinner() {
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, trainingSets);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        SpinnerAddtoImun.setAdapter(adapter);
+        SpinnerAddtoImun.setVisibility(View.VISIBLE); // מציגים אותו רק עכשיו
     }
 
     @Override
