@@ -67,7 +67,7 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
         // databaseservice
         databaseService = DatabaseService.getInstance();
         mauth = FirebaseAuth.getInstance();
-        ArrayList<String> trainingSets = new ArrayList<>();
+        trainingSets = new ArrayList<>();
         // intent
         get = getIntent();
         // textview
@@ -217,9 +217,134 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
     public void setUpSpinner() {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, trainingSets);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         SpinnerAddtoImun.setAdapter(adapter);
-        SpinnerAddtoImun.setVisibility(View.VISIBLE); // מציגים אותו רק עכשיו
+
+        SpinnerAddtoImun.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) { // "Create new training set"
+                    showCreateMaarachDialog();
+                } else if (position > 1) {
+                    String selectedMaarachName = trainingSets.get(position);
+                    addDrillToSelectedMaarach(selectedMaarachName);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+        });
+    }
+
+    private void addDrillToSelectedMaarach(String maarachName) {
+        if (currentUser == null || drill == null) return;
+
+        MaarachImun selectedMaarach = null;
+
+        // חיפוש המערך לפי שם
+        for (MaarachImun m : currentUser.getMaarachim()) {
+            if (m.getName().equals(maarachName)) {
+                selectedMaarach = m;
+                break;
+            }
+        }
+
+        if (selectedMaarach != null) {
+            // וידוא שרשימת ה-IDs קיימת
+            if (selectedMaarach.getDrillsid() == null) {
+                selectedMaarach.setDrillsid(new ArrayList<>());
+            }
+
+            // בדיקה אם התרגיל כבר קיים במערך כדי למנוע כפילויות
+            if (selectedMaarach.getDrillsid().contains(drill.getId())) {
+                Toast.makeText(this, "Drill already in this set", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // הוספת ה-ID של התרגיל
+            selectedMaarach.getDrillsid().add(drill.getId());
+
+            // עדכון המשתמש כולו ב-Firebase (או רק את המערך הספציפי)
+            databaseService.updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
+                @Override
+                public User onCompleted(Void object) {
+                    Toast.makeText(ShowDrill.this, "Added to " + maarachName, Toast.LENGTH_SHORT).show();
+                    // מחזירים את הספינר למצב ברירת מחדל
+                    SpinnerAddtoImun.setSelection(0);
+                    return null;
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    Toast.makeText(ShowDrill.this, "Failed to update", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void showCreateMaarachDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Create New Training Set");
+
+        // יצירת שדה קלט (EditText) בתוך הדיאלוג
+        final android.widget.EditText input = new android.widget.EditText(this);
+        input.setHint("Enter set name (e.g., Monday Practice)");
+        builder.setView(input);
+
+        builder.setPositiveButton("Create & Add", (dialog, which) -> {
+            String name = input.getText().toString().trim();
+            if (!name.isEmpty()) {
+                createNewMaarachWithDrill(name);
+            } else {
+                Toast.makeText(this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                SpinnerAddtoImun.setSelection(0); // החזרה לברירת מחדל
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.cancel();
+            SpinnerAddtoImun.setSelection(0);
+        });
+
+        builder.show();
+    }
+
+    private void createNewMaarachWithDrill(String name) {
+        if (currentUser == null || drill == null) return;
+
+        // 1. יצירת מזהה ייחודי למערך החדש
+        String newMaarachId = databaseService.generateMaarachId(currentUserUid);
+
+        // 2. יצירת רשימת תרגילים והוספת התרגיל הנוכחי
+        ArrayList<String> drillIds = new ArrayList<>();
+        drillIds.add(drill.getId());
+
+        // 3. בניית אובייקט המערך
+        MaarachImun newMaarach = new MaarachImun(newMaarachId, name, "", drillIds);
+
+        // 4. הוספה לרשימה המקומית של המשתמש (כדי שיוצג בספינר וב-UI)
+        if (currentUser.getMaarachim() == null) {
+            currentUser.setMaarachim(new ArrayList<>());
+        }
+        currentUser.getMaarachim().add(newMaarach);
+
+        // 5. עדכון ה-Database
+        databaseService.updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public User onCompleted(Void object) {
+                Toast.makeText(ShowDrill.this, "New set '" + name + "' created!", Toast.LENGTH_SHORT).show();
+
+                // עדכון רשימת הספינר מבלי לטעון הכל מחדש מהשרת
+                trainingSets.add(name);
+                adapter.notifyDataSetChanged();
+                SpinnerAddtoImun.setSelection(0);
+                return null;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(ShowDrill.this, "Failed to create set", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

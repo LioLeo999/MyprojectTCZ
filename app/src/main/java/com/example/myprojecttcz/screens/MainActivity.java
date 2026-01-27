@@ -50,6 +50,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         drillsBtn.setOnClickListener(this);
         chatsBtn = findViewById(R.id.chatsB);
         tsetsBtn = findViewById(R.id.tsetsB);
+        tsetsBtn.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
 
         logoutbtn = findViewById(R.id.logoutbtn);
@@ -117,6 +118,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         if (v == drillsBtn){
             Intent go = new Intent(MainActivity.this, MaagarDrills.class);
+            startActivity(go);
+        }
+        if (v == tsetsBtn){
+            Intent go = new Intent(MainActivity.this, ShowMaarachim.class);
             startActivity(go);
         }
     }

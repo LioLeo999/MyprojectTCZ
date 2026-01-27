@@ -12,43 +12,42 @@ import com.example.myprojecttcz.services.DatabaseService;
 
 import java.util.List;
 
-public class DrillMiniAdapter
-        extends RecyclerView.Adapter<DrillMiniAdapter.DrillViewHolder> {
+public class DrillMiniAdapter extends RecyclerView.Adapter<DrillMiniAdapter.ViewHolder> {
 
     private final List<String> drillIds;
-    private final DatabaseService db;
+    private final DatabaseService ds = DatabaseService.getInstance();
 
     public DrillMiniAdapter(List<String> drillIds) {
         this.drillIds = drillIds;
-        this.db = DatabaseService.getInstance();
     }
 
     @NonNull
     @Override
-    public DrillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // יוצר טקסט פשוט לכל שם תרגיל
         TextView tv = new TextView(parent.getContext());
-        tv.setPadding(8, 4, 8, 4);
-        tv.setTextSize(14f);
-        return new DrillViewHolder(tv);
+        tv.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        tv.setPadding(10, 5, 10, 5);
+        tv.setTextSize(14);
+        return new ViewHolder(tv);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DrillViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String id = drillIds.get(position);
 
-        String drillId = drillIds.get(position);
-
-        // טקסט זמני (שיהיה משהו עד שה־DB חוזר)
-        holder.textView.setText("Loading...");
-
-        db.getDrillById(drillId, new DatabaseService.DrillCallback() {
+        // כאן הקסם: הופכים ID לשם
+        ds.getDrillById(id, new DatabaseService.DrillCallback() {
             @Override
             public void onSuccess(Drill2v drill) {
-                holder.textView.setText(drill.getName());
+                holder.textView.setText("• " + drill.getName());
             }
 
             @Override
             public void onError(Exception e) {
-                holder.textView.setText("Unknown drill");
+                holder.textView.setText("• Unknown Drill");
             }
         });
     }
@@ -58,13 +57,9 @@ public class DrillMiniAdapter
         return drillIds != null ? drillIds.size() : 0;
     }
 
-    // ---------------- ViewHolder ----------------
-
-    static class DrillViewHolder extends RecyclerView.ViewHolder {
-
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
-
-        public DrillViewHolder(@NonNull View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView;
         }

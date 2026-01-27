@@ -552,7 +552,13 @@ public class DatabaseService {
     }
 
 
+    // region Maarach Imun Section
+
     private static final String MAARACHIM_PATH = "maarachim";
+
+    /**
+     * מייצר מזהה ייחודי למערך אימון חדש תחת משתמש ספציפי
+     */
     public String generateMaarachId(String userId) {
         return databaseReference
                 .child(USERS_PATH)
@@ -561,17 +567,40 @@ public class DatabaseService {
                 .push()
                 .getKey();
     }
-    public void addMaarachToUser(
-            @NonNull String userId,
-            @NonNull MaarachImun maarach,
-            @Nullable DatabaseCallback<Void> callback
-    ) {
-        writeData(
-                USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH + "/" + maarach.getId(),
-                maarach,
-                callback
-        );
+
+    /**
+     * יצירת מערך אימון חדש (או עדכון קיים) עבור משתמש
+     */
+    public void createMaarachImun(@NonNull String userId, @NonNull MaarachImun maarach, @Nullable final DatabaseCallback<Void> callback) {
+        String path = USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH + "/" + maarach.getId();
+        writeData(path, maarach, callback);
     }
+
+    /**
+     * קבלת מערך אימון ספציפי לפי ה-ID שלו
+     */
+    public void getMaarachImun(@NonNull String userId, @NonNull String maarachId, @NotNull final DatabaseCallback<MaarachImun> callback) {
+        String path = USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH + "/" + maarachId;
+        getData(path, MaarachImun.class, callback);
+    }
+
+    /**
+     * קבלת רשימת כל מערכי האימון של משתמש מסוים
+     */
+    public void getUserMaarachImunList(@NonNull String userId, @NotNull final DatabaseCallback<List<MaarachImun>> callback) {
+        String path = USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH;
+        getDataList(path, MaarachImun.class, callback);
+    }
+
+    /**
+     * מחיקת מערך אימון
+     */
+    public void deleteMaarachImun(@NonNull String userId, @NonNull String maarachId, @Nullable final DatabaseCallback<Void> callback) {
+        String path = USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH + "/" + maarachId;
+        deleteData(path, callback);
+    }
+
+    // endregion
 
 
 
