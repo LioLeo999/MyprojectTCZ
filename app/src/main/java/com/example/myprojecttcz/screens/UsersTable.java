@@ -44,11 +44,7 @@ public class UsersTable extends BaseActivity {
                 startActivity(intent);
             }
 
-            @Override
-            public void onLongUserClick(User user) {
-                // Handle long user click
-                Log.d(TAG, "User long clicked: " + user);
-            }
+
         });
         usersList.setAdapter(userAdapter);
     }

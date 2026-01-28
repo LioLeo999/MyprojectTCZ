@@ -601,7 +601,16 @@ public class DatabaseService {
     }
 
     // endregion
-
+    // Userstable modifications
+    public void updateUserAdminStatus(@NotNull String uid, boolean isAdmin, @Nullable final DatabaseCallback<Void> callback) {
+        readData(USERS_PATH + "/" + uid + "/admin").setValue(isAdmin, (error, ref) -> {
+            if (error != null) {
+                if (callback != null) callback.onFailed(error.toException());
+            } else {
+                if (callback != null) callback.onCompleted(null);
+            }
+        });
+    }
 
 
 

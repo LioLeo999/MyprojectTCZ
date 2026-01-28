@@ -231,4 +231,5 @@ public class BaseActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.nav_spinner);
         if (spinner != null) spinner.setSelection(0);
     }
+
 }
