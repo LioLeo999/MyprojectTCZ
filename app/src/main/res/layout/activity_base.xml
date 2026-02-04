@@ -16,35 +16,103 @@
             android:id="@+id/basetoolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/lgreen"
-            app:titleTextColor="@color/white"
-            app:title="Tennis Coach Zone"
-            android:elevation="4dp">
+            android:background="@color/white"
+            android:elevation="4dp"
+            app:contentInsetStart="0dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TCZ"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="COACH HUB"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/registerbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Register"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/dgreen"
+                    style="@style/Widget.MaterialComponents.Button"
+                    app:cornerRadius="50dp"
+                    android:layout_toStartOf="@id/loginbtn"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/loginbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Login"
+                    android:textColor="@color/black"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:cornerRadius="50dp"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="1dp"
+                    android:layout_toStartOf="@id/menu_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/logoutbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log out"
+                    android:textColor="@color/black"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:cornerRadius="50dp"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="1dp"
+                    android:layout_toStartOf="@id/menu_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/menu_icon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:contentDescription="TODO"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/tczlogo"
+                    android:contentDescription="Logo"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:focusable="true"
-                    />
+                    android:focusable="true" />
 
                 <Spinner
                     android:id="@+id/nav_spinner"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
-            </LinearLayout>
+            </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout

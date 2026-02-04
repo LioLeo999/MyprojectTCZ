@@ -2,9 +2,16 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="lgreen">#388E3C</color>
-    <color name="yellow">#FFEB3B</color>
-    <color name="dgreen">#2E7D32</color>
-    <color name="lightBg">#F5F5F5</color>
+
+    <color name="lgreen">#90EE90</color>
+    <color name="dgreen">#006400</color>
+    <color name="yellow">#FFFF00</color>
+
+    <color name="tennis_primary">#2F5233</color>
+    <color name="tennis_accent">#D9FD50</color>
+    <color name="background_light">#F8FAFC</color>
+    <color name="text_dark">#1E293B</color>
+    <color name="text_secondary">#64748B</color>
     <color name="red">#FF0000</color>
+    <color name="lightBg">#F5F5F5</color>
 </resources>

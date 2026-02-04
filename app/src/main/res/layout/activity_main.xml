@@ -5,141 +5,299 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dgreen"
+    android:background="@color/background_light"
     tools:context=".screens.MainActivity">
 
-    <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:orientation="vertical"
-        android:weightSum="12"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardBackgroundColor="@color/tennis_primary"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/tczlogo"
+                    app:tint="@color/tennis_accent"/>
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TCZ"
+                    android:textColor="@color/text_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="COACH HUB"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="10dp"
-            android:layout_weight="2"
-            >
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <Button
                 android:id="@+id/loginbtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/yellow"
-                android:textColor="@color/black"
+                android:layout_height="40dp"
                 android:text="Login"
+                android:textColor="@color/tennis_primary"
+                android:background="@android:color/transparent"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:visibility="gone"/>
-
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/logoutbtn"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:backgroundTint="@color/yellow"
-                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
                 android:text="Log out"
-                android:visibility="gone"
-                />
+                android:textColor="@color/tennis_primary"
+                android:background="@android:color/transparent"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/registerbtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
-                android:textColor="@color/black"
-                android:text="Register"
-                android:visibility="gone"
-                />
+                android:layout_height="40dp"
+                android:text="Join"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/tennis_primary"
+                app:cornerRadius="20dp"
+                android:visibility="gone"/>
         </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Space
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/welcomeSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:text="Welcome to"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
         <TextView
             android:id="@+id/coteret"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:text="Welcome to \n TCZ"
-            android:textSize="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_weight="1"
-            />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
+            android:text="Tennis Coach Zone"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/tennis_primary"/>
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="What would you like to do?"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_weight="1"
-
-            />
-
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-
-        <Button
-            android:id="@+id/drillsB"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🎾 Drills"
-            android:backgroundTint="@color/lgreen"
-            android:layout_weight="1.5"
-            android:textSize="30dp"
-            android:layout_margin="10dp"
-
-            />
-        <Button
-            android:id="@+id/chatsB"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="💬Chats"
-            android:backgroundTint="@color/lgreen"
-            android:layout_weight="1.5"
-            android:textSize="30dp"
-            android:layout_margin="10dp"
-
-
-            />
-
-        <Button
-            android:id="@+id/tsetsB"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/lgreen"
-            android:layout_weight="1.5"
-            android:textSize="30dp"
-            android:layout_margin="10dp"
-            android:text="📋🎾Training sets" />
-
-
+            android:layout_marginTop="8dp"
+            android:text="What would you like to focus on today?"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"/>
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/welcomeSection"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="80dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/drillsB"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/tennis_primary"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/tczlogo"
+                        app:tint="@color/white"
+                        android:background="@drawable/ic_launcher_background"
+                        android:backgroundTint="#30FFFFFF"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:text="Browse Drills"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:text="→"
+                        android:textColor="@color/tennis_accent"
+                        android:textSize="30sp"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatsB"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:text="Client Chats"
+                        android:textColor="@color/text_dark"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:text="→"
+                        android:textColor="#E2E8F0"
+                        android:textSize="30sp"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp">
+
+                    <Button
+                        android:id="@+id/tsetsB"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:backgroundTint="#E8EDF2"
+                        android:textColor="@color/text_secondary"
+                        android:text="Training\nSets"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        app:cornerRadius="20dp"
+                        app:icon="@drawable/ic_launcher_foreground"
+                        app:iconGravity="textTop"
+                        app:iconTint="@color/text_secondary"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp">
+
+                    <Button
+                        android:id="@+id/adminBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:backgroundTint="#E8EDF2"
+                        android:textColor="#FF5722"
+                        android:text="Admin\nZone"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        app:cornerRadius="20dp"
+                        app:icon="@drawable/ic_delete"
+                        app:iconGravity="textTop"
+                        app:iconTint="#FF5722"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/tennis_accent"
+        app:tint="@color/tennis_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:elevation="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

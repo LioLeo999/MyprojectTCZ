@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button; // הוספתי ייבוא לכפתור
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -44,34 +45,22 @@ public class BaseActivity extends AppCompatActivity {
         databaseService = DatabaseService.getInstance();
         mauth = FirebaseAuth.getInstance();
 
-        // הערה: לא קוראים כאן ל-setupNavigationSpinner כי ה-Layout עדיין לא קיים!
+        // הסרתי מפה את updateUIForUser - הוא ייקרא ב-setContentView
     }
 
-    /**
-     * הפונקציה הזו נקראת ע"י כל האקטיביטיז שיורשות מ-BaseActivity.
-     * במקום להחליף את המסך, היא לוקחת את העיצוב של הבן ומכניסה אותו לתוך ה-FrameLayout של האבא.
-     */
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
-        // 1. טוענים את ה-Layout של הבסיס (עם ה-Toolbar)
         View fullView = getLayoutInflater().inflate(R.layout.activity_base, null);
-
-        // 2. מוצאים את ה-FrameLayout
         FrameLayout activityContainer = fullView.findViewById(R.id.framelayout);
-
-        // 3. מנפחים את ה-Layout של הבן לתוך ה-Container
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
-
-        // 4. מגדירים את המסך המלא כ-Content View
         super.setContentView(fullView);
 
-        // 5. הגדרות Toolbar וכפתור חזור
         initializeToolbar();
-
-        // 6. הפעלת הספינר (רק עכשיו כשהמסך מוכן)
         setupNavigationSpinner();
 
-        // 7. הגדרות Insets (EdgeToEdge)
+        // קריאה לפונקציה רק כשהמסך מוכן
+        updateUIForUser();
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -82,9 +71,7 @@ public class BaseActivity extends AppCompatActivity {
     private void initializeToolbar() {
         Toolbar toolbar = findViewById(R.id.basetoolbar);
         if (toolbar != null) {
-            setSupportActionBar(toolbar); // הופך את ה-Toolbar ל-ActionBar פעיל
-
-            // בדיקה האם להציג כפתור חזור
+            setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
                 boolean showBack = shouldShowBackButton();
                 getSupportActionBar().setDisplayHomeAsUpEnabled(showBack);
@@ -93,25 +80,71 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // פונקציה שמאפשרת לאקטיביטיז הבנים להחליט אם להראות חץ חזור או לא
     public boolean shouldShowBackButton() {
         return true;
     }
 
-    // פונקציה שמאפשרת לאקטיביטיז הבנים להחליט אם להראות את "מסך הבית" בתפריט
     protected boolean shouldShowHomeInMenu() {
         return true;
     }
 
-    // טיפול בלחיצה על כפתור החזור ב-Toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish(); // סוגר את המסך וחוזר אחורה
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    // ... (פונקציות ה-Spinner נשארות זהות) ...
+
+    // --- הפונקציה המעודכנת ---
+    public void updateUIForUser() {
+        Button btnLogin = findViewById(R.id.loginbtn);
+        Button btnRegister = findViewById(R.id.registerbtn); // כפתור חדש
+        Button btnLogout = findViewById(R.id.logoutbtn);
+
+        // הגנה מפני קריסה
+        if (btnLogin == null || btnLogout == null || btnRegister == null) return;
+
+        if (mauth.getCurrentUser() != null) {
+            // -- משתמש מחובר --
+            // מסתירים את Login ו-Register, מראים את Logout
+            btnLogin.setVisibility(View.GONE);
+            btnRegister.setVisibility(View.GONE);
+            btnLogout.setVisibility(View.VISIBLE);
+
+            btnLogout.setOnClickListener(v -> {
+                mauth.signOut();
+                Intent intent = new Intent(BaseActivity.this, LogIn.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
+
+        } else {
+            // -- משתמש לא מחובר (אורח) --
+            // מראים את Login ו-Register, מסתירים את Logout
+            btnLogin.setVisibility(View.VISIBLE);
+            btnRegister.setVisibility(View.VISIBLE);
+            btnLogout.setVisibility(View.GONE);
+
+            btnLogin.setOnClickListener(v -> {
+                Intent intent = new Intent(BaseActivity.this, LogIn.class);
+                startActivity(intent);
+            });
+
+            // לחיצה על Register
+            btnRegister.setOnClickListener(v -> {
+                Intent intent = new Intent(BaseActivity.this, Register.class);
+                startActivity(intent);
+            });
+        }
+    }
+
+    // יש להעתיק גם את setupNavigationSpinner ו-handleNavigationSelection מהקוד הקודם שלך אם הם לא מופיעים כאן
+    // (קיצרתי כדי לחסוך מקום, אך בקוד שלך תשאיר אותם)
 
     private void setupNavigationSpinner() {
         Toolbar toolbar = findViewById(R.id.basetoolbar);
@@ -136,7 +169,7 @@ public class BaseActivity extends AppCompatActivity {
                 // >> משתמש מחובר <<
                 menuItems.add("Drills");
                 menuItems.add("Profile info");
-                menuItems.add("Log out");
+                // menuItems.add("Log out"); // הסרתי כי יש כפתור
                 databaseService.getUser(mauth.getUid(), new DatabaseService.DatabaseCallback<User>() {
                     @Override
                     public User onCompleted(User object) {
@@ -154,7 +187,7 @@ public class BaseActivity extends AppCompatActivity {
             } else {
                 // >> אורח (לא מחובר) <<
                 menuItems.add("Drills");
-                menuItems.add("Login");
+                // menuItems.add("Login"); // הסרתי כי יש כפתור
                 menuItems.add("Register");
             }
 
@@ -200,10 +233,6 @@ public class BaseActivity extends AppCompatActivity {
                 intent = new Intent(this, UserProfile.class);
                 break;
 
-            case "Login":
-                intent = new Intent(this, LogIn.class);
-                break;
-
             case "Register":
                 intent = new Intent(this, Register.class);
                 break;
@@ -212,24 +241,15 @@ public class BaseActivity extends AppCompatActivity {
                 intent = new Intent(this, AdminPage.class);
                 break;
 
-            case "Log out":
-                mauth.signOut();
-                intent = new Intent(this, LogIn.class);
-                // מנקה את ההיסטוריה כדי שלא יוכלו לחזור אחורה
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                break;
+            // הסרתי את Login ו-Log out מהסוויץ' כי הם מטופלים בכפתורים החדשים
         }
 
         if (intent != null) {
-            // בדיקה שאנחנו לא פותחים את אותו מסך שאנחנו כבר נמצאים בו
             if (!this.getClass().getName().equals(intent.getComponent().getClassName())) {
                 startActivity(intent);
             }
         }
-
-        // איפוס הספינר לפריט הראשון כדי שייראה יפה בפעם הבאה
         Spinner spinner = findViewById(R.id.nav_spinner);
         if (spinner != null) spinner.setSelection(0);
     }
-
 }
