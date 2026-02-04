@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.adapters.TrainingSetAdapter;
+import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.MaarachImun;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
@@ -20,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
-public class ShowMaarachim extends AppCompatActivity {
+public class ShowMaarachim extends BaseActivity {
 
     private RecyclerView rvTrainingSets;
     private TrainingSetAdapter adapter;

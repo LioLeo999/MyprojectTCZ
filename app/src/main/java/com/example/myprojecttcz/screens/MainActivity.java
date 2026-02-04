@@ -30,7 +30,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button registerbtn, loginbtn, tsetsBtn, logoutbtn, adminBtn;
 
     // כפתור צף (הפלוס למטה בצד)
-    private FloatingActionButton fabAdd;
 
     // משתני Firebase ו-Database
     private FirebaseAuth auth;
@@ -83,9 +82,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         logoutbtn.setOnClickListener(this);
 
         // חיבור הכפתור הצף
-
-        fabAdd = findViewById(R.id.fabAdd);
-        fabAdd.setOnClickListener(this);
     }
 
     private void setupAuthStateListener() {
@@ -112,7 +108,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         // הצגת כפתורי תוכן והתנתקות
         logoutbtn.setVisibility(View.VISIBLE);
         tsetsBtn.setVisibility(View.VISIBLE); // מציג את Training Sets
-        fabAdd.setVisibility(View.VISIBLE);   // מציג את הפלוס
 
         // בדיקה האם המשתמש הוא מנהל
         String uid = firebaseUser.getUid();
@@ -143,7 +138,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         logoutbtn.setVisibility(View.GONE);
         tsetsBtn.setVisibility(View.GONE); // אורח לא רואה את מערכי האימון שלו
         adminBtn.setVisibility(View.GONE); // ובוודאי לא את כפתור המנהל
-        fabAdd.setVisibility(View.GONE);
     }
 
     @Override
@@ -189,16 +183,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             startActivity(new Intent(MainActivity.this, AdminPage.class));
         }
 
-        else if (id == R.id.fabAdd) { // כפתור הפלוס הצף
-            // אם המשתמש הוא מנהל, אולי תרצה להעביר אותו להוספת דריל
-            // אם הוא מאמן, אולי ליצירת אימון חדש
-            // כרגע נכוון אותו ליצירת דריל (אם זה מה שאתה רוצה) או הודעה
-            if (adminBtn.getVisibility() == View.VISIBLE) {
-                startActivity(new Intent(MainActivity.this, AddDrill.class));
-            } else {
-                Toast.makeText(this, "Quick Add Action", Toast.LENGTH_SHORT).show();
-            }
-        }
+
     }
 
     // הגדרות BaseActivity - ביטול חץ חזור וכפתור הבית במסך הראשי

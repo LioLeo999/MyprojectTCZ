@@ -1,6 +1,7 @@
 package com.example.myprojecttcz.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.MaarachImun;
+import com.example.myprojecttcz.screens.ShowTrainingSet; // הוספתי את האימפורט הזה
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,17 +48,18 @@ public class TrainingSetAdapter
         ArrayList<String> drillIds =
                 set.getDrillsid() != null ? set.getDrillsid() : new ArrayList<>();
 
-        // RecyclerView פנימי של drill IDs
-        DrillMiniAdapter drillAdapter =
-                new DrillMiniAdapter(drillIds);
+        // RecyclerView פנימי של drill IDs (שומר על מה שהיה לך)
+        // שים לב: תוודא שיש לך את הקלאס DrillMiniAdapter, אם לא - תצטרך ליצור אותו או להסיר את הקטע הזה
+        DrillMiniAdapter drillAdapter = new DrillMiniAdapter(drillIds);
 
-        holder.rvDrills.setLayoutManager(
-                new LinearLayoutManager(context));
+        holder.rvDrills.setLayoutManager(new LinearLayoutManager(context));
         holder.rvDrills.setAdapter(drillAdapter);
 
-        // לחיצה על כרטיס – מסך פירוט (בהמשך)
+        // --- כאן השינוי: לחיצה על הכרטיס מעבירה לעמוד העריכה המלא ---
         holder.itemView.setOnClickListener(v -> {
-            // TODO: מעבר למסך פירוט מערך אימון
+            Intent intent = new Intent(context, ShowTrainingSet.class);
+            intent.putExtra("maarach_id", set.getId()); // שליחת ה-ID
+            context.startActivity(intent);
         });
     }
 
@@ -74,8 +77,8 @@ public class TrainingSetAdapter
 
         public SetViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvSetName = itemView.findViewById(R.id.tvSetName);
-            rvDrills = itemView.findViewById(R.id.rvDrills);
+            tvSetName = itemView.findViewById(R.id.tvSetName); // שם המערך
+            rvDrills = itemView.findViewById(R.id.rvDrills);     // רשימה פנימית קטנה
         }
     }
 }
