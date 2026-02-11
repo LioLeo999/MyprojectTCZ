@@ -43,8 +43,6 @@ public class DrillListReorderAdapter extends RecyclerView.Adapter<DrillListReord
 
         holder.tvDrillName.setText(drill.getName());
 
-        // טעינת תמונה עם Glide
-
 
         // לחיצה למעבר לעמוד הדריל הספציפי
         holder.itemView.setOnClickListener(v -> {
@@ -71,12 +69,10 @@ public class DrillListReorderAdapter extends RecyclerView.Adapter<DrillListReord
     }
 
     static class DrillViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgDrill;
         TextView tvDrillName;
 
         public DrillViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvDrillName = itemView.findViewById(R.id.tvDrillName);
         }
     }
