@@ -14,13 +14,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgDrill"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
-
         <TextView
             android:id="@+id/tvDrillName"
             android:layout_width="match_parent"

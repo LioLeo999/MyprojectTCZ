@@ -20,6 +20,7 @@ import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ShowMaarachim extends BaseActivity {
 
@@ -64,7 +65,10 @@ public class ShowMaarachim extends BaseActivity {
             public User onCompleted(User user) {
                 if (user != null && user.getMaarachim() != null) {
                     maarachList.clear();
-                    maarachList.addAll(user.getMaarachim());
+
+                    // תיקון: המרה מ-HashMap ל-ArrayList עבור האדפטר
+                    maarachList.addAll(user.getMaarachim().values());
+
                     adapter.notifyDataSetChanged();
                 }
                 return null;
@@ -81,7 +85,6 @@ public class ShowMaarachim extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create New Training Set");
 
-        // עיצוב שדה הקלט בתוך הדיאלוג
         final EditText input = new EditText(this);
         input.setHint("Enter set name...");
 
@@ -111,28 +114,25 @@ public class ShowMaarachim extends BaseActivity {
     private void createNewSet(String name) {
         if (uid == null) return;
 
-        // ייצור מזהה ואובייקט חדש
         String newId = ds.generateMaarachId(uid);
         MaarachImun newMaarach = new MaarachImun(newId, name, "", new ArrayList<>());
 
-        // משיכת המשתמש כדי לעדכן את הרשימה שלו
         ds.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
             @Override
             public User onCompleted(User currentUser) {
                 if (currentUser != null) {
                     if (currentUser.getMaarachim() == null) {
-                        currentUser.setMaarachim(new ArrayList<>());
+                        currentUser.setMaarachim(new HashMap<>());
                     }
 
-                    currentUser.getMaarachim().add(newMaarach);
+                    // תיקון: שימוש ב-put עם ה-ID כמפתח
+                    currentUser.getMaarachim().put(newMaarach.getId(), newMaarach);
 
-                    // עדכון ב-Firebase
                     ds.updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
                         @Override
                         public User onCompleted(Void object) {
                             Toast.makeText(ShowMaarachim.this, "Set '" + name + "' Created", Toast.LENGTH_SHORT).show();
 
-                            // עדכון UI מיידי ללא טעינה מחדש מהשרת
                             maarachList.add(newMaarach);
                             adapter.notifyItemInserted(maarachList.size() - 1);
                             rvTrainingSets.scrollToPosition(maarachList.size() - 1);

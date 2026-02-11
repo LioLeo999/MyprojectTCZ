@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,10 +45,11 @@ public class ShowTrainingSet extends BaseActivity {
 
         ds = DatabaseService.getInstance();
 
-        // 2. הגדרת ה-RecyclerView עם LinearLayoutManager (חשוב בשביל רשימה אנכית!)
+        // 2. הגדרת ה-RecyclerView
         rvDrillsList = findViewById(R.id.rvDrillsList);
-        rvDrillsList.setLayoutManager(new LinearLayoutManager(this)); // זה מה שגורם להם להיות אחד מתחת לשני
+        rvDrillsList.setLayoutManager(new LinearLayoutManager(this));
 
+        // ודא ש-DrillListReorderAdapter קיים בפרויקט שלך ומקבל את הרשימה הזו
         adapter = new DrillListReorderAdapter(this, drillsList);
         rvDrillsList.setAdapter(adapter);
 
@@ -62,7 +62,7 @@ public class ShowTrainingSet extends BaseActivity {
 
     private void setupDragAndDrop() {
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) { // תומך בגרירה למעלה ולמטה
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
@@ -72,20 +72,20 @@ public class ShowTrainingSet extends BaseActivity {
                 int fromPos = viewHolder.getAdapterPosition();
                 int toPos = target.getAdapterPosition();
 
-                // ביצוע ההחלפה באדפטר
+                // ביצוע ההחלפה באדפטר (הנחה שהמתודה קיימת באדפטר שלך)
                 adapter.moveItem(fromPos, toPos);
                 return true;
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // לא עושים כלום בגרירה לצדדים
+                // לא רלוונטי לגרירה אנכית
             }
 
             @Override
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 super.clearView(recyclerView, viewHolder);
-                // כשהמשתמש עוזב את הפריט - שומרים את הסדר החדש ב-Firebase
+                // שמירה ב-Firebase רק כשהמשתמש משחרר את הפריט
                 saveOrderToFirebase();
             }
         };
@@ -98,16 +98,23 @@ public class ShowTrainingSet extends BaseActivity {
         String uid = FirebaseAuth.getInstance().getUid();
         if (uid == null) return;
 
-        // שלב א: משיכת מערך האימון הספציפי
+        // שליפת המערך הספציפי לפי ID
+        // זה עובד מצוין גם עם המבנה החדש של HashMap כי אנחנו ניגשים ישירות לנתיב ה-ID
         ds.getMaarachImun(uid, currentMaarachId, new DatabaseService.DatabaseCallback<MaarachImun>() {
             @Override
-            public User onCompleted(MaarachImun maarach) { // התיקון: החזרת User
+            public User onCompleted(MaarachImun maarach) {
                 if (maarach != null) {
                     currentMaarach = maarach;
-                    // שלב ב: משיכת הדרילים לפי הרשימה
-                    fetchDrills(maarach.getDrillsid());
+                    // אם הרשימה ריקה, מונעים קריסה
+                    if (maarach.getDrillsid() != null && !maarach.getDrillsid().isEmpty()) {
+                        fetchDrills(maarach.getDrillsid());
+                    } else {
+                        // אם אין תרגילים, מנקים את הרשימה
+                        drillsList.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-                return null; // מחזירים null כי ה-Callback מחייב החזרה
+                return null;
             }
 
             @Override
@@ -118,20 +125,20 @@ public class ShowTrainingSet extends BaseActivity {
     }
 
     private void fetchDrills(ArrayList<String> drillIds) {
-        if (drillIds == null || drillIds.isEmpty()) return;
-
-        // משיכת כל הדרילים וסינון (בהתאם למה שבנוי כרגע ב-DatabaseService)
+        // משיכת כל הדרילים וסינון לפי הרשימה שיש לנו
         ds.getAllDrills(new DatabaseService.DrillsCallback() {
             @Override
             public void onSuccess(List<Drill2v> allDrills) {
                 drillsList.clear();
 
-                // שמירה על הסדר לפי רשימת ה-IDs
+                // אלגוריתם לשמירה על הסדר המקורי של drillIds
+                // עוברים על רשימת ה-IDs (שקובעת את הסדר)
                 for (String id : drillIds) {
+                    // עבור כל ID, מחפשים את האובייקט המתאים ברשימה הגדולה
                     for (Drill2v drill : allDrills) {
                         if (drill.getId().equals(id)) {
                             drillsList.add(drill);
-                            break;
+                            break; // מצאנו, עוברים ל-ID הבא
                         }
                     }
                 }
@@ -149,6 +156,7 @@ public class ShowTrainingSet extends BaseActivity {
         if (currentMaarach == null) return;
 
         // יצירת רשימת IDs חדשה לפי הסדר הנוכחי באדפטר
+        // הנחה: ל-Adapter יש מתודה getDrills() שמחזירה את הרשימה המסודרת
         ArrayList<String> newIds = new ArrayList<>();
         for (Drill2v d : adapter.getDrills()) {
             newIds.add(d.getId());
@@ -158,10 +166,11 @@ public class ShowTrainingSet extends BaseActivity {
         String uid = FirebaseAuth.getInstance().getUid();
 
         // עדכון ב-Firebase
+        // הפונקציה createMaarachImun כותבת לנתיב הספציפי של ה-ID, ולכן זה תקין
         ds.createMaarachImun(uid, currentMaarach, new DatabaseService.DatabaseCallback<Void>() {
             @Override
-            public User onCompleted(Void object) { // התיקון: החזרת User
-                // נשמר בהצלחה
+            public User onCompleted(Void object) {
+                // נשמר בהצלחה (אפשר להוסיף לוג או טוסט קטן אם רוצים)
                 return null;
             }
 

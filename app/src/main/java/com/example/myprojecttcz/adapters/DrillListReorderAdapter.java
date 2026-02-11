@@ -44,9 +44,7 @@ public class DrillListReorderAdapter extends RecyclerView.Adapter<DrillListReord
         holder.tvDrillName.setText(drill.getName());
 
         // טעינת תמונה עם Glide
-        if (drill.getGif() != null && !drill.getGif().isEmpty()) {
-            Glide.with(context).asGif().load(drill.getGif()).into(holder.imgDrill);
-        }
+
 
         // לחיצה למעבר לעמוד הדריל הספציפי
         holder.itemView.setOnClickListener(v -> {
@@ -78,7 +76,7 @@ public class DrillListReorderAdapter extends RecyclerView.Adapter<DrillListReord
 
         public DrillViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgDrill = itemView.findViewById(R.id.imgDrill);
+
             tvDrillName = itemView.findViewById(R.id.tvDrillName);
         }
     }

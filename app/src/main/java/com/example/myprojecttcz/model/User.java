@@ -1,6 +1,6 @@
 package com.example.myprojecttcz.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User {
     protected String id;
@@ -11,9 +11,11 @@ public class User {
     protected String phone;
     protected String password;
     protected boolean admin;
-    protected ArrayList<MaarachImun> maarachim;
 
-    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean admin, ArrayList<MaarachImun> maarachim) {
+    // שינוי: שימוש ב-HashMap במקום ArrayList
+    protected HashMap<String, MaarachImun> maarachim = new HashMap<>();
+
+    public User(String id, String uname, String fname, String lname, String email, String phone, String password, boolean admin, HashMap<String, MaarachImun> maarachim) {
         this.id = id;
         this.uname = uname;
         this.fname = fname;
@@ -34,7 +36,7 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.admin = admin;
-        this.maarachim = new ArrayList<MaarachImun>();
+        this.maarachim = new HashMap<>(); // אתחול מפה ריקה
     }
 
     public User(String uname, String fname, String lname) {
@@ -45,6 +47,8 @@ public class User {
 
     public User() {
     }
+
+    // Getters and Setters
 
     public String getId() {
         return id;
@@ -102,11 +106,15 @@ public class User {
         this.password = password;
     }
 
-    public ArrayList<MaarachImun> getMaarachim() {
+    // שינוי: החזרה של HashMap
+    public HashMap<String, MaarachImun> getMaarachim() {
+        if (maarachim == null) {
+            maarachim = new HashMap<>();
+        }
         return maarachim;
     }
 
-    public void setMaarachim(ArrayList<MaarachImun> maarachim) {
+    public void setMaarachim(HashMap<String, MaarachImun> maarachim) {
         this.maarachim = maarachim;
     }
 
@@ -117,7 +125,6 @@ public class User {
     public void setIsadmin(boolean isadmin) {
         this.admin = admin;
     }
-
 
     @Override
     public String toString() {
