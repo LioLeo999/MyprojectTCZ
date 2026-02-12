@@ -65,7 +65,10 @@ public class TrainingSetAdapter
 
     @Override
     public int getItemCount() {
-        return sets != null ? sets.size() : 0;
+        if (sets != null) {
+            return sets.size();
+        }
+        return 0;
     }
 
     // ---------------- ViewHolder ----------------

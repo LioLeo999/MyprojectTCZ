@@ -26,19 +26,16 @@ public class DrillMiniAdapter extends RecyclerView.Adapter<DrillMiniAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // כאן התיקון: שימוש ב-LayoutInflater כדי לקשר לקובץ ה-XML שלך
-        // ודא שיש לך קובץ בשם item_drill_mini.xml (או שנה את השם כאן לשם הקובץ שלך)
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_drill_full_width, parent, false);
+                .inflate(R.layout.item_minidrill, parent, false);
         return new ViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String id = drillIds.get(position);
 
-        // איפוס הטקסט לפני הטעינה
+        // איפוס הטקסט לפני הטעינה (כדי שלא יראו טקסט משורה קודמת)
         holder.textView.setText("Loading...");
 
         // שמירת ה-ID בתוך ה-View (כדי לוודא אח"כ שזה עדיין אותו פריט)
@@ -47,20 +44,19 @@ public class DrillMiniAdapter extends RecyclerView.Adapter<DrillMiniAdapter.View
         ds.getDrillById(id, new DatabaseService.DrillCallback() {
             @Override
             public void onSuccess(Drill2v drill) {
-                // בדיקה 1: האם השורה הזו עדיין קיימת ברשימה?
-                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
+                // בדיקה: האם השורה הזו עדיין אמורה להציג את ה-ID הזה?
+                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION &&
+                        id.equals(holder.itemView.getTag())) {
 
-                    // בדיקה 2 (מומלצת): האם השורה הזו עדיין אמורה להציג את ה-ID הזה?
-                    // זה מונע באגים כשגוללים מהר
-                    if (id.equals(holder.itemView.getTag())) {
-                        holder.textView.setText("• " + drill.getName());
-                    }
+                    holder.textView.setText("• " + drill.getName());
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
+                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION &&
+                        id.equals(holder.itemView.getTag())) {
+
                     holder.textView.setText("• Error loading");
                 }
             }
@@ -69,7 +65,10 @@ public class DrillMiniAdapter extends RecyclerView.Adapter<DrillMiniAdapter.View
 
     @Override
     public int getItemCount() {
-        return drillIds != null ? drillIds.size() : 0;
+        if (drillIds != null) {
+            return drillIds.size();
+        }
+        return 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -77,7 +76,7 @@ public class DrillMiniAdapter extends RecyclerView.Adapter<DrillMiniAdapter.View
 
         ViewHolder(View itemView) {
             super(itemView);
-            // קישור ל-ID שמוגדר ב-XML
+            // זה חייב להתאים ל-ID שנתת ב-item_minidrill.xml
             textView = itemView.findViewById(R.id.tvDrillName);
         }
     }
