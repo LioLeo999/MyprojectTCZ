@@ -26,6 +26,7 @@ import com.example.myprojecttcz.screens.LogIn;
 import com.example.myprojecttcz.screens.MaagarDrills;
 import com.example.myprojecttcz.screens.MainActivity;
 import com.example.myprojecttcz.screens.Register;
+import com.example.myprojecttcz.screens.ShowMaarachim;
 import com.example.myprojecttcz.screens.UserProfile;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.auth.FirebaseAuth;
@@ -169,6 +170,7 @@ public class BaseActivity extends AppCompatActivity {
                 // >> משתמש מחובר <<
                 menuItems.add("Drills");
                 menuItems.add("Profile info");
+                menuItems.add("Training sets");
                 // menuItems.add("Log out"); // הסרתי כי יש כפתור
                 databaseService.getUser(mauth.getUid(), new DatabaseService.DatabaseCallback<User>() {
                     @Override
@@ -188,7 +190,7 @@ public class BaseActivity extends AppCompatActivity {
                 // >> אורח (לא מחובר) <<
                 menuItems.add("Drills");
                 // menuItems.add("Login"); // הסרתי כי יש כפתור
-                menuItems.add("Register");
+                // menuItems.add("Register");
             }
 
             // 2. יצירת ה-Adapter
@@ -233,8 +235,8 @@ public class BaseActivity extends AppCompatActivity {
                 intent = new Intent(this, UserProfile.class);
                 break;
 
-            case "Register":
-                intent = new Intent(this, Register.class);
+            case "Training sets":
+                intent = new Intent(this, ShowMaarachim.class);
                 break;
 
             case "Admin page":
