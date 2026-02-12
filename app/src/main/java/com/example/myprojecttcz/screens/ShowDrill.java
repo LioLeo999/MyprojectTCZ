@@ -1,5 +1,6 @@
 package com.example.myprojecttcz.screens;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -315,15 +316,32 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
         if (drill == null) return;
 
         if (v == btnvideocoachview) {
-            Intent intent = new Intent(this, ShowDrillVideo.class);
-            intent.putExtra("link", drill.getVideo1());
-            startActivity(intent);
-        }
+            String videoUrl = drill.getVideo1(); // קבל את הלינק מהאובייקט שלך
 
+            if (videoUrl != null && !videoUrl.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(videoUrl));
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // במקרה שאין אפליקציה שיכולה לפתוח את הוידאו, נפתח בדפדפן כשגיבוי
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(videoUrl));
+                    startActivity(webIntent);
+                }
+            }
+        }
         if (v == btnincourtview) {
-            Intent intent = new Intent(this, ShowDrillVideo.class);
-            intent.putExtra("link", drill.getVideo2());
-            startActivity(intent);
+            String videoUrl = drill.getVideo2(); // קבל את הלינק מהאובייקט שלך
+
+            if (videoUrl != null && !videoUrl.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(videoUrl));
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // במקרה שאין אפליקציה שיכולה לפתוח את הוידאו, נפתח בדפדפן כשגיבוי
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(videoUrl));
+                    startActivity(webIntent);
+                }
+            }
         }
     }
 }
