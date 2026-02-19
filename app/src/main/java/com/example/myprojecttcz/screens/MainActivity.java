@@ -107,6 +107,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         // הצגת כפתורי תוכן והתנתקות
         logoutbtn.setVisibility(View.VISIBLE);
+        chatsBtn.setVisibility(View.VISIBLE);
         tsetsBtn.setVisibility(View.VISIBLE); // מציג את Training Sets
 
         // בדיקה האם המשתמש הוא מנהל
@@ -173,8 +174,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             startActivity(new Intent(MainActivity.this, MaagarDrills.class));
         }
         else if (id == R.id.chatsB) { // לחיצה על הכרטיס הלבן (צ'אטים)
-            // startActivity(new Intent(MainActivity.this, ChatListActivity.class));
-            Toast.makeText(this, "Chats feature coming soon!", Toast.LENGTH_SHORT).show();
+            Intent go = new Intent(MainActivity.this, ChatsListActivity.class);
+            startActivity(go);
         }
         else if (id == R.id.tsetsB) { // Training Sets
             startActivity(new Intent(MainActivity.this, ShowMaarachim.class));
