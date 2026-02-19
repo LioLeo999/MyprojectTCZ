@@ -39,6 +39,7 @@ public class ChatsListActivity extends BaseActivity {
     private List<Chat> chatList;
     private String currentUserId;
     private FloatingActionButton fabAddChat;
+    private FloatingActionButton fabAddForum; // הכפתור החדש לאדמין
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class ChatsListActivity extends BaseActivity {
 
         recyclerView = findViewById(R.id.recycler_view_chats_list);
         fabAddChat = findViewById(R.id.fab_add_chat);
+        fabAddForum = findViewById(R.id.fab_add_forum); // חיבור הכפתור החדש
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -55,6 +57,7 @@ public class ChatsListActivity extends BaseActivity {
         chatList = new ArrayList<>();
 
         readChats();
+        checkIfAdmin(); // בדיקה אם המשתמש הוא מנהל
 
         fabAddChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,8 +65,98 @@ public class ChatsListActivity extends BaseActivity {
                 showAddChatDialog();
             }
         });
+
+        fabAddForum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddForumDialog(); // פתיחת דיאלוג ליצירת פורום
+            }
+        });
     }
 
+    // פונקציה שמושכת את המשתמש הנוכחי ובודקת אם הוא מנהל
+    private void checkIfAdmin() {
+        DatabaseService.getInstance().getUser(currentUserId, new DatabaseService.DatabaseCallback<User>() {
+            @Override
+            public User onCompleted(User currentUser) {
+                if (currentUser != null && currentUser.isadmin()) {
+                    fabAddForum.setVisibility(View.VISIBLE); // מציג את כפתור הפורום לאדמין
+                }
+                return currentUser;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                // התעלם בשקט במקרה של שגיאה
+            }
+        });
+    }
+
+    // דיאלוג יצירת פורום (לאדמין בלבד)
+    private void showAddForumDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChatsListActivity.this);
+        builder.setTitle("צור פורום כללי חדש");
+
+        LinearLayout layout = new LinearLayout(ChatsListActivity.this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
+
+        final EditText titleBox = new EditText(ChatsListActivity.this);
+        titleBox.setHint("הכנס שם לפורום...");
+        layout.addView(titleBox);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("צור פורום", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String forumTitle = titleBox.getText().toString().trim();
+
+                if (forumTitle.isEmpty()) {
+                    Toast.makeText(ChatsListActivity.this, "חובה להכניס שם לפורום", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                createNewForum(forumTitle);
+            }
+        });
+
+        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
+    // יצירת פורום ושמירתו בדאטהבייס
+    private void createNewForum(String title) {
+        String newChatId = DatabaseService.getInstance().generateChatId();
+
+        List<String> members = new ArrayList<>(); // בפורום הרשימה ריקה כי כולם רואים
+
+        // isForum = true
+        Chat newForum = new Chat(newChatId, members, true, title);
+
+        DatabaseService.getInstance().createNewChat(newForum, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public User onCompleted(Void object) {
+                Intent intent = new Intent(ChatsListActivity.this, ChatActivity.class);
+                intent.putExtra("CHAT_ID", newChatId);
+                startActivity(intent);
+                return null;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(ChatsListActivity.this, "שגיאה ביצירת פורום", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // דיאלוג יצירת צ'אט פרטי
     private void showAddChatDialog() {
         DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<List<User>>() {
             @Override
@@ -71,7 +164,6 @@ public class ChatsListActivity extends BaseActivity {
                 List<User> otherUsers = new ArrayList<>();
                 List<String> userNames = new ArrayList<>();
 
-                // מסננים החוצה את המשתמש הנוכחי
                 for (User u : allUsers) {
                     if (!u.getId().equals(currentUserId)) {
                         otherUsers.add(u);
@@ -79,17 +171,14 @@ public class ChatsListActivity extends BaseActivity {
                     }
                 }
 
-                // יצירת מבנה הדיאלוג
                 LinearLayout layout = new LinearLayout(ChatsListActivity.this);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.setPadding(50, 40, 50, 10);
 
-                // שדה טקסט לשם השיחה
                 final EditText titleBox = new EditText(ChatsListActivity.this);
                 titleBox.setHint("הכנס שם לשיחה...");
                 layout.addView(titleBox);
 
-                // רשימה נפתחת לבחירת משתמש
                 final Spinner userSpinner = new Spinner(ChatsListActivity.this);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(ChatsListActivity.this, android.R.layout.simple_spinner_dropdown_item, userNames);
                 userSpinner.setAdapter(adapter);
@@ -101,7 +190,6 @@ public class ChatsListActivity extends BaseActivity {
 
                 layout.addView(userSpinner);
 
-                // בניית הדיאלוג
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatsListActivity.this);
                 builder.setTitle("צור צ'אט חדש");
                 builder.setView(layout);
