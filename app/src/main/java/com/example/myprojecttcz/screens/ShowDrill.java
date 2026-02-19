@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -44,6 +45,8 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
     private Button btnvideocoachview, btnincourtview;
     private DatabaseService databaseService;
     private FirebaseAuth mauth;
+    private CardView cardViewAddtotrainingset;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
         if (mauth.getCurrentUser() != null) {
             currentUserUid = mauth.getUid();
         }
-
+        showaddtotrainingset();
         loadDrill();
 
         if (mauth.getCurrentUser() != null){
@@ -92,6 +95,8 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
         btnincourtview = findViewById(R.id.btnincourtview);
         btnincourtview.setOnClickListener(this);
 
+        cardViewAddtotrainingset = findViewById(R.id.cardViewAddtotrainingset);
+
         SpinnerAddtoImun = findViewById(R.id.spinnerAddtoImun);
         imgGif = findViewById(R.id.imgGif);
 
@@ -104,6 +109,8 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
     }
 
     private void loadDrill() {
+
+
         databaseService.getDrillById(id, new DatabaseService.DrillCallback() {
             @Override
             public void onSuccess(Drill2v d) {
@@ -343,5 +350,11 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
                 }
             }
         }
+    }
+
+    public void showaddtotrainingset(){
+        String uid = mauth.getUid();
+        if (uid != null)
+            cardViewAddtotrainingset.setVisibility(View.VISIBLE);
     }
 }
