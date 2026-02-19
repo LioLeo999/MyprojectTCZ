@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.myprojecttcz.model.Chat;
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.model.MaarachImun;
@@ -612,6 +613,20 @@ public class DatabaseService {
         });
     }
 
+
+    // ---- CHAT SECTION ----
+
+    private static final String CHATS_PATH = "Chats";
+
+    /// יצירת מזהה חדש לצ'אט
+    public String generateChatId() {
+        return generateNewId(CHATS_PATH);
+    }
+
+    /// שמירת הצ'אט החדש במסד הנתונים
+    public void createNewChat(@NotNull final Chat chat, @Nullable final DatabaseCallback<Void> callback) {
+        writeData(CHATS_PATH + "/" + chat.getId(), chat, callback);
+    }
 
 
 

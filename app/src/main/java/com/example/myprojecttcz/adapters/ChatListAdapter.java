@@ -34,15 +34,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = mChats.get(position);
 
-        // נציג את שם הצ'אט. אם זה פורום, נציג את הכותרת שלו.
+        // נציג את שם הצ'אט
         if (chat.isForum()) {
             holder.chatTitle.setText("פורום: " + chat.getTitle());
         } else {
-            // אם זו שיחה פרטית, אפשר (בהמשך) לשלוף את שם המשתמש השני. בינתיים נכתוב:
-            holder.chatTitle.setText("צ'אט פרטי");
+            if (chat.getTitle() != null && !chat.getTitle().isEmpty()) {
+                holder.chatTitle.setText(chat.getTitle());
+            } else {
+                holder.chatTitle.setText("צ'אט פרטי");
+            }
         }
 
-        // כשלוחצים על הצ'אט - עוברים למסך הצ'אט עצמו ומעבירים לו את ה-ID
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("CHAT_ID", chat.getId());
@@ -59,7 +61,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         public TextView chatTitle;
         public ViewHolder(View itemView) {
             super(itemView);
-            chatTitle = itemView.findViewById(R.id.tv_chat_title); // צריך ליצור item_chat_list.xml עם TextView זה
+            chatTitle = itemView.findViewById(R.id.tv_chat_title);
         }
     }
 }

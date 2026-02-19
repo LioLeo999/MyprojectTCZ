@@ -1,19 +1,20 @@
 package com.example.myprojecttcz.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Chat {
     private String id;
-    private List<String> members; // רשימה של מספרי ID של המשתמשים בשיחה
-    private ArrayList<Message> messages;
-    private boolean isForum; // האם זה פורום כללי או צ'אט פרטי
-    private String title; // שם הפורום (אם רלוונטי)
+    private List<String> members;
+    private HashMap<String, Message> messages; // שינוי ל-HashMap
+    private boolean isForum;
+    private String title;
 
     // בנאי ריק חובה עבור Firebase
     public Chat() {
         this.members = new ArrayList<>();
-        this.messages = new ArrayList<>();
+        this.messages = new HashMap<>();
     }
 
     public Chat(String id, List<String> members, boolean isForum, String title) {
@@ -21,7 +22,7 @@ public class Chat {
         this.members = members;
         this.isForum = isForum;
         this.title = title;
-        this.messages = new ArrayList<>();
+        this.messages = new HashMap<>();
     }
 
     // Getters and Setters
@@ -31,8 +32,8 @@ public class Chat {
     public List<String> getMembers() { return members; }
     public void setMembers(List<String> members) { this.members = members; }
 
-    public ArrayList<Message> getMessages() { return messages; }
-    public void setMessages(ArrayList<Message> messages) { this.messages = messages; }
+    public HashMap<String, Message> getMessages() { return messages; }
+    public void setMessages(HashMap<String, Message> messages) { this.messages = messages; }
 
     public boolean isForum() { return isForum; }
     public void setForum(boolean forum) { isForum = forum; }
