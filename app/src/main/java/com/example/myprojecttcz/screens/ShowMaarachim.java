@@ -2,12 +2,13 @@ package com.example.myprojecttcz.screens;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,8 +28,10 @@ public class ShowMaarachim extends BaseActivity {
     private RecyclerView rvTrainingSets;
     private TrainingSetAdapter adapter;
     private ArrayList<MaarachImun> maarachList = new ArrayList<>();
+    private ArrayList<MaarachImun> fullMaarachList = new ArrayList<>(); // רשימה מלאה לגיבוי בזמן חיפוש
     private DatabaseService ds;
     private String uid;
+    private EditText etSearchMaarach; // משתנה לתיבת החיפוש
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +50,51 @@ public class ShowMaarachim extends BaseActivity {
         adapter = new TrainingSetAdapter(this, maarachList);
         rvTrainingSets.setAdapter(adapter);
 
+        // אתחול תיבת החיפוש והוספת מאזין
+        etSearchMaarach = findViewById(R.id.etSearchMaarach);
+        setupSearchListener();
+
         // טעינת נתונים ראשונית מה-Firebase
         loadData();
 
         // כפתור הוספת מערך חדש
         findViewById(R.id.btnaddmaarach).setOnClickListener(v -> showCreateMaarachDialog());
+    }
+
+    private void setupSearchListener() {
+        etSearchMaarach.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // קריאה לפונקציית הסינון בכל פעם שהטקסט משתנה
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    // פונקציית סינון הרשימה לפי טקסט
+    private void filter(String text) {
+        ArrayList<MaarachImun> filteredList = new ArrayList<>();
+
+        // עוברים על הרשימה המלאה (fullMaarachList)
+        for (MaarachImun item : fullMaarachList) {
+            // בודקים אם שם המערך מכיל את הטקסט שחיפשנו (לא רגיש לאותיות גדולות/קטנות)
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+
+        // מעדכנים את הרשימה שמוצגת באדפטר
+        maarachList.clear();
+        maarachList.addAll(filteredList);
+        adapter.notifyDataSetChanged();
     }
 
     private void loadData() {
@@ -65,9 +108,10 @@ public class ShowMaarachim extends BaseActivity {
             public User onCompleted(User user) {
                 if (user != null && user.getMaarachim() != null) {
                     maarachList.clear();
+                    fullMaarachList.clear(); // מנקים גם את הרשימה המלאה
 
-                    // תיקון: המרה מ-HashMap ל-ArrayList עבור האדפטר
                     maarachList.addAll(user.getMaarachim().values());
+                    fullMaarachList.addAll(user.getMaarachim().values()); // שומרים עותק ברשימה המלאה
 
                     adapter.notifyDataSetChanged();
                 }
@@ -125,7 +169,6 @@ public class ShowMaarachim extends BaseActivity {
                         currentUser.setMaarachim(new HashMap<>());
                     }
 
-                    // תיקון: שימוש ב-put עם ה-ID כמפתח
                     currentUser.getMaarachim().put(newMaarach.getId(), newMaarach);
 
                     ds.updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
@@ -133,7 +176,10 @@ public class ShowMaarachim extends BaseActivity {
                         public User onCompleted(Void object) {
                             Toast.makeText(ShowMaarachim.this, "Set '" + name + "' Created", Toast.LENGTH_SHORT).show();
 
+                            // הוספה גם לרשימה הנוכחית וגם לרשימת הגיבוי המלאה
                             maarachList.add(newMaarach);
+                            fullMaarachList.add(newMaarach);
+
                             adapter.notifyItemInserted(maarachList.size() - 1);
                             rvTrainingSets.scrollToPosition(maarachList.size() - 1);
 

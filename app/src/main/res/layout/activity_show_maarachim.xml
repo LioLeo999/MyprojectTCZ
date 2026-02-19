@@ -7,16 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".screens.ShowMaarachim"
     android:background="@color/dgreen">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="horizontal"
             android:weightSum="5">
-
 
             <TextView
                 android:layout_width="0dp"
@@ -26,13 +27,14 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="30dp"
-                android:layout_weight="3"
-                />
+                android:layout_weight="3" />
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>
         </LinearLayout>
+
         <Button
             android:id="@+id/btnaddmaarach"
             android:layout_width="match_parent"
@@ -40,6 +42,18 @@
             android:backgroundTint="@color/lgreen"
             android:text="Add training set"
             android:textSize="22dp"/>
+
+        <EditText
+            android:id="@+id/etSearchMaarach"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="#FFFFFF"
+            android:hint="Search training set by name..."
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="#888888"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTrainingSets"
             android:layout_width="match_parent"
