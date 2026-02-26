@@ -8,16 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.base.BaseActivity;
@@ -30,12 +27,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
-
 public class Register extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "RegisterActivity";
 
     private EditText etEmail, etPassword, etFName, etLName, etPhone, etUname;
-    private Button btnRegister;
+    private Button btnRegister, btnGotoLogin; // הוספנו פה את כפתור המעבר ללוגין
     private DatabaseService databaseService;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -55,39 +51,40 @@ public class Register extends BaseActivity implements View.OnClickListener {
         });
         finds();
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
     }
-
 
     public void finds(){
         /// get the views
-
         etEmail = findViewById(R.id.rEmail);
         etPassword = findViewById(R.id.rPassword);
         etFName = findViewById(R.id.rFname);
         etLName = findViewById(R.id.rLname);
         etPhone = findViewById(R.id.rPhonenumber);
         etUname = findViewById(R.id.rUname);
-        btnRegister = findViewById(R.id.registerbtn);
-        // Corrected: Call the static getInstance() method on the class
+
+        btnRegister = findViewById(R.id.rregisterbtn);
+        btnGotoLogin = findViewById(R.id.gotoLogin); // חיבור הכפתור השקוף שיצרת
+
         databaseService = DatabaseService.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         /// set the click listener
         btnRegister.setOnClickListener(this);
-
+        btnGotoLogin.setOnClickListener(this); // מאזין ללחיצות גם לכפתור המעבר
     }
 
     @Override
     public void onClick(View view) {
+        // שורה לבדיקה - תדפיס איזה ID נלחץ בכלל
+        Log.d(TAG, "onClick: Click detected on View ID: " + view.getId());
 
-        if (view == btnRegister){
-            Log.d(TAG, "onClick: Register button clicked");
-
+        // שינוי קריטי: בודקים לפי ID ולא לפי האובייקט
+        if (view.getId() == R.id.rregisterbtn) {
+            Log.d(TAG, "onClick: Register button clicked!");
 
             /// get the input from the user
-             email = etEmail.getText().toString().trim();
-             password = etPassword.getText().toString().trim();
+            email = etEmail.getText().toString().trim();
+            password = etPassword.getText().toString().trim();
             String fName = etFName.getText().toString().trim();
             String lName = etLName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
@@ -98,9 +95,18 @@ public class Register extends BaseActivity implements View.OnClickListener {
                 return;
             }
 
-            registerUser(uName,fName, lName, phone, email, password);
+            // קורא לפונקציית ההרשמה של פיירבייס
+            registerUser(uName, fName, lName, phone, email, password);
+        }
+        else if (view.getId() == R.id.gotoLogin) {
+            Log.d(TAG, "onClick: Goto Login clicked!");
+            // מעבר חזרה לדף ההתחברות
+            Intent intent = new Intent(Register.this, LogIn.class);
+            startActivity(intent);
+            finish(); // חשוב כדי לסגור את חלון ההרשמה
         }
     }
+
     private void registerUser(String uname, String fname, String lname, String phone, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
