@@ -1,25 +1,38 @@
 package com.example.myprojecttcz.base;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button; // הוספתי ייבוא לכפתור
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myprojecttcz.R;
+import com.example.myprojecttcz.model.Chat;
+import com.example.myprojecttcz.model.Message;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.screens.AdminPage;
 import com.example.myprojecttcz.screens.LogIn;
@@ -30,12 +43,22 @@ import com.example.myprojecttcz.screens.ShowMaarachim;
 import com.example.myprojecttcz.screens.UserProfile;
 import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class BaseActivity extends AppCompatActivity {
     protected DatabaseService databaseService;
     protected FirebaseAuth mauth;
+
+    // משתנים עבור מערכת ההתראות
+    private DatabaseReference chatsRef;
+    private ChildEventListener chatsListener;
+    private long listenerStartTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +69,28 @@ public class BaseActivity extends AppCompatActivity {
         databaseService = DatabaseService.getInstance();
         mauth = FirebaseAuth.getInstance();
 
-        // הסרתי מפה את updateUIForUser - הוא ייקרא ב-setContentView
+        // בקשת הרשאה להתראות (לאנדרואיד 13 ומעלה)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // מתחילים להאזין להודעות רק כשהמשתמש מחובר והמסך מוצג
+        if (mauth.getCurrentUser() != null) {
+            startListeningForNewMessages();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // מפסיקים להאזין כשהמסך מוסתר כדי למנוע כפילויות בהתראות
+        stopListeningForNewMessages();
     }
 
     @Override
@@ -98,12 +142,9 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // ... (פונקציות ה-Spinner נשארות זהות) ...
-
-    // --- הפונקציה המעודכנת ---
     public void updateUIForUser() {
         Button btnLogin = findViewById(R.id.loginbtn);
-        Button btnRegister = findViewById(R.id.registerbtn); // כפתור חדש
+        Button btnRegister = findViewById(R.id.registerbtn);
         Button btnLogout = findViewById(R.id.logoutbtn);
 
         // הגנה מפני קריסה
@@ -111,7 +152,6 @@ public class BaseActivity extends AppCompatActivity {
 
         if (mauth.getCurrentUser() != null) {
             // -- משתמש מחובר --
-            // מסתירים את Login ו-Register, מראים את Logout
             btnLogin.setVisibility(View.GONE);
             btnRegister.setVisibility(View.GONE);
             btnLogout.setVisibility(View.VISIBLE);
@@ -126,7 +166,6 @@ public class BaseActivity extends AppCompatActivity {
 
         } else {
             // -- משתמש לא מחובר (אורח) --
-            // מראים את Login ו-Register, מסתירים את Logout
             btnLogin.setVisibility(View.VISIBLE);
             btnRegister.setVisibility(View.VISIBLE);
             btnLogout.setVisibility(View.GONE);
@@ -136,16 +175,12 @@ public class BaseActivity extends AppCompatActivity {
                 startActivity(intent);
             });
 
-            // לחיצה על Register
             btnRegister.setOnClickListener(v -> {
                 Intent intent = new Intent(BaseActivity.this, Register.class);
                 startActivity(intent);
             });
         }
     }
-
-    // יש להעתיק גם את setupNavigationSpinner ו-handleNavigationSelection מהקוד הקודם שלך אם הם לא מופיעים כאן
-    // (קיצרתי כדי לחסוך מקום, אך בקוד שלך תשאיר אותם)
 
     private void setupNavigationSpinner() {
         Toolbar toolbar = findViewById(R.id.basetoolbar);
@@ -171,12 +206,12 @@ public class BaseActivity extends AppCompatActivity {
                 menuItems.add("Drills");
                 menuItems.add("Profile info");
                 menuItems.add("Training sets");
-                // menuItems.add("Log out"); // הסרתי כי יש כפתור
+
                 databaseService.getUser(mauth.getUid(), new DatabaseService.DatabaseCallback<User>() {
                     @Override
                     public User onCompleted(User object) {
                         User currentUser = object;
-                        if (currentUser.isadmin())
+                        if (currentUser != null && currentUser.isadmin())
                             menuItems.add("Admin page");
                         return object;
                     }
@@ -189,8 +224,6 @@ public class BaseActivity extends AppCompatActivity {
             } else {
                 // >> אורח (לא מחובר) <<
                 menuItems.add("Drills");
-                // menuItems.add("Login"); // הסרתי כי יש כפתור
-                // menuItems.add("Register");
             }
 
             // 2. יצירת ה-Adapter
@@ -218,7 +251,6 @@ public class BaseActivity extends AppCompatActivity {
             });
         }
     }
-    /// hi
 
     private void handleNavigationSelection(String selection) {
         Intent intent = null;
@@ -243,8 +275,6 @@ public class BaseActivity extends AppCompatActivity {
             case "Admin page":
                 intent = new Intent(this, AdminPage.class);
                 break;
-
-            // הסרתי את Login ו-Log out מהסוויץ' כי הם מטופלים בכפתורים החדשים
         }
 
         if (intent != null) {
@@ -254,5 +284,92 @@ public class BaseActivity extends AppCompatActivity {
         }
         Spinner spinner = findViewById(R.id.nav_spinner);
         if (spinner != null) spinner.setSelection(0);
+    }
+
+    // =========================================================
+    // פונקציות לניהול התראות והודעות צ'אט
+    // =========================================================
+
+    private void startListeningForNewMessages() {
+        if (mauth.getCurrentUser() == null) return;
+
+        String currentUserId = mauth.getCurrentUser().getUid();
+        chatsRef = FirebaseDatabase.getInstance().getReference("Chats");
+
+        // זמן תחילת ההאזנה - כדי לא להקפיץ התראות על הודעות היסטוריות
+        listenerStartTime = System.currentTimeMillis();
+
+        chatsListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot chatSnapshot, @Nullable String previousChildName) {
+                Chat chat = chatSnapshot.getValue(Chat.class);
+                // אם המשתמש הוא חלק מהצ'אט הזה
+                if (chat != null && chat.getMembers() != null && chat.getMembers().contains(currentUserId)) {
+
+                    // מאזינים לכל הודעה שנוספת לצ'אט הזה
+                    chatSnapshot.child("messages").getRef().addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot msgSnapshot, @Nullable String previousChildName) {
+                            Message msg = msgSnapshot.getValue(Message.class);
+
+                            // מוודאים שההודעה תקינה, שהיא לא ממני, ושהיא חדשה לגמרי
+                            if (msg != null &&
+                                    msg.getSenderId() != null &&
+                                    !msg.getSenderId().equals(currentUserId) &&
+                                    msg.getTimestamp() > listenerStartTime) {
+
+                                // מקפיצים את ההתראה
+                                showLocalNotification("הודעה חדשה באפליקציה", msg.getContent());
+
+                                // מעדכנים את הזמן כדי למנוע קפיצות כפולות לאותה הודעה
+                                listenerStartTime = msg.getTimestamp();
+                            }
+                        }
+
+                        @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+                        @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+                        @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+                        @Override public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                }
+            }
+
+            @Override public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+            @Override public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+            @Override public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        };
+
+        chatsRef.addChildEventListener(chatsListener);
+    }
+
+    private void stopListeningForNewMessages() {
+        if (chatsRef != null && chatsListener != null) {
+            chatsRef.removeEventListener(chatsListener);
+        }
+    }
+
+    public void showLocalNotification(String title, String messageText) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "chat_notifications";
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "הודעות צ'אט",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher) // אם האייקון לא מופיע טוב, תוכל להחליף ל- R.drawable.ic_launcher_foreground או אייקון אחר
+                .setContentTitle(title)
+                .setContentText(messageText)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setAutoCancel(true);
+
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 }
