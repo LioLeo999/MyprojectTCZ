@@ -6,7 +6,7 @@
     android:id="@+id/top_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#0084FF"
+    android:background="@color/tennis_primary"
     android:padding="16dp"
     android:layout_alignParentTop="true"
     android:elevation="4dp">
