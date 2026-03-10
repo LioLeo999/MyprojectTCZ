@@ -1,53 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.UserProfile"
-    android:background="@color/dgreen">
+    android:background="@color/background_light"
+    tools:context=".screens.UserProfile">
 
+    <View
+        android:id="@+id/topView"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/tennis_primary"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/profileTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="My Profile"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        >
+        app:layout_constraintTop_toBottomOf="@id/profileTitle">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingHorizontal="24dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="32dp">
+                    android:padding="24dp">
+
 
 
                     <TextView
                         android:id="@+id/tv_user_display_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="4dp"
                         android:text="User Name"
-                        android:textColor="?attr/colorOnBackground"
+                        android:textColor="@color/text_dark"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -56,18 +78,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="user@example.com"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/admin_badge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="16dp"
                         android:visibility="gone"
-                        app:cardBackgroundColor="?attr/colorSecondary"
+                        app:cardBackgroundColor="#FEF3C7"
                         app:cardCornerRadius="16dp"
-                        app:cardElevation="2dp">
+                        app:cardElevation="0dp"
+                        app:strokeColor="#F59E0B"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -81,30 +105,29 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="6dp"
-                                android:text="⚙️"
+                                android:text="👑"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Administrator"
-                                android:textColor="?attr/colorOnSecondary"
+                                android:textColor="#D97706"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
-
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -117,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
                         android:text="Personal Information"
-                        android:textColor="?attr/colorOnBackground"
+                        android:textColor="@color/tennis_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -125,8 +148,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
+                        android:layout_marginBottom="16dp"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
@@ -138,10 +160,7 @@
                             android:layout_height="wrap_content"
                             android:hint="Username"
                             android:inputType="textPersonName" />
-
                     </com.google.android.material.textfield.TextInputLayout>
-
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -153,7 +172,7 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="6dp"
                             android:layout_weight="1"
                             app:boxCornerRadiusBottomEnd="12dp"
                             app:boxCornerRadiusBottomStart="12dp"
@@ -166,14 +185,13 @@
                                 android:layout_height="wrap_content"
                                 android:hint="First Name"
                                 android:inputType="textPersonName" />
-
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginStart="6dp"
                             android:layout_weight="1"
                             app:boxCornerRadiusBottomEnd="12dp"
                             app:boxCornerRadiusBottomStart="12dp"
@@ -186,9 +204,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="Last Name"
                                 android:inputType="textPersonName" />
-
                         </com.google.android.material.textfield.TextInputLayout>
-
                     </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -208,19 +224,16 @@
                             android:layout_height="wrap_content"
                             android:hint="Email"
                             android:inputType="textEmailAddress" />
-
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusTopStart="12dp"
-                        app:prefixText="+1"
                         app:startIconDrawable="@android:drawable/sym_action_call">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -229,21 +242,20 @@
                             android:layout_height="wrap_content"
                             android:hint="Phone Number"
                             android:inputType="phone" />
-
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="20dp"
-                        android:background="?attr/colorSurfaceVariant" />
+                        android:layout_marginVertical="24dp"
+                        android:background="#E2E8F0" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="16dp"
                         android:text="Security"
-                        android:textColor="?attr/colorOnBackground"
+                        android:textColor="@color/tennis_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -251,7 +263,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="32dp"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
@@ -266,31 +278,27 @@
                             android:layout_height="wrap_content"
                             android:hint="New Password"
                             android:inputType="textPassword" />
-
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_edit_profile"
-                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
+                        android:backgroundTint="@color/tennis_primary"
                         android:text="Save Changes"
                         android:textAllCaps="false"
-                        android:textSize="16sp"
-                        app:cornerRadius="30dp"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp"
                         app:icon="@android:drawable/ic_menu_save"
                         app:iconGravity="textStart"
-                        android:backgroundTint="@color/lgreen"/>
+                        app:iconTint="@color/white" />
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-
-
-
-
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
