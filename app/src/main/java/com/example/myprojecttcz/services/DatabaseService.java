@@ -552,6 +552,11 @@ public class DatabaseService {
         });
     }
 
+    /// מחיקת דריל מהמאגר
+    public void deleteDrill(@NotNull final String drillId, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData(DRILLS_PATH + "/" + drillId, callback);
+    }
+
 
     // region Maarach Imun Section
 

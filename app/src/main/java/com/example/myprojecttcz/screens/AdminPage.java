@@ -49,7 +49,8 @@ public class AdminPage extends BaseActivity implements View.OnClickListener {
             startActivity(go);
         }
         if (v.getId() == btnshowdrills.getId()){
-
+            Intent go = new Intent(this, AdminShowDrills.class);
+            startActivity(go);
         }
         if (v.getId() == btnaddDrills.getId()){
             Intent go = new Intent(AdminPage.this, AddDrill.class);

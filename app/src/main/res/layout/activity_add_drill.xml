@@ -6,254 +6,402 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.AddDrill"
-    android:background="@color/dgreen">
+    android:background="@color/background_light"
+    tools:context=".screens.AddDrill">
 
-
-    <LinearLayout
+    <View
+        android:id="@+id/topView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@color/dgreen"
-        android:weightSum="10">
+        android:layout_height="160dp"
+        android:background="@color/tennis_primary"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/pageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Create Drill"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.cardview.widget.CardView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pageTitle">
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"
-            android:layout_margin="8dp"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/lightBg">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Create Drill"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:paddingVertical="10dp"
-                        android:background="@color/yellow"
-                        android:textColor="@color/dgreen"
-                        android:layout_marginBottom="16dp"/>
-
-                    <!-- Name -->
                     <EditText
                         android:id="@+id/editName"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
+                        android:background="@null"
                         android:hint="Drill Name"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Explanation -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
+
                     <EditText
                         android:id="@+id/editExplanation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        android:background="@null"
                         android:hint="Explanation"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Time -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
+
                     <EditText
                         android:id="@+id/editTime"
                         android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@null"
+                        android:hint="Time (e.g. 15 mins)"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:baselineAligned="false">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="Time"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#CBD5E1"
+                        app:strokeWidth="1dp">
 
+                        <EditText
+                            android:id="@+id/editMinPlayers"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@null"
+                            android:hint="Min Players"
+                            android:inputType="number"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_dark"
+                            android:textSize="14sp" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Min/Max Players -->
-                    <EditText
-                        android:id="@+id/editMinPlayers"
-                        android:layout_width="match_parent"
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="Minimum Players"
-                        android:inputType="number"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#CBD5E1"
+                        app:strokeWidth="1dp">
 
-                    <EditText
-                        android:id="@+id/editMaxPlayers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Maximum Players"
-                        android:inputType="number"
-                        android:padding="12dp"
-                        android:layout_marginBottom="18dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        <EditText
+                            android:id="@+id/editMaxPlayers"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@null"
+                            android:hint="Max Players"
+                            android:inputType="number"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_dark"
+                            android:textSize="14sp" />
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
 
-                    <!-- Training Tools -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
+
                     <EditText
                         android:id="@+id/editTrainingTools"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
+                        android:background="@null"
                         android:hint="Training Tools"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Age -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
+
                     <EditText
                         android:id="@+id/editAge"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Age"
-                        android:padding="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@android:drawable/editbox_background_normal"/>
+                        android:layout_height="50dp"
+                        android:background="@null"
+                        android:hint="Target Age"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+                </com.google.android.material.card.MaterialCardView>
 
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" android:layout_marginBottom="16dp"/>
 
-                    <!-- Ball Color Spinner -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ball Color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/dgreen"
-                        android:layout_marginTop="10dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ball Color"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="4dp"/>
 
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
                     <Spinner
                         android:id="@+id/spinnerBallColor"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:padding="12dp"
-                        android:layout_marginBottom="16dp"/>
+                        android:paddingHorizontal="8dp"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Court Size Spinner -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Court Size"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/dgreen"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Court Size"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="4dp"/>
 
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
                     <Spinner
                         android:id="@+id/spinnerCourtSize"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:padding="12dp"
-                        android:layout_marginBottom="18dp"/>
+                        android:paddingHorizontal="8dp"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Player level"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/dgreen"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Player Level"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="4dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
                     <Spinner
                         android:id="@+id/spinnerPlayerLevel"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:padding="12dp"
-                        android:layout_marginBottom="18dp"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Physical level"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/dgreen"/>
+                        android:paddingHorizontal="8dp"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Physical Level"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="4dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
                     <Spinner
                         android:id="@+id/spinnerPhysicalLevel"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:padding="12dp"
-                        android:layout_marginBottom="18dp"/>
+                        android:paddingHorizontal="8dp"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Skills -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Skills Included"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:textColor="@color/dgreen"
-                        android:layout_marginBottom="10dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" android:layout_marginBottom="16dp"/>
 
-                    <GridLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:columnCount="2"
-                        android:useDefaultMargins="true">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Skills Included"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/tennis_primary"
+                    android:layout_marginBottom="12dp"/>
 
-                        <CheckBox android:id="@+id/checkForehand" android:text="Forehand"/>
-                        <CheckBox android:id="@+id/checkBackhand" android:text="Backhand"/>
-                        <CheckBox android:id="@+id/checkVolleyForehand" android:text="Volley Forehand"/>
-                        <CheckBox android:id="@+id/checkVolleyBackhand" android:text="Volley Backhand"/>
-                        <CheckBox android:id="@+id/checkDriveForehand" android:text="Drive Forehand"/>
-                        <CheckBox android:id="@+id/checkDriveBackhand" android:text="Drive Backhand"/>
-                        <CheckBox android:id="@+id/checkServe" android:text="Serve"/>
-                        <CheckBox android:id="@+id/checkSmash" android:text="Smash"/>
-                        <CheckBox android:id="@+id/checkForwardForehand" android:text="Forward Forehand"/>
-                        <CheckBox android:id="@+id/checkForwardBackhand" android:text="Forward Backhand"/>
-                    </GridLayout>
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:useDefaultMargins="true"
+                    android:layout_marginBottom="20dp">
 
-                    <!-- YouTube -->
+                    <CheckBox android:id="@+id/checkForehand" android:text="Forehand" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkBackhand" android:text="Backhand" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkVolleyForehand" android:text="Volley FH" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkVolleyBackhand" android:text="Volley BH" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkDriveForehand" android:text="Drive FH" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkDriveBackhand" android:text="Drive BH" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkServe" android:text="Serve" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkSmash" android:text="Smash" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkForwardForehand" android:text="Forward FH" android:layout_width="wrap_content" android:layout_weight="1"/>
+                    <CheckBox android:id="@+id/checkForwardBackhand" android:text="Forward BH" android:layout_width="wrap_content" android:layout_weight="1"/>
+                </GridLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" android:layout_marginBottom="16dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
+
                     <EditText
                         android:id="@+id/etcoachv"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Coach View (youtube link)"
-                        android:padding="10dp"
-                        android:layout_marginTop="16dp"/>
+                        android:background="@null"
+                        android:hint="Coach View (YouTube Link)"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="14sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
 
                     <EditText
                         android:id="@+id/etincourtview"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="In court view (youtube link)"
-                        android:padding="10dp"
-                        android:layout_marginBottom="18dp"/>
+                        android:background="@null"
+                        android:hint="In-Court View (YouTube Link)"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="14sp" />
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- GIF -->
-                    <Button
-                        android:id="@+id/btSelectGif"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select GIF"
-                        android:layout_gravity="center"
-                        android:backgroundTint="@color/yellow"
-                        android:textColor="@color/black"/>
+                <Button
+                    android:id="@+id/btSelectGif"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:backgroundTint="#E2E8F0"
+                    android:text="Select GIF"
+                    android:textColor="@color/text_dark"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:icon="@android:drawable/ic_menu_gallery"
+                    app:iconTint="@color/text_dark"
+                    android:layout_marginBottom="24dp"/>
 
-                    <!-- Submit -->
-                    <Button
-                        android:id="@+id/addsubmitbtn"
-                        android:text="Submit"
-                        android:layout_width="150dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:backgroundTint="@color/yellow"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="20dp"/>
+                <Button
+                    android:id="@+id/addsubmitbtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:backgroundTint="@color/tennis_primary"
+                    android:text="Submit Drill"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp" />
 
-                </LinearLayout>
-            </ScrollView>
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
