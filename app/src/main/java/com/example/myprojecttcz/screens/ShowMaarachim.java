@@ -1,9 +1,11 @@
 package com.example.myprojecttcz.screens;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -28,10 +30,10 @@ public class ShowMaarachim extends BaseActivity {
     private RecyclerView rvTrainingSets;
     private TrainingSetAdapter adapter;
     private ArrayList<MaarachImun> maarachList = new ArrayList<>();
-    private ArrayList<MaarachImun> fullMaarachList = new ArrayList<>(); // רשימה מלאה לגיבוי בזמן חיפוש
+    private ArrayList<MaarachImun> fullMaarachList = new ArrayList<>();
     private DatabaseService ds;
     private String uid;
-    private EditText etSearchMaarach; // משתנה לתיבת החיפוש
+    private EditText etSearchMaarach;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +48,25 @@ public class ShowMaarachim extends BaseActivity {
         rvTrainingSets = findViewById(R.id.rvTrainingSets);
         rvTrainingSets.setLayoutManager(new LinearLayoutManager(this));
 
-        // יצירת האדאפטר עם הרשימה הריקה (תתמלא בהמשך)
-        adapter = new TrainingSetAdapter(this, maarachList);
+        // יצירת האדאפטר עם ה-Listener החדש!
+        adapter = new TrainingSetAdapter(this, maarachList, new TrainingSetAdapter.OnMaarachClickListener() {
+            @Override
+            public void onMaarachClick(MaarachImun maarach) {
+                // כאן אתה יכול להוסיף את הקוד לכניסה לתוך מערך האימון אם יש לך (למשל Intent)
+            }
+
+            @Override
+            public void onDeleteClick(MaarachImun maarach) {
+                showDeleteDialog(maarach); // קריאה לפונקציית המחיקה
+            }
+        });
         rvTrainingSets.setAdapter(adapter);
 
-        // אתחול תיבת החיפוש והוספת מאזין
+        // אתחול תיבת החיפוש
         etSearchMaarach = findViewById(R.id.etSearchMaarach);
         setupSearchListener();
 
-        // טעינת נתונים ראשונית מה-Firebase
+        // טעינת נתונים
         loadData();
 
         // כפתור הוספת מערך חדש
@@ -64,34 +76,25 @@ public class ShowMaarachim extends BaseActivity {
     private void setupSearchListener() {
         etSearchMaarach.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // קריאה לפונקציית הסינון בכל פעם שהטקסט משתנה
                 filter(s.toString());
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
-    // פונקציית סינון הרשימה לפי טקסט
     private void filter(String text) {
         ArrayList<MaarachImun> filteredList = new ArrayList<>();
-
-        // עוברים על הרשימה המלאה (fullMaarachList)
         for (MaarachImun item : fullMaarachList) {
-            // בודקים אם שם המערך מכיל את הטקסט שחיפשנו (לא רגיש לאותיות גדולות/קטנות)
             if (item.getName().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
             }
         }
-
-        // מעדכנים את הרשימה שמוצגת באדפטר
         maarachList.clear();
         maarachList.addAll(filteredList);
         adapter.notifyDataSetChanged();
@@ -108,10 +111,10 @@ public class ShowMaarachim extends BaseActivity {
             public User onCompleted(User user) {
                 if (user != null && user.getMaarachim() != null) {
                     maarachList.clear();
-                    fullMaarachList.clear(); // מנקים גם את הרשימה המלאה
+                    fullMaarachList.clear();
 
                     maarachList.addAll(user.getMaarachim().values());
-                    fullMaarachList.addAll(user.getMaarachim().values()); // שומרים עותק ברשימה המלאה
+                    fullMaarachList.addAll(user.getMaarachim().values());
 
                     adapter.notifyDataSetChanged();
                 }
@@ -123,6 +126,54 @@ public class ShowMaarachim extends BaseActivity {
                 Toast.makeText(ShowMaarachim.this, "Error loading data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // הפונקציה החדשה שמוחקת את המערך!
+    private void showDeleteDialog(MaarachImun maarach) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Training Set")
+                .setMessage("Are you sure you want to delete '" + maarach.getName() + "'?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+
+                    ds.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
+                        @Override
+                        public User onCompleted(User currentUser) {
+                            if (currentUser != null && currentUser.getMaarachim() != null) {
+
+                                // מחיקת המערך מהרשימה של המשתמש
+                                currentUser.getMaarachim().remove(maarach.getId());
+
+                                // עדכון המשתמש במסד הנתונים
+                                ds.updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
+                                    @Override
+                                    public User onCompleted(Void object) {
+                                        Toast.makeText(ShowMaarachim.this, "Training Set deleted", Toast.LENGTH_SHORT).show();
+
+                                        // מחיקה מהרשימות המקומיות כדי לעדכן את המסך מיד
+                                        maarachList.remove(maarach);
+                                        fullMaarachList.remove(maarach);
+                                        adapter.notifyDataSetChanged();
+
+                                        return null;
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception e) {
+                                        Toast.makeText(ShowMaarachim.this, "Failed to delete from DB", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        public void onFailed(Exception e) {
+                            Toast.makeText(ShowMaarachim.this, "Error accessing user data", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     private void showCreateMaarachDialog() {
@@ -176,7 +227,6 @@ public class ShowMaarachim extends BaseActivity {
                         public User onCompleted(Void object) {
                             Toast.makeText(ShowMaarachim.this, "Set '" + name + "' Created", Toast.LENGTH_SHORT).show();
 
-                            // הוספה גם לרשימה הנוכחית וגם לרשימת הגיבוי המלאה
                             maarachList.add(newMaarach);
                             fullMaarachList.add(newMaarach);
 
@@ -200,5 +250,15 @@ public class ShowMaarachim extends BaseActivity {
                 Toast.makeText(ShowMaarachim.this, "Fetch user failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // הלוג הזה יעזור לך לראות ב-Logcat שהעמוד אכן התרענן
+        Log.d("Lifecycle", "onResume: Refreshing data from RTDB");
+
+        // קריאה לפונקציה שלך שמביאה את הנתונים העדכניים מהפיירבייס
+        loadData();
     }
 }

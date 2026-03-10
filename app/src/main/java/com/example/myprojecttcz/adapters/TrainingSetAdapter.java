@@ -13,20 +13,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.model.MaarachImun;
-import com.example.myprojecttcz.screens.ShowTrainingSet; // הוספתי את האימפורט הזה
+import com.example.myprojecttcz.screens.ShowTrainingSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingSetAdapter
-        extends RecyclerView.Adapter<TrainingSetAdapter.SetViewHolder> {
+public class TrainingSetAdapter extends RecyclerView.Adapter<TrainingSetAdapter.SetViewHolder> {
 
     private final Context context;
     private final List<MaarachImun> sets;
+    private final OnMaarachClickListener listener; // הוספנו משתנה ל-Listener
 
-    public TrainingSetAdapter(Context context, List<MaarachImun> sets) {
+    // 1. הגדרת הממשק ללחיצות
+    public interface OnMaarachClickListener {
+        void onMaarachClick(MaarachImun maarach);
+        void onDeleteClick(MaarachImun maarach); // לחיצה ארוכה
+    }
+
+    // 2. עדכון הבנאי שיקבל גם את ה-Listener
+    public TrainingSetAdapter(Context context, List<MaarachImun> sets, OnMaarachClickListener listener) {
         this.context = context;
         this.sets = sets;
+        this.listener = listener;
     }
 
     @NonNull
@@ -48,18 +56,31 @@ public class TrainingSetAdapter
         ArrayList<String> drillIds =
                 set.getDrillsid() != null ? set.getDrillsid() : new ArrayList<>();
 
-        // RecyclerView פנימי של drill IDs (שומר על מה שהיה לך)
-        // שים לב: תוודא שיש לך את הקלאס DrillMiniAdapter, אם לא - תצטרך ליצור אותו או להסיר את הקטע הזה
+        // RecyclerView פנימי של drill IDs
         DrillMiniAdapter drillAdapter = new DrillMiniAdapter(drillIds);
 
         holder.rvDrills.setLayoutManager(new LinearLayoutManager(context));
         holder.rvDrills.setAdapter(drillAdapter);
 
-        // --- כאן השינוי: לחיצה על הכרטיס מעבירה לעמוד העריכה המלא ---
+        // --- לחיצה רגילה (קצרה): כניסה לעמוד העריכה המלא ---
         holder.itemView.setOnClickListener(v -> {
+            // שומר על הקוד המקורי שלך!
             Intent intent = new Intent(context, ShowTrainingSet.class);
             intent.putExtra("maarach_id", set.getId()); // שליחת ה-ID
             context.startActivity(intent);
+
+            // במקביל קורא גם ל-Listener ליתר ביטחון
+            if (listener != null) {
+                listener.onMaarachClick(set);
+            }
+        });
+
+        // --- 3. לחיצה ארוכה: קריאה למחיקה ---
+        holder.itemView.setOnLongClickListener(v -> {
+            if (listener != null) {
+                listener.onDeleteClick(set);
+            }
+            return true; // מחזיר true כדי לא להפעיל גם את המעבר עמוד (הלחיצה הרגילה) בטעות
         });
     }
 
@@ -80,8 +101,8 @@ public class TrainingSetAdapter
 
         public SetViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvSetName = itemView.findViewById(R.id.tvSetName); // שם המערך
-            rvDrills = itemView.findViewById(R.id.rvDrills);     // רשימה פנימית קטנה
+            tvSetName = itemView.findViewById(R.id.tvSetName);
+            rvDrills = itemView.findViewById(R.id.rvDrills);
         }
     }
 }

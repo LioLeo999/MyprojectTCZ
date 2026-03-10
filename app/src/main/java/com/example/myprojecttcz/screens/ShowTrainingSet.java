@@ -1,6 +1,10 @@
 package com.example.myprojecttcz.screens;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowTrainingSet extends BaseActivity {
+public class ShowTrainingSet extends BaseActivity implements View.OnClickListener {
 
     private RecyclerView rvDrillsList;
     private DrillListReorderAdapter adapter; // שימוש באדפטר ששלחת
@@ -29,6 +33,8 @@ public class ShowTrainingSet extends BaseActivity {
     private DatabaseService ds;
     private String currentMaarachId;
     private MaarachImun currentMaarach;
+    private Button btnGoToMaagar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,8 @@ public class ShowTrainingSet extends BaseActivity {
 
         ds = DatabaseService.getInstance();
 
+        btnGoToMaagar = findViewById(R.id.btnGoToMaagar);
+        btnGoToMaagar.setOnClickListener(this);
         // 2. הגדרת RecyclerView
         rvDrillsList = findViewById(R.id.rvDrillsList);
         rvDrillsList.setLayoutManager(new LinearLayoutManager(this));
@@ -173,5 +181,25 @@ public class ShowTrainingSet extends BaseActivity {
                 Toast.makeText(ShowTrainingSet.this, "Failed to save order", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == btnGoToMaagar)
+        {
+            Intent go = new Intent(this, MaagarDrills.class);
+            startActivity(go);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // הלוג הזה יעזור לך לראות ב-Logcat שהעמוד אכן התרענן
+        Log.d("Lifecycle", "onResume: Refreshing data from RTDB");
+
+        // קריאה לפונקציה שלך שמביאה את הנתונים העדכניים מהפיירבייס
+        loadData();
     }
 }
