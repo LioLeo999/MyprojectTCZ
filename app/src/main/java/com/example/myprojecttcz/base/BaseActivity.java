@@ -38,6 +38,7 @@ import com.example.myprojecttcz.screens.AdminPage;
 import com.example.myprojecttcz.screens.LogIn;
 import com.example.myprojecttcz.screens.MaagarDrills;
 import com.example.myprojecttcz.screens.MainActivity;
+import com.example.myprojecttcz.screens.Odot;
 import com.example.myprojecttcz.screens.Register;
 import com.example.myprojecttcz.screens.ShowMaarachim;
 import com.example.myprojecttcz.screens.UserProfile;
@@ -204,6 +205,7 @@ public class BaseActivity extends AppCompatActivity {
             if (mauth.getCurrentUser() != null) {
                 // >> משתמש מחובר <<
                 menuItems.add("Drills");
+                menuItems.add("About");
                 menuItems.add("Profile info");
                 menuItems.add("Training sets");
 
@@ -271,10 +273,13 @@ public class BaseActivity extends AppCompatActivity {
             case "Training sets":
                 intent = new Intent(this, ShowMaarachim.class);
                 break;
+            case "About":
+                intent = new Intent(this, Odot.class );
 
             case "Admin page":
                 intent = new Intent(this, AdminPage.class);
                 break;
+
         }
 
         if (intent != null) {

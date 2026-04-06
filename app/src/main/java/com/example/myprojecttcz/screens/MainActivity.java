@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private View drillsBtn, chatsBtn;
 
     // כפתורים רגילים
-    private Button registerbtn, loginbtn, tsetsBtn, logoutbtn, adminBtn;
+    private Button registerbtn, loginbtn, tsetsBtn, logoutbtn, adminBtn, toOdotBtn;
 
     // כפתור צף (הפלוס למטה בצד)
 
@@ -81,6 +81,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         logoutbtn = findViewById(R.id.logoutbtn);
         logoutbtn.setOnClickListener(this);
 
+        toOdotBtn = findViewById(R.id.toOdotBtn);
+        toOdotBtn.setOnClickListener(this);
         // חיבור הכפתור הצף
     }
 
@@ -182,6 +184,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         else if (id == R.id.adminBtn) { // כפתור המנהל (מופיע רק לאדמין)
             startActivity(new Intent(MainActivity.this, AdminPage.class));
+        } else if (id == R.id.toOdotBtn) {
+            startActivity(new Intent(MainActivity.this, Odot.class));
         }
 
 

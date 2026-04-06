@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyprojectTCZ">
         <activity
+            android:name=".screens.Odot"
+            android:exported="false" />
+        <activity
             android:name=".screens.AdminShowDrills"
             android:exported="false" />
         <activity
