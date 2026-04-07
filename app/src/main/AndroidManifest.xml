@@ -45,9 +45,6 @@
             android:name=".screens.MaagarDrills"
             android:exported="false" />
         <activity
-            android:name=".screens.ShowDrillVideo"
-            android:exported="false" />
-        <activity
             android:name=".screens.ShowDrill"
             android:exported="false" />
         <activity
