@@ -222,7 +222,7 @@
                         android:layout_marginEnd="6dp"
                         android:layout_weight="1"
                         android:backgroundTint="@color/tennis_primary"
-                        android:text="Coach View"
+                        android:text="Video"
                         android:textColor="@color/white"
                         app:cornerRadius="10dp" />
 
@@ -233,9 +233,10 @@
                         android:layout_marginStart="6dp"
                         android:layout_weight="1"
                         android:backgroundTint="@color/tennis_primary"
-                        android:text="In-Court View"
+                        android:text="Second video"
                         android:textColor="@color/white"
-                        app:cornerRadius="10dp" />
+                        app:cornerRadius="10dp"
+                        android:visibility="visible"/>
                 </LinearLayout>
 
                 <androidx.cardview.widget.CardView

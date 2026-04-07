@@ -147,6 +147,9 @@ public class ShowDrill extends BaseActivity implements View.OnClickListener {
             imgGif.setVisibility(View.VISIBLE);
             Glide.with(ShowDrill.this).asGif().load(drill.getGif()).into(imgGif);
         }
+
+        if (drill.getVideo2() == null)
+            btnincourtview.setVisibility(View.GONE);
     }
 
     private String buildShotsText() {

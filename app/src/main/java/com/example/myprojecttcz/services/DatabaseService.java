@@ -221,13 +221,7 @@ public class DatabaseService {
 
     // region User Section
 
-    /// generate a new id for a new user in the database
-    /// @return a new id for the user
-    /// @see #generateNewId(String)
-    /// @see User
-    public String generateUserId() {
-        return generateNewId(USERS_PATH);
-    }
+
 
     /// create a new user in the database
     /// @param user the user object to create
@@ -284,55 +278,10 @@ public class DatabaseService {
         deleteData(USERS_PATH + "/" + uid, callback);
     }
 
-    /// get a user by email and password
-    /// @param email the email of the user
-    /// @param password the password of the user
-    /// @param callback the callback to call when the operation is completed
-    ///            the callback will receive the user object
-    ///          if the operation fails, the callback will receive an exception
-    /// @see DatabaseCallback
-    /// @see User
-    public void getUserByEmailAndPassword(@NotNull final String email, @NotNull final String password, @NotNull final DatabaseCallback<User> callback) {
-        readData(USERS_PATH).orderByChild("email").equalTo(email).get()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.e(TAG, "Error getting data", task.getException());
-                        callback.onFailed(task.getException());
-                        return;
-                    }
-                    if (task.getResult().getChildrenCount() == 0) {
-                        callback.onFailed(new Exception("User not found"));
-                        return;
-                    }
-                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user == null || !Objects.equals(user.getPassword(), password)) {
-                            callback.onFailed(new Exception("Invalid email or password"));
-                            return;
-                        }
 
-                        callback.onCompleted(user);
-                        return;
 
-                    }
-                });
-    }
 
-    /// check if an email already exists in the database
-    /// @param email the email to check
-    /// @param callback the callback to call when the operation is completed
-    public void checkIfEmailExists(@NotNull final String email, @NotNull final DatabaseCallback<Boolean> callback) {
-        readData(USERS_PATH).orderByChild("email").equalTo(email).get()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.e(TAG, "Error getting data", task.getException());
-                        callback.onFailed(task.getException());
-                        return;
-                    }
-                    boolean exists = task.getResult().getChildrenCount() > 0;
-                    callback.onCompleted(exists);
-                });
-    }
+
 
     public void updateUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
         runTransaction(USERS_PATH + "/" + user.getId(), User.class, currentUser -> user, new DatabaseCallback<User>() {
@@ -354,92 +303,8 @@ public class DatabaseService {
     }
 
 
-    // endregion User Section
-
-    // region food section
 
 
-
-    public String generateFoodId() {
-        return generateNewId(FOODS_PATH);
-    }
-
-    /// delete a food from the database
-    /// @param foodId the id of the food to delete
-    /// @param callback the callback to call when the operation is completed
-    public void deleteFood(@NotNull final String foodId, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData(FOODS_PATH + "/" + foodId, callback);
-    }
-
-    // endregion food section
-
-    // region cart section
-
-    /// create a new cart in the database
-    /// @param cart the cart object to create
-    /// @param callback the callback to call when the operation is completed
-    ///               the callback will receive void
-    ///              if the operation fails, the callback will receive an exception
-    /// @see DatabaseCallback
-    /// @see MaarachImun
-    ///    public void createNewCart(@NotNull final MaarachImun cart, @Nullable final DatabaseCallback<Void> callback) {
-    ///        writeData(CARTS_PATH + "/" + cart.getId(), cart, callback);
-    ///    }
-
-    /// get a cart from the database
-    /// @param cartId the id of the cart to get
-    /// @param callback the callback to call when the operation is completed
-    ///                the callback will receive the cart object
-    ///               if the operation fails, the callback will receive an exception
-    /// @see DatabaseCallback
-    /// @see MaarachImun
-    public void getCart(@NotNull final String cartId, @NotNull final DatabaseCallback<MaarachImun> callback) {
-        getData(CARTS_PATH + "/" + cartId, MaarachImun.class, callback);
-    }
-
-    /// get all the carts from the database
-    /// @param callback the callback to call when the operation is completed
-    ///               the callback will receive a list of cart objects
-    ///
-    public void getCartList(@NotNull final DatabaseCallback<List<MaarachImun>> callback) {
-        getDataList(CARTS_PATH, MaarachImun.class, callback);
-    }
-
-    /// get all the carts of a specific user from the database
-    /// @param uid the id of the user to get the carts for
-    /// @param callback the callback to call when the operation is completed
-    ///    public void getUserCartList(@NotNull String uid, @NotNull final DatabaseCallback<List<MaarachImun>> callback) {
-    ///        getCartList(new DatabaseCallback<>() {
-    ///            @Override
-    ///             public void onCompleted(List<MaarachImun> carts) {
-    ///                carts.removeIf(cart -> !Objects.equals(cart.getUid(), uid));
-    ///                callback.onCompleted(carts);
-    ///             }
-
-    ///            @Override
-    ///            public void onFailed(Exception e) {
-    ///                callback.onFailed(e);
-    ///            }
-    ///        });
-    ///    }
-
-
-    /// generate a new id for a new cart in the database
-    /// @return a new id for the cart
-    /// @see #generateNewId(String)
-    /// @see MaarachImun
-    public String generateCartId() {
-        return generateNewId(CARTS_PATH);
-    }
-
-    /// delete a cart from the database
-    /// @param cartId the id of the cart to delete
-    /// @param callback the callback to call when the operation is completed
-    public void deleteCart(@NotNull final String cartId, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData(CARTS_PATH + "/" + cartId, callback);
-    }
-
-    // endregion cart section
     public void LoginUser(@NotNull final String email,final String password,
                           @Nullable final DatabaseCallback<String> callback) {
 
