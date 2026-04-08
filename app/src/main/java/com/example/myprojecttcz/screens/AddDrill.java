@@ -242,10 +242,7 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "You must add a coach view video", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (yt2.isEmpty()){
-            Toast.makeText(this,"You must add in court view video", Toast.LENGTH_SHORT);
-            return;
-        }
+
 
         String id = databaseService.generateDrillId();
 

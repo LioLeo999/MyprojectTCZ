@@ -350,7 +350,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@null"
-                        android:hint="Coach View (YouTube Link)"
+                        android:hint="Video (YouTube Link)"
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/text_dark"
                         android:textSize="14sp" />
@@ -370,7 +370,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@null"
-                        android:hint="In-Court View (YouTube Link)"
+                        android:hint="Second video (YouTube Link, Optional)"
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/text_dark"
                         android:textSize="14sp" />
