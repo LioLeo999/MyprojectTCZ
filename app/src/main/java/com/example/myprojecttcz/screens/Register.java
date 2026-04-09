@@ -20,6 +20,7 @@ import com.example.myprojecttcz.R;
 import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.User;
 import com.example.myprojecttcz.services.DatabaseService;
+import com.example.myprojecttcz.utils.SharedPreferencesUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,7 +35,7 @@ public class Register extends BaseActivity implements View.OnClickListener {
     private Button btnRegister, btnGotoLogin; // הוספנו פה את כפתור המעבר ללוגין
     private DatabaseService databaseService;
 
-    public static final String MyPREFERENCES = "MyPrefs" ;
+
     SharedPreferences sharedpreferences;
     private String email,password;
     private FirebaseAuth mAuth;
@@ -50,7 +51,7 @@ public class Register extends BaseActivity implements View.OnClickListener {
             return insets;
         });
         finds();
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
     }
 
     public void finds(){
@@ -144,10 +145,16 @@ public class Register extends BaseActivity implements View.OnClickListener {
                 Log.d(TAG, "createUserInDatabase: Redirecting to MainActivity");
 
                 // NOT FIXED (as requested): Security issue - saving password in plaintext
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString("email", email);
-                editor.putString("password", password);
-                editor.commit();
+                // שימוש ב-Util כדי לשמור את הנתונים באותו מיקום ובאותם מפתחות שה-Login מחפש
+                SharedPreferencesUtil.saveString(Register.this, "saved_email", email);
+                SharedPreferencesUtil.saveString(Register.this, "saved_password", password);
+
+                // מומלץ גם לשמור את אובייקט המשתמש כדי שהאפליקציה תדע שהוא מחובר
+                try {
+                    SharedPreferencesUtil.saveUser(Register.this, user);
+                } catch (Exception e) {
+                    Log.e(TAG, "Could not save user object", e);
+                }
 
                 Intent mainIntent = new Intent(Register.this, MainActivity.class);
                 // שלא יוכל ללכת אחורה

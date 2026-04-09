@@ -1,6 +1,7 @@
 package com.example.myprojecttcz.screens;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatActivity extends BaseActivity {
+    private static final String TAG = "ChatActivity";
 
     private RecyclerView recyclerView;
     private EditText etMessage;
@@ -67,7 +69,7 @@ public class ChatActivity extends BaseActivity {
             if (!msg.equals("")) {
                 sendMessage(currentUserId, chatId, msg);
             } else {
-                Toast.makeText(ChatActivity.this, "אי אפשר לשלוח הודעה ריקה", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatActivity.this, "You can't send an epmty message", Toast.LENGTH_SHORT).show();
             }
             etMessage.setText("");
         });
@@ -82,12 +84,13 @@ public class ChatActivity extends BaseActivity {
                 Chat chat = snapshot.getValue(Chat.class);
                 if (chat != null) {
                     if (chat.isForum()) {
-                        tvChatTitleTop.setText("פורום: " + chat.getTitle());
+                        tvChatTitleTop.setText("Forum: " + chat.getTitle());
                     } else {
                         if (chat.getTitle() != null && !chat.getTitle().isEmpty()) {
                             tvChatTitleTop.setText(chat.getTitle());
                         } else {
-                            tvChatTitleTop.setText("צ'אט פרטי");
+                            tvChatTitleTop.setText("Private Chat");
+
                         }
                     }
                 }
@@ -107,9 +110,16 @@ public class ChatActivity extends BaseActivity {
         newMessage.setSenderId(sender);
         newMessage.setReceiverId(chatRoomId);
         newMessage.setContent(messageContent);
-        newMessage.setTimestamp(System.currentTimeMillis());
 
+        // שומרים את הזמן הנוכחי במשתנה כדי להשתמש בו פעמיים
+        long currentTime = System.currentTimeMillis();
+        newMessage.setTimestamp(currentTime);
+
+        // 1. שומרים את ההודעה החדשה תחת ענף ההודעות של הצ'אט
         reference.child("Chats").child(chatRoomId).child("messages").child(newMessage.getId()).setValue(newMessage);
+
+        // 2. השלב החסר - מעדכנים את זמן ההודעה האחרונה של הצ'אט עצמו כדי שהמיון יעבוד!
+        reference.child("Chats").child(chatRoomId).child("lastMessageTime").setValue(currentTime);
     }
 
     private void readMessages() {
@@ -123,6 +133,8 @@ public class ChatActivity extends BaseActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Message message = snapshot.getValue(Message.class);
                     mMessages.add(message);
+                    Log.d(TAG, "Time:" + message.getTimestamp());
+
                 }
                 messageAdapter = new MessageAdapter(ChatActivity.this, mMessages);
                 recyclerView.setAdapter(messageAdapter);

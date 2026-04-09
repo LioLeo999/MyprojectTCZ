@@ -124,7 +124,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:text="Client Chats"
+                        android:text="Chats"
                         android:textColor="@color/text_dark"
                         android:textSize="22sp"
                         android:textStyle="bold"/>

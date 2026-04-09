@@ -14,9 +14,8 @@ import com.google.gson.Gson;
 /// @see SharedPreferences
 public class SharedPreferencesUtil {
 
-    /// The name of the shared preferences file
-    /// @see Context#getSharedPreferences(String, int)
-    private static final String PREF_NAME = "com.example.testapp.PREFERENCE_FILE_KEY";
+    // השינוי היחיד שבוצע: שינינו את שם הקובץ לשם האמיתי של הפרויקט שלך
+    private static final String PREF_NAME = "com.example.myprojecttcz.PREFERENCE_FILE_KEY";
 
     /// Save a string to shared preferences
     /// @param context The context to use
@@ -159,6 +158,4 @@ public class SharedPreferencesUtil {
         }
         return null;
     }
-
-
 }

@@ -275,6 +275,7 @@ public class BaseActivity extends AppCompatActivity {
                 break;
             case "About":
                 intent = new Intent(this, Odot.class );
+                break;
 
             case "Admin page":
                 intent = new Intent(this, AdminPage.class);

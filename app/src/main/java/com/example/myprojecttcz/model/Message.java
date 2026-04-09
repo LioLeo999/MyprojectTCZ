@@ -7,7 +7,7 @@ public class Message {
     private String content; // תוכן ההודעה
     private long timestamp; // זמן שליחת ההודעה
 
-    // בנאי ריק חובה עבור Firebase
+    // בנאי ריק עבור Firebase
     public Message() {
     }
 

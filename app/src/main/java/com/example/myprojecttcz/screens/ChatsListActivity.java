@@ -30,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatsListActivity extends BaseActivity {
@@ -95,25 +97,25 @@ public class ChatsListActivity extends BaseActivity {
     // דיאלוג יצירת פורום (לאדמין בלבד)
     private void showAddForumDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ChatsListActivity.this);
-        builder.setTitle("צור פורום כללי חדש");
+        builder.setTitle("Create a new general forum");
 
         LinearLayout layout = new LinearLayout(ChatsListActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 40, 50, 10);
 
         final EditText titleBox = new EditText(ChatsListActivity.this);
-        titleBox.setHint("הכנס שם לפורום...");
+        titleBox.setHint("Enter the forum name");
         layout.addView(titleBox);
 
         builder.setView(layout);
 
-        builder.setPositiveButton("צור פורום", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Create forum", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String forumTitle = titleBox.getText().toString().trim();
 
                 if (forumTitle.isEmpty()) {
-                    Toast.makeText(ChatsListActivity.this, "חובה להכניס שם לפורום", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatsListActivity.this, "You have to enter a forum name", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -121,7 +123,7 @@ public class ChatsListActivity extends BaseActivity {
             }
         });
 
-        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -140,6 +142,9 @@ public class ChatsListActivity extends BaseActivity {
         // isForum = true
         Chat newForum = new Chat(newChatId, members, true, title);
 
+        // אתחול זמן יצירת הפורום כדי שיוצג ברשימה
+        newForum.setLastMessageTime(System.currentTimeMillis());
+
         DatabaseService.getInstance().createNewChat(newForum, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public User onCompleted(Void object) {
@@ -151,7 +156,7 @@ public class ChatsListActivity extends BaseActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(ChatsListActivity.this, "שגיאה ביצירת פורום", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatsListActivity.this, "Error in creating forum", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,56 +168,63 @@ public class ChatsListActivity extends BaseActivity {
             public User onCompleted(List<User> allUsers) {
                 List<User> otherUsers = new ArrayList<>();
                 List<String> userNames = new ArrayList<>();
+                String currentUserName = "Me"; // שם ברירת מחדל למקרה שלא ימצא
 
+                // מעבר על כל המשתמשים: מציאת השם שלנו, והוספת השאר לרשימת הבחירה
                 for (User u : allUsers) {
-                    if (!u.getId().equals(currentUserId)) {
+                    if (u.getId().equals(currentUserId)) {
+                        // שומרים את השם של המשתמש הנוכחי
+                        currentUserName = u.getUname() != null ? u.getUname() : "User " + u.getId().substring(0, 4);
+                    } else {
+                        // מוסיפים משתמשים אחרים לרשימה
                         otherUsers.add(u);
-                        userNames.add(u.getUname() != null ? u.getUname() : "משתמש " + u.getId().substring(0,4));
+                        userNames.add(u.getUname() != null ? u.getUname() : "User " + u.getId().substring(0, 4));
                     }
                 }
+
+                // שמירת השם במשתנה סופי כדי שנוכל להשתמש בו בתוך הכפתור
+                final String finalCurrentUserName = currentUserName;
 
                 LinearLayout layout = new LinearLayout(ChatsListActivity.this);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.setPadding(50, 40, 50, 10);
 
-                final EditText titleBox = new EditText(ChatsListActivity.this);
-                titleBox.setHint("הכנס שם לשיחה...");
-                layout.addView(titleBox);
-
+                // יצירת ה-Spinner לבחירת משתמש (הורדנו את תיבת הטקסט)
                 final Spinner userSpinner = new Spinner(ChatsListActivity.this);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(ChatsListActivity.this, android.R.layout.simple_spinner_dropdown_item, userNames);
                 userSpinner.setAdapter(adapter);
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 30, 0, 0);
+                params.setMargins(0, 10, 0, 0);
                 userSpinner.setLayoutParams(params);
 
                 layout.addView(userSpinner);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatsListActivity.this);
-                builder.setTitle("צור צ'אט חדש");
+                builder.setTitle("Create a new private chat");
                 builder.setView(layout);
 
-                builder.setPositiveButton("צור", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String chatTitle = titleBox.getText().toString().trim();
                         int selectedPosition = userSpinner.getSelectedItemPosition();
-
-                        if (chatTitle.isEmpty()) {
-                            Toast.makeText(ChatsListActivity.this, "חובה להכניס שם לשיחה", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
 
                         if (selectedPosition != android.widget.AdapterView.INVALID_POSITION) {
                             User selectedUser = otherUsers.get(selectedPosition);
+                            String targetUserName = userNames.get(selectedPosition);
+
+                            // חיבור שני השמות ליצירת שם הצ'אט האוטומטי
+                            String chatTitle = finalCurrentUserName + " & " + targetUserName;
+
                             createNewPrivateChat(selectedUser, chatTitle);
+                        } else {
+                            Toast.makeText(ChatsListActivity.this, "Please select a user", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
-                builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -225,7 +237,7 @@ public class ChatsListActivity extends BaseActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(ChatsListActivity.this, "שגיאה בטעינת משתמשים", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatsListActivity.this, "Error in loading users", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -239,6 +251,9 @@ public class ChatsListActivity extends BaseActivity {
 
         Chat newChat = new Chat(newChatId, members, false, title);
 
+        // אתחול זמן יצירת הצ'אט כדי שיוצג ברשימה
+        newChat.setLastMessageTime(System.currentTimeMillis());
+
         DatabaseService.getInstance().createNewChat(newChat, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public User onCompleted(Void object) {
@@ -250,7 +265,7 @@ public class ChatsListActivity extends BaseActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(ChatsListActivity.this, "שגיאה ביצירת צ'אט", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatsListActivity.this, "Error in creating chat", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -273,6 +288,14 @@ public class ChatsListActivity extends BaseActivity {
                     }
                 }
 
+                // מיון הרשימה מהחדש לישן לפי זמן ההודעה האחרונה
+                Collections.sort(chatList, new Comparator<Chat>() {
+                    @Override
+                    public int compare(Chat chat1, Chat chat2) {
+                        return Long.compare(chat2.getLastMessageTime(), chat1.getLastMessageTime());
+                    }
+                });
+
                 chatListAdapter = new ChatListAdapter(ChatsListActivity.this, chatList);
                 recyclerView.setAdapter(chatListAdapter);
             }
@@ -282,4 +305,7 @@ public class ChatsListActivity extends BaseActivity {
             }
         });
     }
+
+
+
 }

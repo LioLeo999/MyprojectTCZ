@@ -10,6 +10,7 @@ public class Chat {
     private HashMap<String, Message> messages; // שינוי ל-HashMap
     private boolean isForum;
     private String title;
+    private long lastMessageTime;
 
     // בנאי ריק חובה עבור Firebase
     public Chat() {
@@ -24,6 +25,7 @@ public class Chat {
         this.title = title;
         this.messages = new HashMap<>();
     }
+
 
     // Getters and Setters
     public String getId() { return id; }
@@ -40,4 +42,11 @@ public class Chat {
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+    public long getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(long lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
 }
