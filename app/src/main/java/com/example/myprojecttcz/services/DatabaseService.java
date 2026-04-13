@@ -500,6 +500,9 @@ public class DatabaseService {
 
 
 
+    public void deleteChat(@NotNull final String chatId, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData(CHATS_PATH + "/" + chatId, callback);
+    }
 
 
 }

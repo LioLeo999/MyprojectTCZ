@@ -17,10 +17,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
     private Context context;
     private List<Chat> mChats;
+    private OnChatLongClickListener longClickListener; // מאזין חדש ללחיצה ארוכה
 
-    public ChatListAdapter(Context context, List<Chat> mChats) {
+    // ממשק (Interface) המאפשר ל-Activity לטפל בלוגיקת המחיקה
+    public interface OnChatLongClickListener {
+        void onChatLongClick(Chat chat);
+    }
+
+    // עדכון הבנאי כך שיקבל גם את המאזין
+    public ChatListAdapter(Context context, List<Chat> mChats, OnChatLongClickListener longClickListener) {
         this.context = context;
         this.mChats = mChats;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -34,21 +42,30 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = mChats.get(position);
 
-        // נציג את שם הצ'אט
+        // הצגת כותרת הצ'אט/פורום
         if (chat.isForum()) {
-            holder.chatTitle.setText("פורום: " + chat.getTitle());
+            holder.chatTitle.setText("Forum: " + chat.getTitle());
         } else {
             if (chat.getTitle() != null && !chat.getTitle().isEmpty()) {
                 holder.chatTitle.setText(chat.getTitle());
             } else {
-                holder.chatTitle.setText("צ'אט פרטי");
+                holder.chatTitle.setText("Private Chat");
             }
         }
 
+        // לחיצה רגילה - כניסה לצ'אט
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("CHAT_ID", chat.getId());
             context.startActivity(intent);
+        });
+
+        // לחיצה ארוכה - קריאה למאזין שיטפל במחיקה
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onChatLongClick(chat);
+            }
+            return true; // החזרת true כדי לציין שהאירוע טופל
         });
     }
 

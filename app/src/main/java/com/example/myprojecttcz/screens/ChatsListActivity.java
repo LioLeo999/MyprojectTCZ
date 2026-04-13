@@ -41,7 +41,7 @@ public class ChatsListActivity extends BaseActivity {
     private List<Chat> chatList;
     private String currentUserId;
     private FloatingActionButton fabAddChat;
-    private FloatingActionButton fabAddForum; // הכפתור החדש לאדמין
+    private FloatingActionButton fabAddForum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class ChatsListActivity extends BaseActivity {
 
         recyclerView = findViewById(R.id.recycler_view_chats_list);
         fabAddChat = findViewById(R.id.fab_add_chat);
-        fabAddForum = findViewById(R.id.fab_add_forum); // חיבור הכפתור החדש
+        fabAddForum = findViewById(R.id.fab_add_forum);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -59,7 +59,7 @@ public class ChatsListActivity extends BaseActivity {
         chatList = new ArrayList<>();
 
         readChats();
-        checkIfAdmin(); // בדיקה אם המשתמש הוא מנהל
+        checkIfAdmin();
 
         fabAddChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,18 +71,17 @@ public class ChatsListActivity extends BaseActivity {
         fabAddForum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddForumDialog(); // פתיחת דיאלוג ליצירת פורום
+                showAddForumDialog();
             }
         });
     }
 
-    // פונקציה שמושכת את המשתמש הנוכחי ובודקת אם הוא מנהל
     private void checkIfAdmin() {
         DatabaseService.getInstance().getUser(currentUserId, new DatabaseService.DatabaseCallback<User>() {
             @Override
             public User onCompleted(User currentUser) {
                 if (currentUser != null && currentUser.isadmin()) {
-                    fabAddForum.setVisibility(View.VISIBLE); // מציג את כפתור הפורום לאדמין
+                    fabAddForum.setVisibility(View.VISIBLE);
                 }
                 return currentUser;
             }
@@ -94,7 +93,6 @@ public class ChatsListActivity extends BaseActivity {
         });
     }
 
-    // דיאלוג יצירת פורום (לאדמין בלבד)
     private void showAddForumDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ChatsListActivity.this);
         builder.setTitle("Create a new general forum");
@@ -133,16 +131,12 @@ public class ChatsListActivity extends BaseActivity {
         builder.show();
     }
 
-    // יצירת פורום ושמירתו בדאטהבייס
     private void createNewForum(String title) {
         String newChatId = DatabaseService.getInstance().generateChatId();
 
-        List<String> members = new ArrayList<>(); // בפורום הרשימה ריקה כי כולם רואים
+        List<String> members = new ArrayList<>();
 
-        // isForum = true
         Chat newForum = new Chat(newChatId, members, true, title);
-
-        // אתחול זמן יצירת הפורום כדי שיוצג ברשימה
         newForum.setLastMessageTime(System.currentTimeMillis());
 
         DatabaseService.getInstance().createNewChat(newForum, new DatabaseService.DatabaseCallback<Void>() {
@@ -161,35 +155,29 @@ public class ChatsListActivity extends BaseActivity {
         });
     }
 
-    // דיאלוג יצירת צ'אט פרטי
     private void showAddChatDialog() {
         DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<List<User>>() {
             @Override
             public User onCompleted(List<User> allUsers) {
                 List<User> otherUsers = new ArrayList<>();
                 List<String> userNames = new ArrayList<>();
-                String currentUserName = "Me"; // שם ברירת מחדל למקרה שלא ימצא
+                String currentUserName = "Me";
 
-                // מעבר על כל המשתמשים: מציאת השם שלנו, והוספת השאר לרשימת הבחירה
                 for (User u : allUsers) {
                     if (u.getId().equals(currentUserId)) {
-                        // שומרים את השם של המשתמש הנוכחי
                         currentUserName = u.getUname() != null ? u.getUname() : "User " + u.getId().substring(0, 4);
                     } else {
-                        // מוסיפים משתמשים אחרים לרשימה
                         otherUsers.add(u);
                         userNames.add(u.getUname() != null ? u.getUname() : "User " + u.getId().substring(0, 4));
                     }
                 }
 
-                // שמירת השם במשתנה סופי כדי שנוכל להשתמש בו בתוך הכפתור
                 final String finalCurrentUserName = currentUserName;
 
                 LinearLayout layout = new LinearLayout(ChatsListActivity.this);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.setPadding(50, 40, 50, 10);
 
-                // יצירת ה-Spinner לבחירת משתמש (הורדנו את תיבת הטקסט)
                 final Spinner userSpinner = new Spinner(ChatsListActivity.this);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(ChatsListActivity.this, android.R.layout.simple_spinner_dropdown_item, userNames);
                 userSpinner.setAdapter(adapter);
@@ -214,9 +202,7 @@ public class ChatsListActivity extends BaseActivity {
                             User selectedUser = otherUsers.get(selectedPosition);
                             String targetUserName = userNames.get(selectedPosition);
 
-                            // חיבור שני השמות ליצירת שם הצ'אט האוטומטי
                             String chatTitle = finalCurrentUserName + " & " + targetUserName;
-
                             createNewPrivateChat(selectedUser, chatTitle);
                         } else {
                             Toast.makeText(ChatsListActivity.this, "Please select a user", Toast.LENGTH_SHORT).show();
@@ -250,8 +236,6 @@ public class ChatsListActivity extends BaseActivity {
         members.add(targetUser.getId());
 
         Chat newChat = new Chat(newChatId, members, false, title);
-
-        // אתחול זמן יצירת הצ'אט כדי שיוצג ברשימה
         newChat.setLastMessageTime(System.currentTimeMillis());
 
         DatabaseService.getInstance().createNewChat(newChat, new DatabaseService.DatabaseCallback<Void>() {
@@ -288,7 +272,6 @@ public class ChatsListActivity extends BaseActivity {
                     }
                 }
 
-                // מיון הרשימה מהחדש לישן לפי זמן ההודעה האחרונה
                 Collections.sort(chatList, new Comparator<Chat>() {
                     @Override
                     public int compare(Chat chat1, Chat chat2) {
@@ -296,7 +279,13 @@ public class ChatsListActivity extends BaseActivity {
                     }
                 });
 
-                chatListAdapter = new ChatListAdapter(ChatsListActivity.this, chatList);
+                // כאן הוספנו את המאזין החדש ללחיצה ארוכה
+                chatListAdapter = new ChatListAdapter(ChatsListActivity.this, chatList, new ChatListAdapter.OnChatLongClickListener() {
+                    @Override
+                    public void onChatLongClick(Chat chat) {
+                        handleChatDeletion(chat);
+                    }
+                });
                 recyclerView.setAdapter(chatListAdapter);
             }
 
@@ -306,6 +295,56 @@ public class ChatsListActivity extends BaseActivity {
         });
     }
 
+    // פונקציה חדשה המטפלת בלוגיקת המחיקה ובדיקת ההרשאות
+    private void handleChatDeletion(Chat chat) {
+        DatabaseService.getInstance().getUser(currentUserId, new DatabaseService.DatabaseCallback<User>() {
+            @Override
+            public User onCompleted(User currentUser) {
+                boolean isAdmin = currentUser != null && currentUser.isadmin();
 
+                // חסימה: אם זה פורום והמשתמש אינו מנהל
+                if (chat.isForum() && !isAdmin) {
+                    Toast.makeText(ChatsListActivity.this, "Only admins can delete forums", Toast.LENGTH_SHORT).show();
+                    return currentUser;
+                }
 
+                // אם הבדיקה עברה, נציג דיאלוג אישור
+                String type = chat.isForum() ? "forum" : "chat";
+                new AlertDialog.Builder(ChatsListActivity.this)
+                        .setTitle("Delete " + type)
+                        .setMessage("Are you sure you want to delete this " + type + "?")
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteChatFromDb(chat.getId());
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+
+                return currentUser;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(ChatsListActivity.this, "Failed to verify permissions", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // פונקציה חדשה שקוראת ל-DatabaseService כדי למחוק את הצ'אט
+    private void deleteChatFromDb(String chatId) {
+        DatabaseService.getInstance().deleteChat(chatId, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public User onCompleted(Void object) {
+                Toast.makeText(ChatsListActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(ChatsListActivity.this, "Error deleting", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
