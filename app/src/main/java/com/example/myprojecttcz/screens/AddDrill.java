@@ -242,6 +242,14 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "You must add a coach view video", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (name.isEmpty() || explanation.isEmpty() || time.isEmpty() || minP.isEmpty() || maxP.isEmpty() || tools.isEmpty() || age.isEmpty() || level.isEmpty() || playerLevel.isEmpty() || ballColor.isEmpty() || courtSize.isEmpty()) {
+            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!checkBackhand.isChecked() || !checkBackhand.isChecked() || !checkDriveBackhand.isChecked() || !checkDriveForehand.isChecked() || !checkForehand.isChecked() || !checkServe.isChecked() || !checkSmash.isChecked()){
+            Toast.makeText(this, "You must check at least one shot", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         String id = databaseService.generateDrillId();

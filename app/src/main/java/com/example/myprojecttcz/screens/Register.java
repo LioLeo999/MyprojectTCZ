@@ -95,6 +95,10 @@ public class Register extends BaseActivity implements View.OnClickListener {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (phone.length() != 10) {
+                Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // קורא לפונקציית ההרשמה של פיירבייס
             registerUser(uName, fName, lName, phone, email, password);
@@ -129,6 +133,8 @@ public class Register extends BaseActivity implements View.OnClickListener {
                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                         Toast.makeText(Register.this, "Email address is already in use.", Toast.LENGTH_SHORT).show();
+                    } else if (password.length() < 6) {
+                        Toast.makeText(Register.this, "Password should be at least 6 characters", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(Register.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
