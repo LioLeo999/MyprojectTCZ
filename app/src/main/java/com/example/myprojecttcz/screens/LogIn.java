@@ -30,6 +30,7 @@ public class LogIn extends BaseActivity implements View.OnClickListener {
     private Button btnLogin, btnRegister;
     private DatabaseService databaseService;
     private FirebaseAuth auth;
+    private Intent get;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,14 @@ public class LogIn extends BaseActivity implements View.OnClickListener {
         btnRegister = findViewById(R.id.gotoRegister);
         btnRegister.setOnClickListener(this);
         databaseService = DatabaseService.getInstance();
+
+        get = getIntent();
+        if (get.getExtras() != null){
+            String logout = get.getStringExtra("logout");
+            if (logout == "true")
+                shouldShowBackButton();
+
+        }
     }
 
     @Override
@@ -158,5 +167,9 @@ public class LogIn extends BaseActivity implements View.OnClickListener {
                 Toast.makeText(LogIn.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    public boolean shouldShowBackButton() {
+        return false;
     }
 }
