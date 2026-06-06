@@ -505,4 +505,15 @@ public class DatabaseService {
     }
 
 
+    public void getUserToken(String uid, DatabaseCallback<String> callback) {
+        readData("users/" + uid + "/fcmToken").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                callback.onCompleted(task.getResult().getValue(String.class));
+            } else {
+                callback.onFailed(new Exception("Token not found"));
+            }
+        });
+    }
+
+
 }

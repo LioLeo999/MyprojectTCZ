@@ -150,17 +150,30 @@ public class Register extends BaseActivity implements View.OnClickListener {
                 Log.d(TAG, "createUserInDatabase: User created successfully");
                 Log.d(TAG, "createUserInDatabase: Redirecting to MainActivity");
 
-                // NOT FIXED (as requested): Security issue - saving password in plaintext
-                // שימוש ב-Util כדי לשמור את הנתונים באותו מיקום ובאותם מפתחות שה-Login מחפש
+                // שמירת נתונים למילוי אוטומטי
                 SharedPreferencesUtil.saveString(Register.this, "saved_email", email);
                 SharedPreferencesUtil.saveString(Register.this, "saved_password", password);
 
-                // מומלץ גם לשמור את אובייקט המשתמש כדי שהאפליקציה תדע שהוא מחובר
                 try {
                     SharedPreferencesUtil.saveUser(Register.this, user);
                 } catch (Exception e) {
                     Log.e(TAG, "Could not save user object", e);
                 }
+
+                // ============================================================
+                // תוספת חובה: שמירת הטוקן להתראות גם בעת הרשמה של משתמש חדש!
+                // ============================================================
+                com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        com.google.firebase.database.FirebaseDatabase.getInstance().getReference("Users")
+                                .child(user.getId())
+                                .child("fcmToken")
+                                .setValue(token);
+                        Log.d(TAG, "FCM Token saved successfully for new user: " + user.getId());
+                    }
+                });
+                // ============================================================
 
                 Intent mainIntent = new Intent(Register.this, MainActivity.class);
                 // שלא יוכל ללכת אחורה
@@ -175,7 +188,7 @@ public class Register extends BaseActivity implements View.OnClickListener {
                 Log.e(TAG, "createUserInDatabase: Failed to create user", e);
                 Toast.makeText(Register.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
 
-                // FIX 2: Handle failure - sign out user to prevent inconsistent state
+                // במקרה של כישלון - ננתק את המשתמש
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     mAuth.signOut();

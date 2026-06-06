@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +16,7 @@ import com.example.myprojecttcz.adapters.MessageAdapter;
 import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.Chat;
 import com.example.myprojecttcz.model.Message;
+import com.example.myprojecttcz.services.DatabaseService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,99 +33,103 @@ public class ChatActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private EditText etMessage;
     private ImageButton btnSend;
-    private TextView tvChatTitleTop; // המשתנה לכותרת
+    private TextView tvChatTitleTop;
 
     private MessageAdapter messageAdapter;
     private List<Message> mMessages;
 
     private String currentUserId;
     private String chatId;
+    private DatabaseService databaseService;
+
+    // משתנה ששומר את נתוני הצ'אט כדי שנדע מי המשתתפים בו
+    private Chat currentChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        databaseService = DatabaseService.getInstance();
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        chatId = getIntent().getStringExtra("CHAT_ID");
+
         recyclerView = findViewById(R.id.recycler_view_chat);
         etMessage = findViewById(R.id.et_message);
         btnSend = findViewById(R.id.btn_send);
-        tvChatTitleTop = findViewById(R.id.tv_chat_title_top); // חיבור הכותרת
+        tvChatTitleTop = findViewById(R.id.tv_chat_title_top);
 
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        chatId = getIntent().getStringExtra("CHAT_ID");
-
-        // קריאה לפונקציות טעינת הנתונים
         loadChatTitle();
         readMessages();
 
         btnSend.setOnClickListener(v -> {
-            String msg = etMessage.getText().toString();
-            if (!msg.equals("")) {
+            String msg = etMessage.getText().toString().trim();
+            if (!msg.isEmpty()) {
+                btnSend.setEnabled(false); // מניעת לחיצות כפולות
                 sendMessage(currentUserId, chatId, msg);
+                etMessage.setText("");
+                btnSend.setEnabled(true);
             } else {
-                Toast.makeText(ChatActivity.this, "You can't send an epmty message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatActivity.this, "You can't send an empty message", Toast.LENGTH_SHORT).show();
             }
-            etMessage.setText("");
         });
     }
 
-    // פונקציה למשיכת השם של הצ'אט
     private void loadChatTitle() {
         DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId);
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Chat chat = snapshot.getValue(Chat.class);
-                if (chat != null) {
-                    if (chat.isForum()) {
-                        tvChatTitleTop.setText("Forum: " + chat.getTitle());
+                currentChat = snapshot.getValue(Chat.class);
+                if (currentChat != null) {
+                    if (currentChat.isForum()) {
+                        tvChatTitleTop.setText("Forum: " + currentChat.getTitle());
                     } else {
-                        if (chat.getTitle() != null && !chat.getTitle().isEmpty()) {
-                            tvChatTitleTop.setText(chat.getTitle());
-                        } else {
-                            tvChatTitleTop.setText("Private Chat");
-
-                        }
+                        tvChatTitleTop.setText(currentChat.getTitle() != null && !currentChat.getTitle().isEmpty() ? currentChat.getTitle() : "Private Chat");
                     }
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
     private void sendMessage(String sender, String chatRoomId, String messageContent) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
         Message newMessage = new Message();
         newMessage.setId(reference.push().getKey());
         newMessage.setSenderId(sender);
-        newMessage.setReceiverId(chatRoomId);
-        newMessage.setContent(messageContent);
 
-        // שומרים את הזמן הנוכחי במשתנה כדי להשתמש בו פעמיים
+        // --- תיקון חשוב: מציאת מזהה המשתמש השני (המקבל) כדי שהשרת ידע למי לשלוח התראה ---
+        String receiverId = "";
+        if (currentChat != null && currentChat.getMembers() != null) {
+            for (String memberId : currentChat.getMembers()) {
+                if (!memberId.equals(currentUserId)) {
+                    receiverId = memberId;
+                    break;
+                }
+            }
+        }
+        newMessage.setReceiverId(receiverId);
+        // -------------------------------------------------------------------------
+
+        newMessage.setContent(messageContent);
         long currentTime = System.currentTimeMillis();
         newMessage.setTimestamp(currentTime);
 
-        // 1. שומרים את ההודעה החדשה תחת ענף ההודעות של הצ'אט
+        // שמירת ההודעה במסד הנתונים (השרת יזהה את זה אוטומטית וישלח התראה ל-receiverId)
         reference.child("Chats").child(chatRoomId).child("messages").child(newMessage.getId()).setValue(newMessage);
-
-        // 2. השלב החסר - מעדכנים את זמן ההודעה האחרונה של הצ'אט עצמו כדי שהמיון יעבוד!
         reference.child("Chats").child(chatRoomId).child("lastMessageTime").setValue(currentTime);
     }
 
     private void readMessages() {
         mMessages = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats").child(chatId).child("messages");
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -133,16 +137,12 @@ public class ChatActivity extends BaseActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Message message = snapshot.getValue(Message.class);
                     mMessages.add(message);
-                    Log.d(TAG, "Time:" + message.getTimestamp());
-
                 }
                 messageAdapter = new MessageAdapter(ChatActivity.this, mMessages);
                 recyclerView.setAdapter(messageAdapter);
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
 }

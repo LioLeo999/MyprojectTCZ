@@ -19,6 +19,8 @@ import com.example.myprojecttcz.services.DatabaseService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -201,4 +203,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected boolean shouldShowHomeInMenu() {
         return false;
     }
+
+
+
 }

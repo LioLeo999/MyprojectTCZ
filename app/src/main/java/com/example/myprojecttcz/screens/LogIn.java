@@ -109,12 +109,29 @@ public class LogIn extends BaseActivity implements View.OnClickListener {
             public User onCompleted(String uid) {
                 Log.d(TAG, "onCompleted: User logged in with UID: " + uid);
 
-                // --- הוספה: שמירת אימייל וסיסמה למילוי אוטומטי בפעם הבאה ---
+                // --- שמירת אימייל וסיסמה למילוי אוטומטי בפעם הבאה ---
                 SharedPreferencesUtil.saveString(LogIn.this, "saved_email", email);
                 SharedPreferencesUtil.saveString(LogIn.this, "saved_password", password);
                 // ------------------------------------------------------------
 
-                // כעת נמשוך את פרטי המשתמש המלאים
+                // ============================================================
+                // תוספת חובה: שליפת הטוקן של המכשיר ושמירתו במסד הנתונים להתראות
+                // ============================================================
+                com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        com.google.firebase.database.FirebaseDatabase.getInstance().getReference("Users")
+                                .child(uid)
+                                .child("fcmToken")
+                                .setValue(token);
+                        Log.d(TAG, "FCM Token saved successfully for user: " + uid);
+                    } else {
+                        Log.w(TAG, "Failed to get FCM token.");
+                    }
+                });
+                // ============================================================
+
+                // כעת נמשוך את פרטי המשתמש המלאים כדי לשמור ב-SharedPreferences ולעבור מסך
                 databaseService.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
                     @Override
                     public User onCompleted(User user) {
