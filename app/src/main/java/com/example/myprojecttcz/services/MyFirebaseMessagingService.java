@@ -22,11 +22,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        // בודקים אם קיבלנו "data" מהשרת
+        // אם ההודעה מכילה "notification", המערכת כבר תציג אותה אם אנחנו בחוץ.
+        // אם אנחנו בפנים, נרצה אולי להציג אותה ידנית או להתעלם אם אנחנו כבר בתוך הצ'אט.
         if (remoteMessage.getData().size() > 0) {
             String title = remoteMessage.getData().get("title");
             String body = remoteMessage.getData().get("body");
 
+            // כאן תוכל להוסיף לוגיקה: אם המשתמש כבר נמצא ב-ChatActivity, אל תציג התראה!
             showNotification(title, body);
         }
     }

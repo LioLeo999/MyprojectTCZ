@@ -326,18 +326,18 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
                     courtSize
             );
 
-
+            // יצירת הדריל בפיירבייס
             databaseService.createNewDrill2v(drill2v, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
                 public User onCompleted(Void object) {
-                    Toast.makeText(AddDrill.this, "תרגיל 2V נוצר!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddDrill.this, "Drill created", Toast.LENGTH_SHORT).show();
                     finish();
                     return null;
                 }
 
                 @Override
                 public void onFailed(Exception e) {
-                    Toast.makeText(AddDrill.this, "כשל ביצירת 2V", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddDrill.this, "Failed to create drill", Toast.LENGTH_SHORT).show();
                 }
             });
 

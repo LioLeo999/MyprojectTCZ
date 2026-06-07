@@ -83,7 +83,7 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
 
     private void showManagementDialog(User user, int position) {
         String adminAction = user.isadmin() ? "בטל הרשאת אדמין" : "הפוך לאדמין";
-        String[] options = {adminAction, "מחק משתמש", "ביטול"};
+        String[] options = {adminAction,  "ביטול"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("ניהול משתמש: " + user.getUname());
@@ -103,22 +103,6 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
                         @Override
                         public void onFailed(Exception e) {
                             Toast.makeText(context, "שגיאה בעדכון", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                });
-            } else if (which == 1) { // מחיקת משתמש
-                showConfirmDialog("האם אתה בטוח שברצונך למחוק את המשתמש? פעולה זו סופית.", () -> {
-                    DatabaseService.getInstance().deleteUser(user.getId(), new DatabaseService.DatabaseCallback<Void>() {
-                        @Override
-                        public User onCompleted(Void object) {
-                            userList.remove(position);
-                            notifyItemRemoved(position);
-                            Toast.makeText(context, "משתמש נמחק", Toast.LENGTH_SHORT).show();
-                            return null;
-                        }
-                        @Override
-                        public void onFailed(Exception e) {
-                            Toast.makeText(context, "שגיאה במחיקה", Toast.LENGTH_SHORT).show();
                         }
                     });
                 });
