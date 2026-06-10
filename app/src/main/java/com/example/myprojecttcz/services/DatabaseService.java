@@ -443,6 +443,18 @@ public class DatabaseService {
         String path = USERS_PATH + "/" + userId + "/" + MAARACHIM_PATH + "/" + maarachId;
         getData(path, MaarachImun.class, callback);
     }
+    /**
+     * מעדכן את רשימת ה-IDs של הדרילים במערך אימון ספציפי של משתמש.
+     * שימושי לניקוי אוטומטי של דרילים שנמחקו.
+     */
+    public void updateMaarachDrillsList(@NonNull String userId, @NonNull String maarachId, @NonNull ArrayList<String> updatedDrillsList) {
+        String path = "users/" + userId + "/maarachim/" + maarachId + "/drillsid";
+
+        // כתיבת הרשימה החדשה (ללא הדריל המחוק) לתוך מסד הנתונים
+        databaseReference.child(path).setValue(updatedDrillsList)
+                .addOnSuccessListener(aVoid -> Log.d("DatabaseService", "Drills list updated successfully (Lazy Cleanup)"))
+                .addOnFailureListener(e -> Log.e("DatabaseService", "Failed to update drills list", e));
+    }
 
     /**
      * קבלת רשימת כל מערכי האימון של משתמש מסוים

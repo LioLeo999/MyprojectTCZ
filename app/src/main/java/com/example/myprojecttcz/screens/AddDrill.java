@@ -246,7 +246,7 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!checkBackhand.isChecked() || !checkBackhand.isChecked() || !checkDriveBackhand.isChecked() || !checkDriveForehand.isChecked() || !checkForehand.isChecked() || !checkServe.isChecked() || !checkSmash.isChecked()){
+        if (!isAtLeastOneShotChecked()){
             Toast.makeText(this, "You must check at least one shot", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -258,6 +258,23 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
                 createDrillObject(id, name, explanation, time, level, minP, maxP,
                         tools, age, playerLevel, ballColor, courtSize, yt1, yt2)
         );
+    }
+
+    /**
+     * בודקת האם לפחות סוג מכה אחד נבחר.
+     * @return true אם לפחות תיבה אחת מסומנת, אחרת false.
+     */
+    private boolean isAtLeastOneShotChecked() {
+        return checkForehand.isChecked() ||
+                checkBackhand.isChecked() ||
+                checkVolleyForehand.isChecked() ||
+                checkVolleyBackhand.isChecked() ||
+                checkDriveForehand.isChecked() ||
+                checkDriveBackhand.isChecked() ||
+                checkServe.isChecked() ||
+                checkSmash.isChecked() ||
+                checkForwardForehand.isChecked() ||
+                checkForwardBackhand.isChecked();
     }
 
     // ---------------------------------------------------------

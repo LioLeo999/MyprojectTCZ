@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojecttcz.R;
-import com.example.myprojecttcz.adapters.DrillListReorderAdapter; // האדפטר שלך
+import com.example.myprojecttcz.adapters.DrillListReorderAdapter;
 import com.example.myprojecttcz.base.BaseActivity;
 import com.example.myprojecttcz.model.Drill2v;
 import com.example.myprojecttcz.model.MaarachImun;
@@ -27,14 +27,13 @@ import java.util.List;
 public class ShowTrainingSet extends BaseActivity implements View.OnClickListener {
 
     private RecyclerView rvDrillsList;
-    private DrillListReorderAdapter adapter; // שימוש באדפטר ששלחת
+    private DrillListReorderAdapter adapter;
     private List<Drill2v> drillsList = new ArrayList<>();
 
     private DatabaseService ds;
     private String currentMaarachId;
     private MaarachImun currentMaarach;
     private Button btnGoToMaagar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +52,7 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
 
         btnGoToMaagar = findViewById(R.id.btnGoToMaagar);
         btnGoToMaagar.setOnClickListener(this);
+
         // 2. הגדרת RecyclerView
         rvDrillsList = findViewById(R.id.rvDrillsList);
         rvDrillsList.setLayoutManager(new LinearLayoutManager(this));
@@ -61,7 +61,7 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
         adapter = new DrillListReorderAdapter(this, drillsList);
         rvDrillsList.setAdapter(adapter);
 
-        // 3. הפעלת מנגנון הגרירה (חשוב!)
+        // 3. הפעלת מנגנון הגרירה
         setupDragAndDrop();
 
         // 4. טעינת נתונים
@@ -69,7 +69,6 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
     }
 
     private void setupDragAndDrop() {
-        // מגדירים תמיכה בגרירה למעלה (UP) ולמטה (DOWN)
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
 
@@ -81,27 +80,21 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
                 int fromPos = source.getAdapterPosition();
                 int toPos = target.getAdapterPosition();
 
-                // *** כאן אנחנו קוראים לפונקציה שכתבת באדפטר ***
                 adapter.moveItem(fromPos, toPos);
-
                 return true;
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // לא עושים כלום בגרירה לצדדים
             }
 
-            // הפונקציה הזו נקראת כשהמשתמש *עוזב* את הפריט (סיים לגרור)
             @Override
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 super.clearView(recyclerView, viewHolder);
-                // זה הזמן לשמור את הסדר החדש ב-Firebase
                 saveOrderToFirebase();
             }
         };
 
-        // חיבור ה-Helper ל-RecyclerView
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(rvDrillsList);
     }
@@ -137,21 +130,51 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(List<Drill2v> allDrills) {
                 drillsList.clear();
+
+                // משתנים למעקב אחרי מחיקות (Lazy Cleanup)
+                boolean needsCleanup = false;
+                ArrayList<String> updatedValidIds = new ArrayList<>();
+
                 // שמירה על הסדר המקורי לפי רשימת ה-IDs
                 for (String id : drillIds) {
+                    boolean drillFound = false;
+
                     for (Drill2v drill : allDrills) {
                         if (drill.getId().equals(id)) {
                             drillsList.add(drill);
+                            updatedValidIds.add(id); // שומרים רק את מי שבאמת קיים!
+                            drillFound = true;
                             break;
                         }
                     }
+
+                    // אם סיימנו לחפש במאגר והדריל לא קיים יותר (האדמין מחק אותו)
+                    if (!drillFound) {
+                        needsCleanup = true;
+                        Log.w("ShowTrainingSet", "Drill ID " + id + " was deleted from the main DB. Will auto-clean.");
+                    }
                 }
+
+                // עדכון התצוגה למשתמש
                 adapter.notifyDataSetChanged();
+
+                // הפעלת הניקוי האוטומטי אם מצאנו דרילים שנמחקו
+                if (needsCleanup) {
+                    currentMaarach.setDrillsid(updatedValidIds); // מעדכנים מקומית לאובייקט
+
+                    String uid = FirebaseAuth.getInstance().getUid();
+                    if (uid != null) {
+                        // הפעלת פונקציית העדכון בסרביס
+                        ds.updateMaarachDrillsList(uid, currentMaarachId, updatedValidIds);
+                    }
+                }
             }
 
             @Override
             public void onError(String error) {
+                // אם יש בעיית רשת, השגיאה תגיע לפה ולא נבצע ניקוי בטעות!
                 Toast.makeText(ShowTrainingSet.this, "Error fetching drills", Toast.LENGTH_SHORT).show();
+                Log.e("ShowTrainingSet", "Failed to get drills from DB: " + error);
             }
         });
     }
@@ -159,8 +182,6 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
     private void saveOrderToFirebase() {
         if (currentMaarach == null) return;
 
-        // יצירת רשימת IDs חדשה לפי הסדר הנוכחי באדפטר
-        // אנחנו משתמשים ב-getDrills() שכתבת באדפטר
         ArrayList<String> newIds = new ArrayList<>();
         for (Drill2v d : adapter.getDrills()) {
             newIds.add(d.getId());
@@ -172,7 +193,6 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
         ds.createMaarachImun(uid, currentMaarach, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public User onCompleted(Void object) {
-                // נשמר בהצלחה (שקט)
                 return null;
             }
 
@@ -185,8 +205,7 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (view == btnGoToMaagar)
-        {
+        if (view == btnGoToMaagar) {
             Intent go = new Intent(this, MaagarDrills.class);
             startActivity(go);
         }
@@ -195,11 +214,7 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
     @Override
     protected void onResume() {
         super.onResume();
-
-        // הלוג הזה יעזור לך לראות ב-Logcat שהעמוד אכן התרענן
         Log.d("Lifecycle", "onResume: Refreshing data from RTDB");
-
-        // קריאה לפונקציה שלך שמביאה את הנתונים העדכניים מהפיירבייס
         loadData();
     }
 }
