@@ -58,7 +58,23 @@ public class ShowTrainingSet extends BaseActivity implements View.OnClickListene
         rvDrillsList.setLayoutManager(new LinearLayoutManager(this));
 
         // יצירת האדפטר שלך
-        adapter = new DrillListReorderAdapter(this, drillsList);
+        // למחוק את זה:
+// adapter = new DrillListReorderAdapter(this, drillsList);
+
+// ולהחליף בזה:
+        adapter = new DrillListReorderAdapter(this, drillsList, new DrillListReorderAdapter.OnDrillDeleteListener() {
+            @Override
+            public void onDeleteClick(int position) {
+                // 1. מחיקה מהרשימה המקומית והעלמת הפריט מהמסך
+                drillsList.remove(position);
+                adapter.notifyItemRemoved(position);
+
+                // 2. שמירה של הרשימה החדשה לפיירבייס (כבר קיימת לך פונקציה כזו!)
+                saveOrderToFirebase();
+
+                Toast.makeText(ShowTrainingSet.this, "The drill was deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
         rvDrillsList.setAdapter(adapter);
 
         // 3. הפעלת מנגנון הגרירה

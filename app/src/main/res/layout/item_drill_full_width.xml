@@ -20,15 +20,25 @@
             android:padding="16dp"
             android:gravity="center_vertical">
 
-
             <TextView
                 android:id="@+id/tvDrillName"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Drill Name"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"/>
+
+            <ImageView
+                android:id="@+id/deleteDrillFromTrainigSet"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="DeleteIcon"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
 
         </LinearLayout>
 

@@ -527,6 +527,23 @@ public class DatabaseService {
         });
     }
 
+    // להוסיף בתוך מחלקת DatabaseService.java
+
+    public void updateMaarachDrillsList2(String uid, String maarachId, ArrayList<String> updatedDrillsIds) {
+        databaseReference.child("Users")
+                .child(uid)
+                .child("Maarachim")
+                .child(maarachId)
+                .child("drillsid")
+                .setValue(updatedDrillsIds)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("DatabaseService", "הרשימה עודכנה בהצלחה (תרגיל נמחק או סודר מחדש)");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DatabaseService", "שגיאה בעדכון הרשימה", e);
+                });
+    }
+
 
     // ---- CHAT SECTION ----
 
