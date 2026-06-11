@@ -20,6 +20,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import android.net.Uri;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -409,6 +413,45 @@ public class DatabaseService {
     /// מחיקת דריל מהמאגר
     public void deleteDrill(@NotNull final String drillId, @Nullable final DatabaseCallback<Void> callback) {
         deleteData(DRILLS_PATH + "/" + drillId, callback);
+    }
+
+    /// עדכון דריל קיים (דורס את המידע הישן עם האובייקט המעודכן)
+    public void updateDrill(@NonNull final Drill2v drill, @Nullable final DatabaseCallback<Void> callback) {
+        // כתיבה לאותו הנתיב מעדכנת את כל הנתונים של הדריל הזה במסד הנתונים
+        writeData(DRILLS_PATH + "/" + drill.getId(), drill, callback);
+    }
+
+    // ---- STORAGE SECTION (IMAGES/GIFS) ----
+
+    public interface ImageUploadCallback {
+        void onSuccess(String imageUrl);
+        void onError(Exception e);
+    }
+
+    /// העלאת תמונה/GIF ל-Firebase Storage וקבלת הקישור (URL) המלא שלה
+    public void uploadImage(Uri imageUri, ImageUploadCallback callback) {
+        if (imageUri == null) {
+            callback.onError(new Exception("Image URI is null"));
+            return;
+        }
+
+        // יצירת שם קובץ ייחודי ורנדומלי
+        String fileName = UUID.randomUUID().toString() + ".gif";
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("drills_gifs/" + fileName);
+
+        // העלאת הקובץ למאגר
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // הקובץ עלה בהצלחה, עכשיו נבקש את כתובת ה-URL שלו
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        callback.onSuccess(uri.toString()); // מחזירים את הקישור למסך כדי לשמור ב-Drill
+                    }).addOnFailureListener(e -> {
+                        callback.onError(e);
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    callback.onError(e);
+                });
     }
 
 

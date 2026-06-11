@@ -161,7 +161,7 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
                         R.array.playerlevel,
                         android.R.layout.simple_spinner_item
                 );
-        adapterCourt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterpllevel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPlayerLevel.setAdapter(adapterpllevel);
         // Phisical level
         ArrayAdapter<CharSequence> adapterphlevel =
@@ -170,7 +170,7 @@ public class AddDrill extends BaseActivity implements View.OnClickListener {
                         R.array.level,
                         android.R.layout.simple_spinner_item
                 );
-        adapterCourt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterphlevel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPhisicalLevel.setAdapter(adapterphlevel);
 
     }

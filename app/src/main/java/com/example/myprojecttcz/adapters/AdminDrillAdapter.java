@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.myprojecttcz.R;
-import com.example.myprojecttcz.model.Drill2v; // ייבוא של המודל שלך
+import com.example.myprojecttcz.model.Drill2v;
 import java.util.List;
 
 public class AdminDrillAdapter extends RecyclerView.Adapter<AdminDrillAdapter.DrillViewHolder> {
@@ -17,7 +17,7 @@ public class AdminDrillAdapter extends RecyclerView.Adapter<AdminDrillAdapter.Dr
 
     public interface OnDrillClickListener {
         void onDrillClick(Drill2v drill);
-        void onDeleteClick(Drill2v drill); // לפעולה הזו נקרא בלחיצה ארוכה
+        void onDrillLongClick(Drill2v drill); // שינינו את השם כאן
     }
 
     public AdminDrillAdapter(List<Drill2v> drillList, OnDrillClickListener listener) {
@@ -44,13 +44,13 @@ public class AdminDrillAdapter extends RecyclerView.Adapter<AdminDrillAdapter.Dr
         // הצגת השם
         holder.tvDrillName.setText(drill.getName());
 
-        // לחיצה רגילה (קצרה) - כניסה לצפייה בדריל
+        // לחיצה רגילה (קצרה)
         holder.itemView.setOnClickListener(v -> listener.onDrillClick(drill));
 
-        // לחיצה ארוכה - הפעלת המחיקה
+        // לחיצה ארוכה
         holder.itemView.setOnLongClickListener(v -> {
-            listener.onDeleteClick(drill);
-            return true; // חשוב: מחזיר true כדי שהמערכת תדע שהלחיצה טופלה ולא תפעיל גם את הלחיצה הרגילה (onClick)
+            listener.onDrillLongClick(drill); // קורא לפעולה המעודכנת
+            return true;
         });
     }
 

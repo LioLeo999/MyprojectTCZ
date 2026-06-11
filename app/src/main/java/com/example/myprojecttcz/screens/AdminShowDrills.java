@@ -59,15 +59,16 @@ public class AdminShowDrills extends BaseActivity {
         adapter = new AdminDrillAdapter(drillList, new AdminDrillAdapter.OnDrillClickListener() {
             @Override
             public void onDrillClick(Drill2v drill) {
-                // מעבר לדף תצוגת דריל - שולחים את ה-ID של הדריל
+                // מעבר לדף תצוגת דריל
                 Intent intent = new Intent(AdminShowDrills.this, ShowDrill.class);
                 intent.putExtra("id", drill.getId());
                 startActivity(intent);
             }
 
             @Override
-            public void onDeleteClick(Drill2v drill) {
-                showDeleteDialog(drill);
+            public void onDrillLongClick(Drill2v drill) {
+                // במקום למחוק מיד, פותחים את דיאלוג האפשרויות
+                showOptionsDialog(drill);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -117,6 +118,27 @@ public class AdminShowDrills extends BaseActivity {
             }
         }
         adapter.filterList(filteredList);
+    }
+
+
+    // פונקציה שמציגה תפריט לבחירה בין עריכה למחיקה
+    private void showOptionsDialog(Drill2v drill) {
+        String[] options = {"Edit Drill", "Delete Drill"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Drill Options")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        // המשתמש בחר "Edit Drill" (אינדקס 0 ברשימה)
+                        Intent intent = new Intent(AdminShowDrills.this, EditDrill.class);
+                        intent.putExtra("id", drill.getId());
+                        startActivity(intent);
+                    } else if (which == 1) {
+                        // המשתמש בחר "Delete Drill" (אינדקס 1 ברשימה)
+                        showDeleteDialog(drill);
+                    }
+                })
+                .show();
     }
 
     // פונקציית מחיקה שמשתמשת בסרביס
